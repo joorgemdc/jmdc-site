@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMDC | Network Diagnostic & Tools</title>
+    <style>
+        :root { --bg: #0a0f1d; --card: #1e293b; --primary: #3b82f6; --text: #e2e8f0; --success: #10b981; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; }
+        
+        /* LOGIN SCREEN */
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100%; position: absolute; background: var(--bg); z-index: 10; }
+        .btn-google { background: white; color: #333; padding: 12px 24px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .btn-google:hover { transform: translateY(-2px); }
+
+        /* DASHBOARD */
+        #dashboard { display: none; width: 90%; max-width: 1000px; padding: 2rem 0; animation: fadeIn 0.5s; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #334155; padding-bottom: 1rem; }
+        .user-profile { display: flex; align-items: center; gap: 15px; background: rgba(30, 41, 59, 0.5); padding: 5px 15px; border-radius: 50px; border: 1px solid #334155; }
+        .user-avatar { width: 35px; height: 35px; border-radius: 50%; }
+
+        /* TOOLS GRID */
+        .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .tool-card { background: var(--card); padding: 1.5rem; border-radius: 12px; border: 1px solid #334155; }
+        .data-val { font-size: 1.8rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0; }
+        .data-label { color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* 1-TOOLS SECTION */
+        .repo-section { background: rgba(16, 185, 129, 0.05); border: 1px solid var(--success); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; }
+        .btn-download { display: inline-block; background: var(--success); color: white; padding: 0.8rem 2rem; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 1rem; transition: 0.3s; }
+        .btn-download:hover { background: #059669; }
+
+        /* IFRAME SPEEDTEST */
+        .iframe-container { height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid #334155; margin-top: 2rem; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <h1 style="color: var(--primary); margin-bottom: 0.5rem;">JMDC Access</h1>
+        <p style="color: #64748b; margin-bottom: 2rem;">Ambiente restrito. Identifique-se.</p>
+        <button id="btnLogin" class="btn-google">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.715H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.159 6.656 3.58 9 3.58z"/></svg>
+            Entrar com Google
+        </button>
+    </div>
+
+    <div id="dashboard">
+        <header class="dash-header">
+            <div>
+                <h2>Diagnóstico de Rede</h2>
+                <a href="index.html" style="color: #64748b; font-size: 0.9rem; text-decoration: none;">&larr; Voltar ao site</a>
+            </div>
+            <div class="user-profile">
+                <img id="uAvatar" src="" class="user-avatar">
+                <span id="uName" style="font-size: 0.9rem;">...</span>
+                <button onclick="logout()" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold; font-size: 1.2rem;">&times;</button>
+            </div>
+        </header>
+
+        <div class="grid-tools">
+            <div class="tool-card">
+                <div class="data-label">Seu IP Público</div>
+                <div id="ip-disp" class="data-val">...</div>
+                <div id="isp-disp" style="font-size: 0.8rem; color: #64748b;">Carregando ISP...</div>
+            </div>
+            <div class="tool-card">
+                <div class="data-label">Segurança</div>
+                <div class="data-val" style="color: var(--success);">SSL Ativo</div>
+                <div style="font-size: 0.8rem; color: #64748b;">Criptografia End-to-End</div>
+            </div>
+        </div>
+
+        <div class="repo-section">
+            <h3 style="color: var(--success); margin-bottom: 0.5rem;">REPOSITÓRIO: 1-TOOLS</h3>
+            <p style="color: #cbd5e1; max-width: 600px; margin: 0 auto;">Acesso exclusivo ao Pack de Utilitários JMDC (Scripts, Drivers e Diagnósticos).</p>
+            <a href="#" class="btn-download">📂 Abrir Repositório no Drive</a>
+        </div>
+
+        <div class="iframe-container">
+            <iframe src="https://openspeedtest.com/Get-widget.php" width="100%" height="100%" frameborder="0" allow="fullscreen"></iframe>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // --- PREENCHA COM SEUS DADOS DO FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "COLE_SUA_API_KEY_AQUI",
+            authDomain: "COLE_SEU_AUTH_DOMAIN_AQUI",
+            projectId: "COLE_SEU_PROJECT_ID_AQUI",
+            storageBucket: "COLE_SEU_STORAGE_BUCKET_AQUI",
+            messagingSenderId: "COLE_SEU_MESSAGING_SENDER_ID_AQUI",
+            appId: "COLE_SEU_APP_ID_AQUI"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Elementos UI
+        const loginScreen = document.getElementById('login-screen');
+        const dashboard = document.getElementById('dashboard');
+
+        // Login
+        document.getElementById('btnLogin').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch((error) => console.error("Erro Login:", error));
+        });
+
+        // Logout
+        window.logout = () => signOut(auth).then(() => location.reload());
+
+        // Monitoramento de Auth
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Logado
+                loginScreen.style.display = 'none';
+                dashboard.style.display = 'block';
+                document.getElementById('uName').innerText = user.displayName.split(" ")[0]; // Primeiro nome
+                document.getElementById('uAvatar').src = user.photoURL;
+
+                // Salva Lead
+                await setDoc(doc(db, "leads_jmdc", user.uid), {
+                    nome: user.displayName,
+                    email: user.email,
+                    ultimo_login: serverTimestamp(),
+                    origem: "Network Tools"
+                }, { merge: true });
+
+                // Carrega Dados de Rede
+                fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
+                    document.getElementById('ip-disp').innerText = data.ip;
+                    document.getElementById('isp-disp').innerText = `${data.org} - ${data.region}`;
+                });
+
+            } else {
+                // Deslogado
+                loginScreen.style.display = 'flex';
+                dashboard.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

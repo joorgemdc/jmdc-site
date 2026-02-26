@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JMDC - Inteligência em Tecnologia, Infraestrutura e Desenvolvimento.">
+    <title>JMDC | Tecnologia e Inteligência</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <style>
+        :root {
+            --bg-color: #0a0f1d; 
+            --text-color: #e2e8f0;
+            --primary: #3b82f6;
+            --secondary: rgba(30, 41, 59, 0.8);
+            --accent: #60a5fa;
+            --success: #10b981;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; scroll-behavior: smooth; overflow-x: hidden; }
+        
+        /* CANVAS BACKGROUND */
+        #network-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        /* HEADER & LOGO */
+        header { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid rgba(59, 130, 246, 0.1); transition: all 0.4s ease; }
+        header.scrolled { padding: 0.8rem 5%; background: rgba(10, 15, 29, 0.98); border-bottom: 1px solid rgba(59, 130, 246, 0.3); }
+        
+        .logo-text { font-size: 1.8rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; text-transform: uppercase; }
+        /* Se usar imagem, descomente abaixo e comente .logo-text */
+        /* .logo-img { height: 45px; transition: 0.3s; } header.scrolled .logo-img { height: 35px; } */
+
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { font-size: 0.95rem; font-weight: 500; transition: color 0.3s; position: relative; color: #cbd5e1; }
+        .nav-links a:hover { color: var(--primary); }
+        
+        .btn-cta { background: var(--success); color: white; padding: 0.5rem 1.5rem; border-radius: 6px; font-weight: 600; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .btn-cta:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); }
+
+        /* HERO SECTION */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; position: relative; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #fff 30%, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 20px 50px rgba(0,0,0,0.5); letter-spacing: -2px; }
+        .hero p { font-size: 1.3rem; color: #94a3b8; max-width: 700px; margin-bottom: 2.5rem; }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+        /* GENERIC SECTIONS */
+        section { padding: 6rem 5%; border-bottom: 1px solid rgba(51, 65, 85, 0.2); }
+        .section-title { text-align: center; margin-bottom: 4rem; font-size: 2.2rem; color: white; }
+        
+        /* CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .card { background: rgba(30, 41, 59, 0.4); padding: 2.5rem; border-radius: 12px; border: 1px solid rgba(51, 65, 85, 0.5); transition: 0.3s; backdrop-filter: blur(5px); }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.1); }
+        .card h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.3rem; }
+        .card p { color: #94a3b8; font-size: 0.95rem; }
+
+        /* FORM */
+        .form-container { max-width: 600px; margin: 0 auto; background: rgba(15, 23, 42, 0.6); padding: 3rem; border-radius: 16px; border: 1px solid rgba(51, 65, 85, 0.5); }
+        input, textarea { width: 100%; padding: 1rem; margin-bottom: 1.5rem; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; border-radius: 8px; color: white; font-size: 1rem; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary); }
+        .btn-submit { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+        .btn-submit:hover { background: var(--accent); }
+
+        /* FOOTER & NETPROBE */
+        footer { padding: 3rem 5%; text-align: center; color: #64748b; font-size: 0.9rem; position: relative; padding-bottom: 5rem; }
+        #netprobe-widget { position: fixed; bottom: 15px; left: 15px; background: rgba(15, 23, 42, 0.95); padding: 8px 15px; border: 1px solid #334155; border-radius: 50px; font-size: 0.75rem; color: #60a5fa; backdrop-filter: blur(10px); z-index: 9999; display: flex; gap: 8px; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 2.8rem; } .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <canvas id="network-canvas"></canvas>
+
+    <header id="main-header">
+        <div class="logo-text">JMDC.</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#servicos">Expertise</a></li>
+                <li><a href="network.html" target="_blank" style="color: var(--accent);">Network Tools 🔒</a></li>
+                <li><a href="#contato">Fale com Especialista</a></li>
+            </ul>
+        </nav>
+
+        <a href="https://wa.me/5571991905429?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20sobre%20um%20projeto%20de%20tecnologia." target="_blank" class="btn-cta">
+            WhatsApp
+        </a>
+    </header>
+
+    <section class="hero">
+        <h1>Hackeando o Futuro<br>do seu Negócio.</h1>
+        <p>Infraestrutura de alta disponibilidade, desenvolvimento de software crítico e consultoria estratégica.</p>
+        <div class="hero-buttons">
+            <a href="#contato" class="btn-cta" style="background: var(--primary);">Iniciar Projeto</a>
+            <a href="network.html" class="btn-cta" style="background: transparent; border: 1px solid var(--primary); color: var(--primary);">Acessar Ferramentas</a>
+        </div>
+    </section>
+
+    <section id="servicos">
+        <h2 class="section-title">Nossa Expertise</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Infraestrutura Crítica</h3>
+                <p>Implementação de servidores, virtualização e redes complexas com foco em uptime de 99.9%.</p>
+            </div>
+            <div class="card">
+                <h3>Desenvolvimento Ágil</h3>
+                <p>Softwares sob medida, integrações de API e automação de processos comerciais.</p>
+            </div>
+            <div class="card">
+                <h3>Gestão de Redes</h3>
+                <p>Monitoramento ativo, segurança de borda (Firewall) e otimização de tráfego (QoS).</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato">
+        <h2 class="section-title">Solicitação Técnica</h2>
+        <div class="form-container">
+            <form action="https://formspree.io/f/SEU_CODIGO_FORMSPREE_AQUI" method="POST">
+                <input type="text" name="nome" placeholder="Nome do Responsável / Empresa" required>
+                <input type="tel" name="telefone" placeholder="Telefone / WhatsApp" required>
+                <textarea name="demanda" rows="5" placeholder="Descreva brevemente o desafio técnico..." required></textarea>
+                <button type="submit" class="btn-submit">Enviar para Análise</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 JMDC Tecnologia. Todos os direitos reservados.</p>
+        <p>Salvador, Bahia - Brasil.</p>
+    </footer>
+
+    <div id="netprobe-widget">
+        <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 5px #10b981;"></span>
+        <span id="user-ip">Detectando Conexão...</span>
+    </div>
+
+    <script>
+        // 1. SEGURANÇA (Anti-Cópia)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = (e) => {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) return false;
+        };
+
+        // 2. NETPROBE (IP Detection)
+        fetch('https://api.ipify.org?format=json')
+            .then(r => r.json())
+            .then(d => document.getElementById('user-ip').innerText = `IP: ${d.ip} | Seguro`)
+            .catch(() => document.getElementById('user-ip').innerText = "Monitoramento Ativo");
+
+        // 3. HEADER SCROLL
+        window.addEventListener('scroll', () => {
+            document.getElementById('main-header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // 4. CANVAS NETWORK
+        const canvas = document.getElementById('network-canvas'), ctx = canvas.getContext('2d');
+        let particles = [];
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); };
+        window.addEventListener('resize', resize);
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = '#3b82f6'; ctx.fill(); }
+        }
+
+        function init() { particles = []; for(let i=0; i<80; i++) particles.push(new Particle()); }
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach((p, index) => {
+                p.update(); p.draw();
+                for(let j=index; j<particles.length; j++){
+                    const dx = p.x - particles[j].x, dy = p.y - particles[j].y, dist = Math.hypot(dx, dy);
+                    if(dist < 100) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(59, 130, 246, ${1 - dist/100})`;
+                        ctx.lineWidth = 0.5; ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        resize(); animate();
+    </script>
+</body>
+</html>
