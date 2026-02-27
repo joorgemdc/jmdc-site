@@ -182,33 +182,59 @@
 
     <script>
 async function getNetworkData() {
-            try {
-                // 1. Força a consulta especificamente via IPv4 (api.ipify.org é IPv4-only)
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                
-                document.getElementById('ip-addr').innerText = ipData.ip;
-                document.getElementById('ip-addr').style.color = '#3b82f6'; // Azul JMDC
+            const ipElement = document.getElementById('ip-addr');
+            const ispElement = document.getElementById('isp-info');
+            
+            // Placeholders iniciais
+            let ipv4 = "Verificando v4...";
+            let ipv6 = "Verificando v6...";
 
-                // 2. Busca os dados do Provedor (ISP) e Geolocalização
-                const geoResponse = await fetch('https://ipapi.co/json/');
-                const geoData = await geoResponse.json();
-                
-                document.getElementById('isp-info').innerText = `${geoData.org} - ${geoData.region_code}`;
-                
+            try {
+                // 1. Consulta Forçada IPv4
+                const v4Req = await fetch('https://api.ipify.org?format=json');
+                if(v4Req.ok) {
+                    const v4Data = await v4Req.json();
+                    ipv4 = v4Data.ip;
+                } else { ipv4 = "IPv4 Indisponível"; }
+
+                // 2. Consulta Forçada IPv6
+                const v6Req = await fetch('https://api6.ipify.org?format=json');
+                if(v6Req.ok) {
+                    const v6Data = await v6Req.json();
+                    ipv6 = v6Data.ip;
+                } else { ipv6 = "IPv6 não detectado"; }
+
+                // 3. Atualiza o DOM formatando os dois
+                ipElement.innerHTML = `
+                    <div style="line-height: 1.1;">
+                        <span style="color: #3b82f6;">${ipv4}</span>
+                        <br>
+                        <span style="font-size: 0.65rem; color: #94a3b8; font-weight: 400; display: block; margin-top: 4px; word-break: break-all;">
+                            ${ipv6}
+                        </span>
+                    </div>
+                `;
+
+                // 4. Busca Provedor e Localização
+                const geoReq = await fetch('https://ipapi.co/json/');
+                if(geoReq.ok) {
+                    const geoData = await geoReq.json();
+                    ispElement.innerText = `${geoData.org} - ${geoData.region_code}`;
+                }
+
             } catch (error) {
-                console.error("Erro de rede:", error);
-                // Fallback caso algo falhe
-                const currentIP = document.getElementById('ip-addr').innerText;
-                if(currentIP === "Carregando..." || currentIP === "Detectando...") {
-                     document.getElementById('ip-addr').innerText = "Falha na detecção";
+                console.error("Erro no diagnóstico:", error);
+                // Fallback visual em caso de erro crítico
+                if(ipElement.innerText.includes("Carregando")) {
+                    ipElement.innerText = "Falha na detecção";
                 }
             }
         }
 
-        // Executa ao carregar
+        // Executa a função
         getNetworkData();
     </script>
 </body>
 </html>
+
 
