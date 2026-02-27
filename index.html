@@ -39,8 +39,27 @@
         }
         
         /* LOGO */
-        .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; text-transform: uppercase; text-decoration: none; }
+        .logo-link { 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none;
+        }
         
+        .logo-img { 
+            height: 45px; /* Altura fixa para não quebrar o cabeçalho */
+            width: auto;  /* Largura ajusta automaticamente */
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover { 
+            transform: scale(1.05); /* Leve zoom ao passar o mouse */
+            filter: brightness(1.1);
+        }
+        
+        /* Ajuste para Mobile (opcional, para não ficar gigante no celular) */
+        @media (max-width: 768px) {
+            .logo-img { height: 35px; }
+        }
         /* MENU DE NAVEGAÇÃO ESTILIZADO */
         .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
         
@@ -137,7 +156,9 @@
     <canvas id="network-canvas"></canvas>
 
     <header id="main-header">
-        <a href="#" class="logo-text">JMDC.</a>
+        <a href="index.html" class="logo-link">
+            <img src="logo.png" alt="JMDC Tecnologia" class="logo-img">
+        </a>
         
         <nav>
             <ul class="nav-links">
@@ -336,5 +357,6 @@
     </script>
 </body>
 </html>
+
 
 
