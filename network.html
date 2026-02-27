@@ -210,52 +210,78 @@
         </div> 
     </main>
 
-    <script>
-        // 1. IP INFO (Robustez melhorada)
+<script>
+        // 1. IP INFO (Robustez melhorada para IPv4 e IPv6)
         async function getNetworkData() {
             const ipEl = document.getElementById('ip-addr');
             let v4 = "...", v6 = "...";
+            
             try {
-                // IPv4 Force
-                try { let r4 = await fetch('https://api.ipify.org?format=json'); let d4 = await r4.json(); v4 = d4.ip; } catch(e) { v4 = "IPv4: --"; }
-                // IPv6 Force
-                try { let r6 = await fetch('https://api6.ipify.org?format=json'); let d6 = await r6.json(); v6 = d6.ip; } catch(e) { v6 = ""; }
+                // Tenta forçar IPv4
+                try { 
+                    let r4 = await fetch('https://api.ipify.org?format=json'); 
+                    let d4 = await r4.json(); 
+                    v4 = d4.ip; 
+                } catch(e) { v4 = "IPv4: --"; }
 
+                // Tenta forçar IPv6
+                try { 
+                    let r6 = await fetch('https://api6.ipify.org?format=json'); 
+                    let d6 = await r6.json(); 
+                    v6 = d6.ip; 
+                } catch(e) { v6 = ""; }
+
+                // Atualiza o HTML
                 ipEl.innerHTML = `<span style="color:#3b82f6">${v4}</span><br><span style="font-size:0.7rem; color:#94a3b8">${v6}</span>`;
                 
+                // Pega Provedor e Cidade
                 let rGeo = await fetch('https://ipapi.co/json/');
                 let dGeo = await rGeo.json();
                 document.getElementById('isp-info').innerText = `${dGeo.org} - ${dGeo.city}`;
+
             } catch(e) { console.log(e); }
         }
+        
+        // Inicia a busca de dados
         getNetworkData();
 
-        // 2. PING (HTTP Latency Check)
+
+        // 2. FUNÇÃO PING (Latência HTTP)
         async function runPing() {
             const target = document.getElementById('ping-target').value;
             const resEl = document.getElementById('ping-result');
-            resEl.innerText = "Pingando..."; resEl.style.color = "#fbbf24";
+            
+            resEl.innerText = "Pingando..."; 
+            resEl.style.color = "#fbbf24"; // Amarelo
 
             const start = performance.now();
             try {
-                // Fetch 'no-cors' permite medir tempo até de sites que bloqueiam scripts (como Google)
+                // 'no-cors' permite medir o tempo até de sites que bloqueiam scripts (como Google)
                 await fetch(`https://${target}`, { mode: 'no-cors', cache: 'no-cache' });
                 const time = (performance.now() - start).toFixed(0);
                 
                 let color = time < 100 ? '#10b981' : (time < 300 ? '#fbbf24' : '#ef4444');
                 resEl.innerHTML = `<span style="color:${color}">${time} ms</span>`;
             } catch (e) {
-                resEl.innerText = "Erro DNS/CORS"; resEl.style.color = "#ef4444";
+                resEl.innerText = "Erro DNS/CORS"; 
+                resEl.style.color = "#ef4444";
             }
         }
 
-        // 3. TRACERT (Ferramenta Externa Otimizada)
+
+        // 3. FUNÇÃO TRACERT (ATUALIZADA E CORRIGIDA)
         function runTracert() {
             const target = document.getElementById('trace-target').value;
-            if(!target) return alert("Digite um alvo!");
-            // Abre o DNSChecker que é muito superior e visual
-            window.open(`https://dnschecker.org/traceroute.php?query=${target}`, '_blank');
+            
+            if(!target) {
+                alert("Digite um alvo!");
+                return;
+            }
+            
+            // Usando KeyCDN Tools - Estável e Profissional
+            window.open('https://tools.keycdn.com/traceroute?host=' + target, '_blank');
         }
     </script>
 </body>
 </html>
+
