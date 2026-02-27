@@ -163,7 +163,130 @@
             <a href="network.html" class="btn-hero btn-outline">Acessar Ferramentas</a>
         </div>
     </section>
+<style>
+        /* Estilo 100% Transparente - Sem tarjas */
+        .stats-section { 
+            padding: 3rem 5%; 
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1); /* Linha divisória sutil */
+        }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 2rem; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            text-align: center; 
+        }
 
+        .stat-item { 
+            /* Sem background, sem borda */
+            padding: 1rem; 
+            transition: transform 0.3s; 
+        }
+        
+        .stat-item:hover { 
+            transform: translateY(-5px); /* Apenas sobe levemente ao passar o mouse */
+        }
+
+        .stat-icon { 
+            color: #10b981; /* Verde Oficial */
+            margin-bottom: 15px;
+            display: inline-flex;
+            background: rgba(16, 185, 129, 0.1); /* Brilho verde muito sutil apenas atrás do ícone */
+            padding: 12px;
+            border-radius: 50%;
+        }
+        .stat-icon svg { width: 32px; height: 32px; stroke-width: 2.5; }
+
+        .stat-number { 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            color: #ffffff; /* Branco Puro */
+            line-height: 1.1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label { 
+            color: #94a3b8; /* Cinza claro */
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 600; 
+        }
+    </style>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </div>
+                <div class="stat-number" data-target="1232">0</div>
+                <div class="stat-label">Clientes Atendidos</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                </div>
+                <div class="stat-number">+<span data-target="15">0</span></div>
+                <div class="stat-label">Anos de Experiência</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                </div>
+                <div class="stat-number"><span data-target="100">0</span>%</div>
+                <div class="stat-label">Satisfação Garantida</div>
+            </div>
+
+        </div>
+    </section>
+    ```
+
+---
+
+### PASSO 2: A Inteligência (Script)
+
+Como você restaurou o arquivo, perdeu o script que faz os números girarem.
+Vá até o **finalzão** do arquivo, **antes** de fechar a tag `</body>`, e cole este script. Se já tiver um script de canvas/animação lá, cole logo abaixo dele.
+
+```html
+    <script>
+        const counters = document.querySelectorAll('[data-target]');
+        const speed = 200; 
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 25);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        let observerStats = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    animateCounters();
+                    observerStats.disconnect(); 
+                }
+            });
+        });
+        observerStats.observe(document.querySelector('.stats-section'));
+    </script>
     <section id="expertise">
         <h2 class="section-title">Nossa Expertise</h2>
         <div class="grid">
@@ -222,3 +345,4 @@
     </script>
 </body>
 </html>
+
