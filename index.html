@@ -164,6 +164,125 @@
         </div>
     </section>
 
+    <style>
+        .stats-section { padding: 4rem 5%; background: #ffffff; text-align: center; border-bottom: 1px solid rgba(51, 65, 85, 0.1); }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+    
+        .stat-card {
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+    
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            color: #10b981;
+        }
+        .stat-icon svg { width: 32px; height: 32px; stroke-width: 2; }
+    
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+    
+    <section class="stats-section">
+        <div class="stats-grid">
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </div>
+                <div class="stat-number" data-target="1232">0</div>
+                <div class="stat-label">Clientes Atendidos</div>
+            </div>
+    
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                </div>
+                <div class="stat-number">
+                    +<span data-target="15">0</span>
+                </div>
+                <div class="stat-label">Anos de Experiência</div>
+            </div>
+    
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                </div>
+                <div class="stat-number">
+                    <span data-target="100">0</span>%
+                </div>
+                <div class="stat-label">Satisfação Garantida</div>
+            </div>
+    
+        </div>
+    </section>
+    
+    <script>
+        // Lógica para animar os números apenas quando aparecerem na tela
+        const counters = document.querySelectorAll('[data-target]');
+        const speed = 200; 
+    
+        const animate = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+    
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+    
+        let observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    animate();
+                    observer.disconnect(); 
+                }
+            });
+        });
+        observer.observe(document.querySelector('.stats-section'));
+    </script>
+    ```
+
     <section id="expertise">
         <h2 class="section-title">Nossa Expertise</h2>
         <div class="grid">
@@ -222,4 +341,5 @@
     </script>
 </body>
 </html>
+
 
