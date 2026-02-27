@@ -3,148 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JMDC | Network Diagnostic & Tools</title>
+    <title>JMDC | Network Tools</title>
     <style>
-        :root { --bg: #0a0f1d; --card: #1e293b; --primary: #3b82f6; --text: #e2e8f0; --success: #10b981; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; }
-        
-        /* LOGIN SCREEN */
-        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100%; position: absolute; background: var(--bg); z-index: 10; }
-        .btn-google { background: white; color: #333; padding: 12px 24px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .btn-google:hover { transform: translateY(-2px); }
+        /* RESET BÁSICO */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
 
-        /* DASHBOARD */
-        #dashboard { display: none; width: 90%; max-width: 1000px; padding: 2rem 0; animation: fadeIn 0.5s; }
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #334155; padding-bottom: 1rem; }
-        .user-profile { display: flex; align-items: center; gap: 15px; background: rgba(30, 41, 59, 0.5); padding: 5px 15px; border-radius: 50px; border: 1px solid #334155; }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; }
+        body {
+            background-color: #0f172a; /* Fundo Escuro Azulado */
+            color: #f1f5f9; /* Texto Claro */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* TOOLS GRID */
-        .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .tool-card { background: var(--card); padding: 1.5rem; border-radius: 12px; border: 1px solid #334155; }
-        .data-val { font-size: 1.8rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0; }
-        .data-label { color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        /* HEADER */
+        header {
+            background: #1e293b;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-        /* 1-TOOLS SECTION */
-        .repo-section { background: rgba(16, 185, 129, 0.05); border: 1px solid var(--success); border-radius: 12px; padding: 2rem; margin-top: 2rem; text-align: center; }
-        .btn-download { display: inline-block; background: var(--success); color: white; padding: 0.8rem 2rem; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 1rem; transition: 0.3s; }
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #3b82f6; /* Azul Vibrante */
+            letter-spacing: 1px;
+        }
+
+        .btn-back {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+        .btn-back:hover { background: #334155; color: white; }
+
+        /* MAIN CONTENT */
+        main {
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 300; }
+        h1 strong { font-weight: 800; color: #3b82f6; }
+        p.subtitle { color: #94a3b8; margin-bottom: 3rem; }
+
+        /* GRID SYSTEM */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* CARDS */
+        .card {
+            background: #1e293b; /* Card Cinza Escuro */
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.2s;
+            position: relative;
+        }
+        .card:hover { transform: translateY(-5px); border-color: #3b82f6; }
+
+        /* ÍCONES */
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: #3b82f6;
+        }
+        /* Garantindo que o SVG apareça */
+        .icon-circle svg { width: 28px; height: 28px; stroke-width: 2; stroke: currentColor; fill: none; }
+
+        .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; font-weight: 700; margin-bottom: 5px; }
+        .value { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 5px; word-break: break-all; }
+        .footer { font-size: 0.85rem; color: #10b981; display: flex; align-items: center; gap: 5px; }
+
+        /* DESTAQUE 1-TOOLS */
+        .card.highlight {
+            background: linear-gradient(135deg, #064e3b 0%, #1e293b 100%);
+            border-color: #10b981;
+        }
+        .card.highlight .icon-circle { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .btn-download {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
         .btn-download:hover { background: #059669; }
 
         /* IFRAME SPEEDTEST */
-        .iframe-container { height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid #334155; margin-top: 2rem; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .speedtest-box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        iframe { width: 100%; height: 450px; border: none; border-radius: 8px; background: #000; }
+
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <h1 style="color: var(--primary); margin-bottom: 0.5rem;">JMDC Access</h1>
-        <p style="color: #64748b; margin-bottom: 2rem;">Ambiente restrito. Identifique-se.</p>
-        <button id="btnLogin" class="btn-google">
-            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.715H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.159 6.656 3.58 9 3.58z"/></svg>
-            Entrar com Google
-        </button>
-    </div>
+    <header>
+        <div class="brand">JMDC.NET</div>
+        <a href="index.html" class="btn-back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Voltar
+        </a>
+    </header>
 
-    <div id="dashboard">
-        <header class="dash-header">
-            <div>
-                <h2>Diagnóstico de Rede</h2>
-                <a href="index.html" style="color: #64748b; font-size: 0.9rem; text-decoration: none;">&larr; Voltar ao site</a>
-            </div>
-            <div class="user-profile">
-                <img id="uAvatar" src="" class="user-avatar">
-                <span id="uName" style="font-size: 0.9rem;">...</span>
-                <button onclick="logout()" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold; font-size: 1.2rem;">&times;</button>
-            </div>
-        </header>
+    <main>
+        <h1>Painel <strong>Técnico</strong></h1>
+        <p class="subtitle">Diagnóstico de Rede e Repositório de Arquivos.</p>
 
-        <div class="grid-tools">
-            <div class="tool-card">
-                <div class="data-label">Seu IP Público</div>
-                <div id="ip-disp" class="data-val">...</div>
-                <div id="isp-disp" style="font-size: 0.8rem; color: #64748b;">Carregando ISP...</div>
+        <div class="grid">
+            <div class="card">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <div class="label">IP Público</div>
+                <div id="ip-addr" class="value">Carregando...</div>
+                <div class="footer">IPv4 Detectado</div>
             </div>
-            <div class="tool-card">
-                <div class="data-label">Segurança</div>
-                <div class="data-val" style="color: var(--success);">SSL Ativo</div>
-                <div style="font-size: 0.8rem; color: #64748b;">Criptografia End-to-End</div>
+
+            <div class="card">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div class="label">Provedor & Rota</div>
+                <div id="isp-info" class="value">Analisando...</div>
+                <div class="footer">Geolocalização Ativa</div>
+            </div>
+
+            <div class="card highlight">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </div>
+                <div class="label" style="color: #a7f3d0;">Repositório Oficial</div>
+                <div class="value">Pasta: 1-TOOLS</div>
+                <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:10px;">Drivers e Scripts JMDC.</div>
+                <a href="#" class="btn-download">Acessar Drive &rarr;</a>
             </div>
         </div>
 
-        <div class="repo-section">
-            <h3 style="color: var(--success); margin-bottom: 0.5rem;">REPOSITÓRIO: 1-TOOLS</h3>
-            <p style="color: #cbd5e1; max-width: 600px; margin: 0 auto;">Acesso exclusivo ao Pack de Utilitários JMDC (Scripts, Drivers e Diagnósticos).</p>
-            <a href="#" class="btn-download">📂 Abrir Repositório no Drive</a>
+        <div class="speedtest-box">
+            <h3 style="margin-bottom: 15px; font-weight: 300; font-size: 1.5rem;">Teste de Velocidade</h3>
+            <iframe src="https://openspeedtest.com/Get-widget.php"></iframe>
         </div>
 
-        <div class="iframe-container">
-            <iframe src="https://openspeedtest.com/Get-widget.php" width="100%" height="100%" frameborder="0" allow="fullscreen"></iframe>
-        </div>
-    </div>
+    </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-        // --- PREENCHA COM SEUS DADOS DO FIREBASE ---
-        const firebaseConfig = {
-            apiKey: "COLE_SUA_API_KEY_AQUI",
-            authDomain: "COLE_SEU_AUTH_DOMAIN_AQUI",
-            projectId: "COLE_SEU_PROJECT_ID_AQUI",
-            storageBucket: "COLE_SEU_STORAGE_BUCKET_AQUI",
-            messagingSenderId: "COLE_SEU_MESSAGING_SENDER_ID_AQUI",
-            appId: "COLE_SEU_APP_ID_AQUI"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
-
-        // Elementos UI
-        const loginScreen = document.getElementById('login-screen');
-        const dashboard = document.getElementById('dashboard');
-
-        // Login
-        document.getElementById('btnLogin').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch((error) => console.error("Erro Login:", error));
-        });
-
-        // Logout
-        window.logout = () => signOut(auth).then(() => location.reload());
-
-        // Monitoramento de Auth
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Logado
-                loginScreen.style.display = 'none';
-                dashboard.style.display = 'block';
-                document.getElementById('uName').innerText = user.displayName.split(" ")[0]; // Primeiro nome
-                document.getElementById('uAvatar').src = user.photoURL;
-
-                // Salva Lead
-                await setDoc(doc(db, "leads_jmdc", user.uid), {
-                    nome: user.displayName,
-                    email: user.email,
-                    ultimo_login: serverTimestamp(),
-                    origem: "Network Tools"
-                }, { merge: true });
-
-                // Carrega Dados de Rede
-                fetch('https://ipapi.co/json/').then(r => r.json()).then(data => {
-                    document.getElementById('ip-disp').innerText = data.ip;
-                    document.getElementById('isp-disp').innerText = `${data.org} - ${data.region}`;
-                });
-
-            } else {
-                // Deslogado
-                loginScreen.style.display = 'flex';
-                dashboard.style.display = 'none';
+    <script>
+        // Script simples e robusto para pegar o IP
+        // Se falhar, ele mostra uma mensagem amigável em vez de travar
+        async function getNetworkData() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                if (!response.ok) throw new Error('Falha na rede');
+                const data = await response.json();
+                
+                document.getElementById('ip-addr').innerText = data.ip;
+                document.getElementById('ip-addr').style.color = '#60a5fa'; // Azul quando carrega
+                document.getElementById('isp-info').innerText = `${data.org} - ${data.region_code}`;
+            } catch (error) {
+                console.error("Erro ao buscar IP:", error);
+                document.getElementById('ip-addr').innerText = "Modo Offline";
+                document.getElementById('isp-info').innerText = "Verifique a conexão";
             }
-        });
+        }
+
+        // Executa ao carregar a página
+        getNetworkData();
     </script>
 </body>
 </html>
