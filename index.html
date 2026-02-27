@@ -7,6 +7,7 @@
     <title>JMDC | Tecnologia e Inteligência</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
+    
     <style>
         :root {
             --bg-color: #0a0f1d; 
@@ -41,7 +42,7 @@
         /* LOGO */
         .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; text-transform: uppercase; text-decoration: none; }
         
-        /* MENU DE NAVEGAÇÃO ESTILIZADO */
+        /* MENU DE NAVEGAÇÃO */
         .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
         
         .nav-links a { 
@@ -54,7 +55,6 @@
             padding-bottom: 5px;
         }
 
-        /* Efeito de linha animada embaixo dos links */
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -68,11 +68,11 @@
         .nav-links a:hover { color: white; }
         .nav-links a:hover::after { width: 100%; }
 
-        /* Estilo especial para o item bloqueado */
+        /* ITEM BLOQUEADO */
         .nav-locked { color: var(--accent) !important; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .nav-locked:hover { text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
 
-        /* BOTÃO WHATSAPP PREMIUM */
+        /* BOTÃO WHATSAPP */
         .btn-whatsapp { 
             background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
             color: white; 
@@ -106,70 +106,12 @@
         .btn-outline { border: 1px solid var(--primary); color: var(--primary); }
         .btn-outline:hover { background: rgba(59, 130, 246, 0.1); }
 
-        /* SECTIONS */
-        section { padding: 5rem 5%; border-bottom: 1px solid rgba(51, 65, 85, 0.2); }
-        .section-title { text-align: center; margin-bottom: 3rem; font-size: 2rem; color: white; }
-        
-        /* GRID DE SERVIÇOS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .card { background: rgba(30, 41, 59, 0.4); padding: 2rem; border-radius: 12px; border: 1px solid rgba(51, 65, 85, 0.5); transition: 0.3s; }
-        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
-        .card h3 { color: var(--accent); margin-bottom: 0.5rem; }
-        .card p { color: #94a3b8; font-size: 0.9rem; }
-
-        /* FORM */
-        .form-container { max-width: 600px; margin: 0 auto; background: rgba(15, 23, 42, 0.6); padding: 2rem; border-radius: 12px; border: 1px solid rgba(51, 65, 85, 0.5); }
-        input, textarea { width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; border-radius: 6px; color: white; }
-        .btn-submit { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
-        /* FOOTER */
-        footer { padding: 2rem 5%; text-align: center; color: #64748b; font-size: 0.8rem; }
-
-        @media (max-width: 768px) { 
-            .hero h1 { font-size: 2.5rem; } 
-            .nav-links { display: none; } /* Em mobile, simplificamos escondendo o menu por enquanto */
-            .btn-whatsapp { padding: 0.5rem 1rem; font-size: 0.9rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <canvas id="network-canvas"></canvas>
-
-    <header id="main-header">
-        <a href="#" class="logo-text">JMDC.</a>
-        
-        <nav>
-            <ul class="nav-links">
-                <li><a href="#expertise">Expertise</a></li>
-                <li><a href="network.html" class="nav-locked">1-Tools 🔒</a></li>
-                <li><a href="#contato">Contato</a></li>
-            </ul>
-        </nav>
-
-        <a href="https://wa.me/5571991905429?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="btn-whatsapp">
-            <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-            </svg>
-            Fale com o Especialista pelo WhatsApp
-        </a>
-    </header>
-
-    <section class="hero">
-        <h1>Inteligência Técnica<br>para Negócios Complexos.</h1>
-        <p>Desenvolvimento de Site, Gerenciamento de infraestrutura crítica e consultoria especializada. A tecnologia a serviço da sua performance.</p>
-        <div class="hero-buttons">
-            <a href="#contato" class="btn-hero btn-primary">Iniciar Projeto</a>
-            <a href="network.html" class="btn-hero btn-outline">Acessar Ferramentas</a>
-        </div>
-    </section>
-<style>
-        /* MUDANÇA PRINCIPAL: Fundo transparente e Texto Claro */
+        /* --- ESTILOS DOS CONTADORES (STATS) --- */
         .stats-section { 
             padding: 4rem 5%; 
             background: transparent; /* Fundo transparente */
             text-align: center; 
-            border-bottom: 1px solid rgba(51, 65, 85, 0.3); /* Linha sutil */
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
         }
         
         .stats-grid { 
@@ -179,112 +121,14 @@
             max-width: 1200px; 
             margin: 0 auto; 
         }
-    
+
         .stat-card {
             padding: 2rem;
-            /* Fundo escuro com transparência (Glassmorphism) */
-            background: rgba(30, 41, 59, 0.4); 
+            background: rgba(30, 41, 59, 0.4); /* Glassmorphism */
             border-radius: 12px;
             border: 1px solid rgba(51, 65, 85, 0.5);
             transition: transform 0.3s, box-shadow 0.3s;
             backdrop-filter: blur(5px);
         }
         
-        .stat-card:hover { 
-            transform: translateY(-5px); 
-            border-color: #3b82f6; 
-            box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.15); 
-        }
-    
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem auto;
-            color: #10b981;
-        }
-        .stat-icon svg { width: 32px; height: 32px; stroke-width: 2; }
-    
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #f1f5f9; /* Texto agora é BRANCO para contraste */
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            color: #94a3b8; /* Cinza claro */
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-    </style>
-    
-    <section id="expertise">
-        <h2 class="section-title">Nossa Expertise</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>Infraestrutura</h3>
-                <p>Redes de alta disponibilidade, servidores e virtualização.</p>
-            </div>
-            <div class="card">
-                <h3>Desenvolvimento</h3>
-                <p>Sistemas web, automação e integração de APIs.</p>
-            </div>
-            <div class="card">
-                <h3>Consultoria</h3>
-                <p>Auditoria de segurança e redução de custos operacionais.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="contato">
-        <h2 class="section-title">Fale Conosco</h2>
-        <div class="form-container">
-            <form action="https://formspree.io/f/SEU_CODIGO_AQUI" method="POST">
-                <input type="text" name="nome" placeholder="Nome" required>
-                <input type="tel" name="telefone" placeholder="Telefone" required>
-                <textarea name="mensagem" rows="4" placeholder="Como podemos ajudar?" required></textarea>
-                <button type="submit" class="btn-submit">Enviar</button>
-            </form>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2026 JMDC Tecnologia. Salvador, Bahia.</p>
-    </footer>
-
-    <script>
-        // Background Canvas Simples
-        const canvas = document.getElementById('network-canvas'), ctx = canvas.getContext('2d');
-        let w, h, particles = [];
-        const resize = () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; };
-        window.addEventListener('resize', resize); resize();
-        
-        function init(){ particles=[]; for(let i=0;i<50;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
-        function animate(){ 
-            ctx.clearRect(0,0,w,h); 
-            particles.forEach((p,i)=>{
-                p.x+=p.vx; p.y+=p.vy; 
-                if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
-                ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle='#3b82f6'; ctx.fill();
-                for(let j=i;j<particles.length;j++){
-                    let dx=p.x-particles[j].x, dy=p.y-particles[j].y, d=Math.hypot(dx,dy);
-                    if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(59,130,246,${1-d/100})`;ctx.lineWidth=0.5;ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
-                }
-            }); requestAnimationFrame(animate);
-        }
-        init(); animate();
-    </script>
-</body>
-</html>
-
-
-
-
+        .stat-card:hover
