@@ -32,21 +32,19 @@
         h1 strong { font-weight: 800; color: var(--primary); }
         p.subtitle { color: var(--muted); margin-bottom: 2rem; }
 
-        /* --- GRID SYSTEM REFORMULADO (O SEGREDO DO ALINHAMENTO) --- */
+        /* GRID SYSTEM (Alinhamento Rigoroso) */
         .grid-container {
             display: grid;
-            /* Cria 4 colunas iguais em telas grandes */
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr); /* 4 Colunas Iguais */
             gap: 20px;
             margin-bottom: 20px;
         }
 
-        /* Classes para controlar o tamanho dos cards */
-        .span-1 { grid-column: span 1; } /* Ocupa 1 espaço */
-        .span-2 { grid-column: span 2; } /* Ocupa 2 espaços (Metade) */
-        .span-4 { grid-column: span 4; } /* Ocupa tudo (Full Width) */
+        .span-1 { grid-column: span 1; }
+        .span-2 { grid-column: span 2; }
+        .span-4 { grid-column: span 4; }
 
-        /* CARD DESIGN PADRONIZADO */
+        /* CARD DESIGN */
         .card {
             background: var(--card); border: 1px solid #334155; border-radius: 12px; padding: 20px;
             display: flex; flex-direction: column; justify-content: space-between; height: 100%;
@@ -54,28 +52,28 @@
         }
         .card:hover { transform: translateY(-3px); border-color: var(--primary); }
 
-        /* Estilos Internos dos Cards */
         .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         .icon-box { width: 36px; height: 36px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
         .icon-box svg { width: 20px; height: 20px; }
         
         .card-title { font-size: 0.85rem; text-transform: uppercase; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; }
-        .card-value { font-size: 1.2rem; font-weight: 700; color: white; word-break: break-all; }
+        .card-value { font-size: 1.1rem; font-weight: 700; color: white; word-break: break-all; line-height: 1.3; }
         .card-footer { font-size: 0.75rem; color: var(--success); margin-top: 5px; }
 
-        /* INPUTS PARA PING/TRACERT */
-        .tool-input-group { display: flex; gap: 5px; margin-top: 10px; }
+        /* INPUTS */
+        .tool-input-group { display: flex; gap: 5px; margin-top: auto; }
         .tool-input { background: rgba(0,0,0,0.2); border: 1px solid #334155; color: white; padding: 8px; border-radius: 4px; width: 100%; font-size: 0.9rem; }
-        .btn-action { background: var(--primary); color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; transition: 0.3s; font-weight: bold; }
         .btn-action:hover { background: var(--accent); }
 
-        /* ESTILO LISTA REPOSITÓRIO */
+        /* REPOSITÓRIO */
         .file-list { list-style: none; margin-top: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
         .file-list::-webkit-scrollbar { width: 5px; }
         .file-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .file-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .file-name { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .btn-dl-mini { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.2); transition: 0.2s; }
+        .file-name { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; color: #f1f5f9; }
+        .file-desc { display: block; font-size: 0.75rem; color: #64748b; font-weight: normal; }
+        .btn-dl-mini { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.2); transition: 0.2s; white-space: nowrap; }
         .btn-dl-mini:hover { background: var(--success); color: white; }
 
         /* SPEEDTEST */
@@ -83,11 +81,10 @@
         iframe { width: 100%; height: 100%; border: none; background: #000; }
 
         /* RESPONSIVIDADE */
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .grid-container { grid-template-columns: repeat(2, 1fr); }
             .span-1 { grid-column: span 1; }
-            .span-2 { grid-column: span 2; }
-            .span-4 { grid-column: span 2; } /* Ajusta full width para mobile */
+            .span-2, .span-4 { grid-column: span 2; }
         }
         @media (max-width: 600px) {
             .grid-container { grid-template-columns: 1fr; }
@@ -107,7 +104,7 @@
 
     <main>
         <h1>Painel <strong>Técnico</strong></h1>
-        <p class="subtitle">Diagnóstico em tempo real e utilitários.</p>
+        <p class="subtitle">Diagnóstico avançado e downloads.</p>
 
         <div class="grid-container">
             
@@ -117,7 +114,7 @@
                         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
                         <div class="card-title">IP Público</div>
                     </div>
-                    <div id="ip-addr" class="card-value" style="color: var(--primary); font-size: 1.1rem;">Carregando...</div>
+                    <div id="ip-addr" class="card-value" style="color: var(--primary);">Carregando...</div>
                 </div>
                 <div class="card-footer">Dual Stack (v4/v6)</div>
             </div>
@@ -137,13 +134,13 @@
                 <div>
                     <div class="card-header">
                         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
-                        <div class="card-title">Latência (Ping)</div>
+                        <div class="card-title">Ping (HTTP)</div>
                     </div>
-                    <div class="tool-input-group">
-                        <input type="text" id="ping-target" class="tool-input" value="google.com" placeholder="Domínio">
-                        <button onclick="runPing()" class="btn-action">Go</button>
-                    </div>
-                    <div id="ping-result" style="margin-top: 10px; font-weight: bold; font-size: 0.9rem;">Aguardando...</div>
+                    <div id="ping-result" style="font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">--- ms</div>
+                </div>
+                <div class="tool-input-group">
+                    <input type="text" id="ping-target" class="tool-input" value="google.com" placeholder="Domínio">
+                    <button onclick="runPing()" class="btn-action">Go</button>
                 </div>
             </div>
 
@@ -151,54 +148,57 @@
                 <div>
                     <div class="card-header">
                         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
-                        <div class="card-title">Rota (Tracert)</div>
+                        <div class="card-title">Trace Route</div>
                     </div>
-                    <div class="tool-input-group">
-                        <input type="text" id="trace-target" class="tool-input" value="8.8.8.8" placeholder="IP/Domínio">
-                        <button onclick="runTracert()" class="btn-action">Go</button>
+                    <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">
+                        Mapeamento visual de rota via <strong>DNSChecker</strong>.
                     </div>
-                    <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 5px;">*Abre ferramenta externa</div>
+                </div>
+                <div class="tool-input-group">
+                    <input type="text" id="trace-target" class="tool-input" value="8.8.8.8" placeholder="IP/Domínio">
+                    <button onclick="runTracert()" class="btn-action">Go</button>
                 </div>
             </div>
 
             <div class="card span-4" style="border-color: var(--success);">
                 <div class="card-header">
                     <div class="icon-box" style="background: rgba(16,185,129,0.1); color: var(--success);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
-                    <div class="card-title" style="color: var(--success);">Repositório de Ferramentas (/ferramentas)</div>
+                    <div class="card-title" style="color: var(--success);">Repositório Oficial (/ferramentas)</div>
                 </div>
                 
                 <ul class="file-list">
                     <li class="file-item">
-                        <span class="file-name">📄 AnyDesk.exe</span>
+                        <div><span class="file-name">📄 AnyDesk.exe</span><span class="file-desc">Acesso Remoto</span></div>
                         <a href="ferramentas/AnyDesk.exe" class="btn-dl-mini" download>⬇ Baixar</a>
                     </li>
                     <li class="file-item">
-                        <span class="file-name">⚙️ CONFIGURAR IP.bat</span>
+                        <div><span class="file-name">⚙️ CONFIGURAR IP.bat</span><span class="file-desc">Script de Rede</span></div>
                         <a href="ferramentas/CONFIGURAR IP.bat" class="btn-dl-mini" download>⬇ Baixar</a>
                     </li>
                     <li class="file-item">
-                        <span class="file-name">📡 IP SCAN.exe</span>
+                        <div><span class="file-name">📡 IP SCAN.exe</span><span class="file-desc">Scanner LAN</span></div>
                         <a href="ferramentas/IP SCAN.exe" class="btn-dl-mini" download>⬇ Baixar</a>
                     </li>
                     <li class="file-item">
-                        <span class="file-name">💻 putty.exe</span>
+                        <div><span class="file-name">💻 putty.exe</span><span class="file-desc">Cliente SSH</span></div>
                         <a href="ferramentas/putty.exe" class="btn-dl-mini" download>⬇ Baixar</a>
                     </li>
                     <li class="file-item">
-                        <span class="file-name">📦 7ZIP / WinRAR</span>
-                        <div>
+                        <div><span class="file-name">📦 7ZIP / WinRAR</span><span class="file-desc">Compactadores</span></div>
+                        <div style="display:flex; gap:5px;">
                              <a href="ferramentas/7ZIP.exe" class="btn-dl-mini">7Z</a>
                              <a href="ferramentas/7WINRAR.exe" class="btn-dl-mini">RAR</a>
                         </div>
                     </li>
                      <li class="file-item">
-                        <span class="file-name">🌐 Chrome / Office</span>
-                        <div>
+                        <div><span class="file-name">🌐 Chrome / Office</span><span class="file-desc">Instaladores Offline</span></div>
+                        <div style="display:flex; gap:5px;">
                              <a href="ferramentas/ChromeSetup.exe" class="btn-dl-mini">Chrome</a>
                              <a href="ferramentas/OfficeSetup.exe" class="btn-dl-mini">Office</a>
                         </div>
                     </li>
                 </ul>
+                <div style="margin-top:10px; text-align:center;"><a href="https://github.com/joorgemdc/jmdc-site/tree/main/ferramentas" target="_blank" style="color:#10b981; font-size:0.8rem;">Ver Pasta Completa</a></div>
             </div>
 
             <div class="card span-4" style="padding: 0; border: none; background: transparent;">
@@ -207,69 +207,54 @@
                 </div>
             </div>
 
-        </div> </main>
+        </div> 
+    </main>
 
     <script>
-        // 1. IP INFO (v4 e v6)
+        // 1. IP INFO (Robustez melhorada)
         async function getNetworkData() {
             const ipEl = document.getElementById('ip-addr');
             let v4 = "...", v6 = "...";
-            
             try {
-                // Tenta v4
-                try {
-                    let r4 = await fetch('https://api.ipify.org?format=json');
-                    let d4 = await r4.json();
-                    v4 = d4.ip;
-                } catch(e) { v4 = "v4 off"; }
-
-                // Tenta v6
-                try {
-                    let r6 = await fetch('https://api6.ipify.org?format=json');
-                    let d6 = await r6.json();
-                    v6 = d6.ip;
-                } catch(e) { v6 = ""; }
+                // IPv4 Force
+                try { let r4 = await fetch('https://api.ipify.org?format=json'); let d4 = await r4.json(); v4 = d4.ip; } catch(e) { v4 = "IPv4: --"; }
+                // IPv6 Force
+                try { let r6 = await fetch('https://api6.ipify.org?format=json'); let d6 = await r6.json(); v6 = d6.ip; } catch(e) { v6 = ""; }
 
                 ipEl.innerHTML = `<span style="color:#3b82f6">${v4}</span><br><span style="font-size:0.7rem; color:#94a3b8">${v6}</span>`;
                 
-                // ISP Info
                 let rGeo = await fetch('https://ipapi.co/json/');
                 let dGeo = await rGeo.json();
                 document.getElementById('isp-info').innerText = `${dGeo.org} - ${dGeo.city}`;
-
             } catch(e) { console.log(e); }
         }
         getNetworkData();
 
-        // 2. FUNÇÃO PING (Simulação via HTTP Fetch)
+        // 2. PING (HTTP Latency Check)
         async function runPing() {
             const target = document.getElementById('ping-target').value;
             const resEl = document.getElementById('ping-result');
-            resEl.innerText = "Pingando...";
-            resEl.style.color = "#94a3b8";
+            resEl.innerText = "Pingando..."; resEl.style.color = "#fbbf24";
 
-            const start = new Date().getTime();
+            const start = performance.now();
             try {
-                // Tenta carregar uma imagem ou recurso do domínio (modo cors) ou fallback
-                // Nota: Ping real via browser é bloqueado. Usamos o tempo de resposta HTTP.
-                // Usamos 'no-cors' para permitir requisição opaca, medindo apenas o tempo.
+                // Fetch 'no-cors' permite medir tempo até de sites que bloqueiam scripts (como Google)
                 await fetch(`https://${target}`, { mode: 'no-cors', cache: 'no-cache' });
-                const end = new Date().getTime();
-                const time = end - start;
+                const time = (performance.now() - start).toFixed(0);
                 
                 let color = time < 100 ? '#10b981' : (time < 300 ? '#fbbf24' : '#ef4444');
-                resEl.innerHTML = `Tempo: <span style="color:${color}">${time}ms</span> (HTTP)`;
+                resEl.innerHTML = `<span style="color:${color}">${time} ms</span>`;
             } catch (e) {
-                resEl.innerText = "Erro/Bloqueio (CORS)";
-                resEl.style.color = "#ef4444";
+                resEl.innerText = "Erro DNS/CORS"; resEl.style.color = "#ef4444";
             }
         }
 
-        // 3. FUNÇÃO TRACERT (Link Externo)
+        // 3. TRACERT (Ferramenta Externa Otimizada)
         function runTracert() {
             const target = document.getElementById('trace-target').value;
-            // Abre uma ferramenta confiável em nova aba
-            window.open(`https://api.hackertarget.com/mtr/?q=${target}`, '_blank');
+            if(!target) return alert("Digite um alvo!");
+            // Abre o DNSChecker que é muito superior e visual
+            window.open(`https://dnschecker.org/traceroute.php?query=${target}`, '_blank');
         }
     </script>
 </body>
