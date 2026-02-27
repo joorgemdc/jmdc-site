@@ -163,15 +163,111 @@
             </div>
 
             <div class="card highlight">
-                <div class="icon-circle">
-                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <div class="header-repo">
+                    <div class="icon-circle">
+                        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="label" style="color: #a7f3d0;">Repositório Oficial</div>
+                        <div class="value">/ferramentas</div>
+                    </div>
                 </div>
-                <div class="label" style="color: #a7f3d0;">Repositório Oficial</div>
-                <div class="value">Pasta: 1-TOOLS</div>
-                <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:10px;">Drivers e Scripts JMDC.</div>
-                <a href="#" class="btn-download">Acessar Drive &rarr;</a>
+
+                <style>
+                    /* Estilo Exclusivo para a Lista de Arquivos */
+                    .file-list { list-style: none; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+                    .file-item { 
+                        display: flex; 
+                        justify-content: space-between; 
+                        align-items: center; 
+                        padding: 12px 0; 
+                        border-bottom: 1px solid rgba(255,255,255,0.05); 
+                        transition: 0.2s;
+                    }
+                    .file-item:hover { background: rgba(255,255,255,0.05); padding-left: 10px; padding-right: 10px; border-radius: 6px; }
+                    
+                    .file-info { display: flex; flex-direction: column; }
+                    .file-name { color: #f1f5f9; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+                    .file-desc { color: #94a3b8; font-size: 0.8rem; margin-top: 2px; }
+                    
+                    .btn-dl-mini {
+                        background: rgba(16, 185, 129, 0.1); 
+                        color: #10b981; 
+                        padding: 6px 12px; 
+                        border-radius: 4px; 
+                        text-decoration: none; 
+                        font-size: 0.8rem; 
+                        font-weight: bold;
+                        border: 1px solid rgba(16, 185, 129, 0.2);
+                        transition: 0.3s;
+                        white-space: nowrap;
+                    }
+                    .btn-dl-mini:hover { background: #10b981; color: white; }
+                    .header-repo { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+                </style>
+
+                <ul class="file-list">
+                    
+                    <li class="file-item">
+                        <div class="file-info">
+                            <span class="file-name">📄 AnyDesk.exe</span>
+                            <span class="file-desc">Acesso Remoto Rápido</span>
+                        </div>
+                        <a href="ferramentas/AnyDesk.exe" class="btn-dl-mini" download>⬇ Baixar</a>
+                    </li>
+
+                    <li class="file-item">
+                        <div class="file-info">
+                            <span class="file-name">⚙️ CONFIGURAR IP.bat</span>
+                            <span class="file-desc">Script de Automação de Rede</span>
+                        </div>
+                        <a href="ferramentas/CONFIGURAR IP.bat" class="btn-dl-mini" download>⬇ Baixar</a>
+                    </li>
+
+                    <li class="file-item">
+                        <div class="file-info">
+                            <span class="file-name">📡 IP SCAN.exe</span>
+                            <span class="file-desc">Scanner de IPs na LAN</span>
+                        </div>
+                        <a href="ferramentas/IP SCAN.exe" class="btn-dl-mini" download>⬇ Baixar</a>
+                    </li>
+
+                    <li class="file-item">
+                        <div class="file-info">
+                            <span class="file-name">💻 putty.exe</span>
+                            <span class="file-desc">Cliente SSH e Telnet</span>
+                        </div>
+                        <a href="ferramentas/putty.exe" class="btn-dl-mini" download>⬇ Baixar</a>
+                    </li>
+
+                    <li class="file-item">
+                        <div class="file-info">
+                            <span class="file-name">📦 7ZIP / WinRAR</span>
+                            <span class="file-desc">Compactadores Essenciais</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <a href="ferramentas/7ZIP.exe" class="btn-dl-mini" title="Baixar 7Zip">7Z</a>
+                            <a href="ferramentas/7WINRAR.exe" class="btn-dl-mini" title="Baixar WinRAR">RAR</a>
+                        </div>
+                    </li>
+
+                    <li class="file-item">
+                        <div class="file-info">
+                            <span class="file-name">🌐 Chrome & Office</span>
+                            <span class="file-desc">Instaladores Offline</span>
+                        </div>
+                         <div style="display: flex; gap: 5px;">
+                            <a href="ferramentas/ChromeSetup.exe" class="btn-dl-mini">Chrome</a>
+                            <a href="ferramentas/OfficeSetup.exe" class="btn-dl-mini">Office</a>
+                        </div>
+                    </li>
+
+                </ul>
+                
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="https://github.com/joorgemdc/jmdc-site/tree/main/ferramentas" target="_blank" style="color: #a7f3d0; font-size: 0.85rem; text-decoration: none;">Ver todos no GitHub &rarr;</a>
+                </div>
             </div>
-        </div>
 
         <div class="speedtest-box">
             <h3 style="margin-bottom: 15px; font-weight: 300; font-size: 1.5rem;">Teste de Velocidade</h3>
@@ -236,5 +332,6 @@ async function getNetworkData() {
     </script>
 </body>
 </html>
+
 
 
