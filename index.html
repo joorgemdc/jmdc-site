@@ -320,7 +320,8 @@
     <section id="contato">
         <h2 class="section-title">Fale Conosco</h2>
         <div class="form-container">
-            <form action="https://formspree.io/f/mvzbyaky" method="POST">
+            <div class="form-container">
+            <form id="contact-form">
                 
                 <h3 style="color: white; margin-bottom: 20px; text-align: center;">Envie sua mensagem</h3>
 
@@ -331,14 +332,63 @@
                 <input type="email" name="email" placeholder="Seu E-mail" required style="background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; color: white;">
 
                 <textarea name="message" rows="4" placeholder="Como podemos ajudar?" required style="background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; color: white;"></textarea>
-
-                <input type="hidden" name="_next" value="https://joorgemdc.github.io/jmdc-site/obrigado.html">
                 
                 <input type="hidden" name="_subject" value="Novo Lead via Site JMDC!">
 
-                <button type="submit" class="btn-submit">Enviar Solicitação</button>
+                <button type="submit" class="btn-submit" id="btn-send">Enviar Solicitação</button>
             </form>
         </div>
+
+        <script>
+            const form = document.getElementById("contact-form");
+            
+            async function handleSubmit(event) {
+                event.preventDefault(); // Impede o navegador de abrir a página do Formspree
+                
+                const btn = document.getElementById("btn-send");
+                const originalText = btn.innerText;
+                
+                // Feedback visual de carregamento
+                btn.innerText = "Enviando...";
+                btn.style.opacity = "0.7";
+                btn.disabled = true;
+
+                const data = new FormData(event.target);
+
+                try {
+                    // Envia os dados silenciosamente via fetch
+                    const response = await fetch("https://formspree.io/f/mvzbyaky", {
+                        method: "POST",
+                        body: data,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        // SUCESSO: Vai direto para a página de obrigado
+                        window.location.href = "obrigado.html";
+                    } else {
+                        // ERRO: Mostra alerta e reativa o botão
+                        const errorData = await response.json();
+                        alert("Ocorreu um erro no envio. Tente novamente.");
+                        console.error("Erro Formspree:", errorData);
+                        
+                        btn.innerText = originalText;
+                        btn.style.opacity = "1";
+                        btn.disabled = false;
+                    }
+                } catch (error) {
+                    // ERRO DE REDE
+                    alert("Erro de conexão. Verifique sua internet.");
+                    btn.innerText = originalText;
+                    btn.style.opacity = "1";
+                    btn.disabled = false;
+                }
+            }
+            
+            form.addEventListener("submit", handleSubmit);
+        </script>
     </section>
 
     <footer>
@@ -369,6 +419,7 @@
     </script>
 </body>
 </html>
+
 
 
 
