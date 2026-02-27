@@ -149,6 +149,39 @@
             .nav-links { display: none; } /* Em mobile, simplificamos escondendo o menu por enquanto */
             .btn-whatsapp { padding: 0.5rem 1rem; font-size: 0.9rem; }
         }
+        /* --- CORREÇÃO DE EMERGÊNCIA: BOTÃO WHATSAPP MOBILE --- */
+    @media (max-width: 768px) {
+        /* 1. Reduz a Logo para dar espaço ao botão */
+        .logo-img { 
+            height: 28px !important; /* Força a logo a ficar menor */
+        }
+
+        /* 2. Ajusta o Botão para o texto longo caber */
+        .btn-whatsapp {
+            padding: 6px 10px !important; /* Botão mais "magro" */
+            font-size: 0.75rem !important; /* Letra menor (aprox 12px) para não estourar */
+            width: auto;
+            max-width: 70%; /* Garante que o botão não empurre a logo */
+            white-space: nowrap; /* Tenta manter em uma linha */
+            overflow: hidden; /* Se sobrar texto, esconde pra não quebrar o site */
+            text-overflow: ellipsis; /* Coloca "..." se o celular for muito antigo/pequeno */
+        }
+
+        /* 3. Ajuste fino no cabeçalho */
+        header {
+            padding: 10px 15px !important; /* Menos borda lateral no celular */
+            gap: 5px;
+        }
+        
+        /* Para celulares MUITO pequenos (tipo iPhone 5/SE), permite quebrar a linha */
+        @media (max-width: 360px) {
+            .btn-whatsapp {
+                white-space: normal;
+                line-height: 1.1;
+                font-size: 0.7rem !important;
+            }
+        }
+    }
     </style>
 </head>
 <body>
@@ -419,6 +452,7 @@
     </script>
 </body>
 </html>
+
 
 
 
