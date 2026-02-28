@@ -316,20 +316,21 @@
     </div>
 
     <script>
-        // --- CONFIGURAÇÃO ---
+       <script>
+        // CONFIGURAÇÃO
         const MASTER_USER = 'joorgemdc@gmail.com';
         const MASTER_PASS = '@ishit3rU';
 
-        // Event Listeners (Para garantir que o JS rode)
-        document.addEventListener('DOMContentLoaded', () => {
-            // Verificar Sessão
-            if(localStorage.getItem('jmdc_session')) loadSystem();
-
-            // Bind Forms
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
-            document.getElementById('registerForm').addEventListener('submit', handleRegister);
-            document.getElementById('newTicketForm').addEventListener('submit', createNewTicket);
-        });
+        // --- LIMPEZA DE EMERGÊNCIA (Executa ao carregar) ---
+        // Se o sistema estiver travado, isso resolve.
+        try {
+            // Verifica se é a versão antiga e limpa
+            if(!localStorage.getItem('jmdc_version_2')) {
+                console.log("Limpando dados antigos...");
+                localStorage.clear(); // Limpa tudo
+                localStorage.setItem('jmdc_version_2', 'true'); // Marca como novo
+            }
+        } catch(e) { console.error("Erro ao limpar:", e); }
 
         // --- AUTH ---
         function toggleAuth(screen) {
@@ -337,47 +338,73 @@
             document.getElementById('form-register').style.display = screen === 'register' ? 'block' : 'none';
         }
 
+        // TENTA O LOGIN
         function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
+            e.preventDefault(); // Impede recarregar a página
+            
+            try {
+                const emailInput = document.getElementById('login-email');
+                const passInput = document.getElementById('login-pass');
 
-            // 1. Master Login (Hardcoded)
-            if (email === MASTER_USER && pass === MASTER_PASS) {
-                loginSuccess({ name: 'Jorge Mendonça (Admin)', email: email, role: 'MASTER' });
-                return;
-            }
+                if(!emailInput || !passInput) {
+                    alert("Erro: Campos não encontrados. Recarregue a página.");
+                    return;
+                }
 
-            // 2. User Login
-            const users = JSON.parse(localStorage.getItem('jmdc_users')) || [];
-            const user = users.find(u => u.email === email && u.pass === pass);
+                const email = emailInput.value.trim();
+                const pass = passInput.value.trim();
 
-            if (user) {
-                loginSuccess(user);
-            } else {
-                alert('Acesso Negado!\nVerifique e-mail e senha.\nSe não tem conta, cadastre-se.');
+                // 1. Master Login
+                if (email === MASTER_USER && pass === MASTER_PASS) {
+                    alert("Login Master Identificado!");
+                    loginSuccess({ name: 'Jorge Mendonça (Admin)', email: email, role: 'MASTER' });
+                    return;
+                }
+
+                // 2. User Login
+                const users = JSON.parse(localStorage.getItem('jmdc_users')) || [];
+                const user = users.find(u => u.email === email && u.pass === pass);
+
+                if (user) {
+                    loginSuccess(user);
+                } else {
+                    alert('Acesso Negado! Verifique e-mail e senha.\n(Se não criou conta ainda, clique em "Criar conta")');
+                }
+            } catch (err) {
+                alert("Erro no Login: " + err.message);
             }
         }
 
+        // TENTA O CADASTRO
         function handleRegister(e) {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const pass = document.getElementById('reg-pass').value.trim();
-            const confirm = document.getElementById('reg-pass-confirm').value.trim();
+            
+            try {
+                const name = document.getElementById('reg-name').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
+                const pass = document.getElementById('reg-pass').value.trim();
+                const confirm = document.getElementById('reg-pass-confirm').value.trim();
 
-            if (pass !== confirm) { alert('As senhas não conferem.'); return; }
-            if (pass.length < 6) { alert('Senha muito curta (mínimo 6).'); return; }
+                if (pass !== confirm) { alert('As senhas não conferem!'); return; }
+                if (pass.length < 6) { alert('A senha deve ter no mínimo 6 caracteres.'); return; }
 
-            const users = JSON.parse(localStorage.getItem('jmdc_users')) || [];
-            if (users.find(u => u.email === email)) { alert('E-mail já cadastrado.'); return; }
+                const users = JSON.parse(localStorage.getItem('jmdc_users')) || [];
+                
+                if (users.find(u => u.email === email)) { 
+                    alert('Este e-mail já possui cadastro.'); 
+                    return; 
+                }
 
-            const newUser = { name, email, pass, role: 'USER', avatar: null, date: new Date().toLocaleDateString() };
-            users.push(newUser);
-            localStorage.setItem('jmdc_users', JSON.stringify(users));
+                const newUser = { name, email, pass, role: 'USER', avatar: null, date: new Date().toLocaleDateString() };
+                users.push(newUser);
+                localStorage.setItem('jmdc_users', JSON.stringify(users));
 
-            alert('Cadastro realizado! Faça login.');
-            toggleAuth('login');
+                alert('Cadastro realizado com sucesso! Agora faça login.');
+                toggleAuth('login');
+                
+            } catch (err) {
+                alert("Erro no Cadastro: " + err.message);
+            }
         }
 
         function loginSuccess(user) {
@@ -386,40 +413,125 @@
         }
 
         function handleLogout() {
-            localStorage.removeItem('jmdc_session');
-            location.reload();
+            if(confirm("Deseja realmente sair?")) {
+                localStorage.removeItem('jmdc_session');
+                location.reload();
+            }
         }
 
-        // --- SYSTEM CORE ---
+        // --- SISTEMA ---
         function loadSystem() {
+            try {
+                const session = JSON.parse(localStorage.getItem('jmdc_session'));
+                if (!session) return; // Se não tem sessão, fica no login
+
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'flex';
+
+                // Preenche dados
+                document.getElementById('user-name-display').innerText = session.name;
+                document.getElementById('user-role-display').innerText = session.role === 'MASTER' ? 'Administrador' : 'Cliente';
+
+                // Avatar
+                const avatarDiv = document.getElementById('avatar-circle');
+                if (session.avatar) avatarDiv.innerHTML = `<img src="${session.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                else avatarDiv.innerText = session.name.substring(0,2).toUpperCase();
+
+                // Master Tabs
+                if (session.role === 'MASTER') {
+                    document.getElementById('master-tabs').style.display = 'flex';
+                    renderUsersTable();
+                }
+
+                renderTickets();
+
+            } catch(err) {
+                console.error(err);
+                // Se der erro ao carregar, limpa a sessão para não travar
+                localStorage.removeItem('jmdc_session');
+                location.reload();
+            }
+        }
+
+        // --- TICKETS E TABELAS ---
+        function renderTickets() {
             const session = JSON.parse(localStorage.getItem('jmdc_session'));
-            if (!session) return;
-
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('dashboard-screen').style.display = 'flex';
-
-            document.getElementById('user-name-display').innerText = session.name;
-            document.getElementById('user-role-display').innerText = session.role === 'MASTER' ? 'Administrador' : 'Cliente';
-
-            // Avatar
-            const avatarDiv = document.getElementById('avatar-circle');
-            if (session.avatar) avatarDiv.innerHTML = `<img src="${session.avatar}">`;
-            else avatarDiv.innerText = session.name.substring(0,2).toUpperCase();
-
-            // Master Logic
-            if (session.role === 'MASTER') {
-                document.getElementById('master-tabs').style.display = 'flex';
-                renderUsersTable();
+            let allTickets = JSON.parse(localStorage.getItem('jmdc_tickets')) || [];
+            
+            if (session.email !== MASTER_USER) {
+                allTickets = allTickets.filter(t => t.owner === session.email);
             }
 
-            renderTickets();
+            const colOpen = document.getElementById('col-open-list');
+            const colProgress = document.getElementById('col-progress-list');
+            const colClosed = document.getElementById('col-closed-list');
+
+            if(colOpen) colOpen.innerHTML = ''; 
+            if(colProgress) colProgress.innerHTML = ''; 
+            if(colClosed) colClosed.innerHTML = '';
+
+            allTickets.forEach(t => {
+                let badgeClass = 'prio-low';
+                if(t.priority && t.priority.includes('Alta')) badgeClass = 'prio-high';
+                if(t.priority && t.priority.includes('Média')) badgeClass = 'prio-med';
+                const ownerInfo = session.role === 'MASTER' ? `<div style="font-size:0.7rem; color:#60a5fa; margin-bottom:5px;">👤 ${t.ownerName}</div>` : '';
+                
+                const cardHTML = `
+                    <div class="ticket-card">
+                        <div style="font-size:0.75rem; color:#94a3b8; display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span>#${t.id}</span><span>${t.date}</span>
+                        </div>
+                        ${ownerInfo}
+                        <div style="font-weight:600; margin-bottom:8px;">${t.subject}</div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#94a3b8;">
+                            <span>${t.service}</span><span class="badge ${badgeClass}">${t.priority}</span>
+                        </div>
+                    </div>`;
+
+                if(t.status === 'open' && colOpen) colOpen.innerHTML += cardHTML;
+                else if(t.status === 'progress' && colProgress) colProgress.innerHTML += cardHTML;
+                else if(colClosed) colClosed.innerHTML += cardHTML;
+            });
+
+            // Atualiza contadores com segurança
+            if(document.getElementById('count-open')) document.getElementById('count-open').innerText = colOpen ? colOpen.children.length : 0;
+            if(document.getElementById('count-progress')) document.getElementById('count-progress').innerText = colProgress ? colProgress.children.length : 0;
+            if(document.getElementById('count-closed')) document.getElementById('count-closed').innerText = colClosed ? colClosed.children.length : 0;
         }
 
-        // --- MASTER VIEWS ---
+        function createNewTicket(e) {
+            e.preventDefault();
+            const session = JSON.parse(localStorage.getItem('jmdc_session'));
+            
+            const newTicket = {
+                id: document.getElementById('ticket-id').value,
+                owner: session.email,
+                ownerName: session.name,
+                service: document.getElementById('ticket-service').value,
+                priority: document.getElementById('ticket-priority').value,
+                subject: document.getElementById('ticket-subject').value,
+                desc: document.getElementById('ticket-desc').value,
+                status: 'open',
+                date: new Date().toLocaleDateString()
+            };
+
+            const allTickets = JSON.parse(localStorage.getItem('jmdc_tickets')) || [];
+            allTickets.push(newTicket);
+            localStorage.setItem('jmdc_tickets', JSON.stringify(allTickets));
+            
+            closeModal();
+            renderTickets();
+            e.target.reset();
+            alert(`Chamado #${newTicket.id} criado!`);
+        }
+
+        // --- MASTER TABLE ---
         function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${viewName}`).classList.add('active');
+            
+            const view = document.getElementById(`view-${viewName}`);
+            if(view) view.classList.add('active');
             
             const btns = document.querySelectorAll('.tab-btn');
             if(viewName === 'tickets') btns[0].classList.add('active');
@@ -428,7 +540,9 @@
 
         function renderUsersTable() {
             const tbody = document.getElementById('users-table-body');
+            if(!tbody) return;
             tbody.innerHTML = '';
+            
             const users = JSON.parse(localStorage.getItem('jmdc_users')) || [];
 
             if(users.length === 0) {
@@ -457,7 +571,7 @@
             }
         }
 
-        // --- TICKETS ---
+        // --- UTILITÁRIOS ---
         function openModal() {
             document.getElementById('new-ticket-modal').style.display = 'flex';
             const now = new Date();
@@ -470,12 +584,33 @@
         }
 
         function closeModal() { document.getElementById('new-ticket-modal').style.display = 'none'; }
+        
+        function toggleDropdown() { 
+            const drop = document.getElementById('profile-dropdown');
+            drop.classList.toggle('show');
+        }
+        
+        window.onclick = function(e) { 
+            if (!e.target.closest('.user-profile-container')) {
+                const drop = document.getElementById('profile-dropdown');
+                if(drop) drop.classList.remove('show');
+            }
+        }
 
-        function createNewTicket(e) {
-            e.preventDefault();
-            const session = JSON.parse(localStorage.getItem('jmdc_session'));
-            
-            const newTicket = {
-                id: document.getElementById('ticket-id').value,
-                owner: session.email,
-                ownerName: session.
+        function uploadAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const session = JSON.parse(localStorage.getItem('jmdc_session'));
+                    session.avatar = e.target.result;
+                    localStorage.setItem('jmdc_session', JSON.stringify(session));
+                    loadSystem();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function handleChangePassword() { alert('Simulação: Senha alterada!'); }
+
+        // Inicializa ao carregar
+        if(localStorage.getItem('jmdc_session')) loadSystem();
+    </script>
