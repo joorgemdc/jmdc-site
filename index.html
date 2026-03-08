@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
-        /* --- ESTILOS GLOBAIS --- */
+        /* --- 1. ESTILOS GLOBAIS E RESET --- */
         :root {
             --bg-color: #0a0f1d;
             --text-color: #e2e8f0;
@@ -23,7 +23,6 @@
             color: var(--text-color); 
             line-height: 1.6; 
             overflow-x: hidden; 
-            position: relative;
         }
 
         #network-canvas { 
@@ -31,7 +30,7 @@
             z-index: -1; opacity: 0.3; pointer-events: none;
         }
 
-        /* --- CABEÇALHO --- */
+        /* --- 2. CABEÇALHO --- */
         header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95);
@@ -61,7 +60,7 @@
         .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3); }
         .whatsapp-icon { width: 20px; height: 20px; fill: currentColor; }
 
-        /* --- SEÇÃO HERO --- */
+        /* --- 3. SEÇÃO HERO (SEM MIN-HEIGHT PARA EVITAR QUEBRAS) --- */
         .hero {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 150px 5% 40px 5%; position: relative; z-index: 10;
@@ -71,5 +70,66 @@
         .hero h1 span { color: var(--primary); }
         .hero-subtitle { max-width: 800px; margin: 0 auto 2.5rem auto; color: #94a3b8; font-size: 1.15rem; line-height: 1.6; }
 
-        /* Contadores Fluidos e Transparentes */
-        .stats-wrapper { width: 100%; max-
+        /* Contadores */
+        .stats-wrapper { width: 100%; max-width: 1200px; margin: 0 auto 3rem auto; }
+        .stats-flex { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+        
+        .stat-item { 
+            flex: 1 1 180px; padding: 1rem; background: transparent; 
+            border: none; text-align: center;
+        }
+        
+        .stat-icon { color: var(--accent); margin-bottom: 10px; display: inline-flex; }
+        .stat-icon svg { width: 40px; height: 40px; stroke-width: 2; }
+        .stat-number { font-size: 3rem; font-weight: 800; color: #ffffff; line-height: 1; margin-bottom: 5px; }
+        .stat-label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; width: 100%; margin-bottom: 2rem; }
+        .btn-primary { background: var(--primary); color: white; padding: 14px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s; font-size: 1.05rem; }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4); }
+        .btn-secondary { background: transparent; color: white; border: 1px solid #475569; padding: 14px 36px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s; font-size: 1.05rem; }
+        .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.05); }
+
+        /* --- 4. CASES DE SUCESSO (MATEMÁTICA ENGEÇADA PARA NÃO TRAVAR) --- */
+        .clients-section { 
+            width: 100%; padding: 3rem 0; margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05); background: transparent; 
+        }
+        .clients-title { text-align: center; font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; font-weight: bold; }
+        
+        .clients-slider { position: relative; width: 100%; max-width: 1200px; margin: 0 auto; overflow: hidden; }
+        
+        .clients-slider::before, .clients-slider::after { content: ""; position: absolute; top: 0; width: 80px; height: 100%; z-index: 2; pointer-events: none; }
+        .clients-slider::before { left: 0; background: linear-gradient(to right, var(--bg-color) 0%, transparent 100%); }
+        .clients-slider::after { right: 0; background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%); }
+
+        .clients-slide-track {
+            display: flex; align-items: center;
+            /* LARGURA FIXA ABSOLUTA: 56 imagens * 200px de espaço cada = 11200px */
+            width: 11200px; 
+            animation: scrollLogos 80s linear infinite; 
+        }
+        
+        .clients-slide-track img { 
+            /* TAMANHO FIXO ABSOLUTO: Impede o navegador de sofrer calculando */
+            width: 150px; height: 60px; margin: 0 25px; /* 150 + 25 + 25 = 200px de área total por imagem */
+            object-fit: contain; flex-shrink: 0;
+            filter: grayscale(100%) opacity(0.6); transition: all 0.3s ease;
+        }
+        .clients-slide-track img:hover { filter: grayscale(0%) opacity(1); transform: scale(1.05); }
+
+        @keyframes scrollLogos {
+            0% { transform: translateX(0); }
+            /* Desloca exatamente metade da trilha (28 imagens * 200px = 5600px) */
+            100% { transform: translateX(-5600px); } 
+        }
+
+        /* --- 5. CARROSSEL DE SERVIÇOS --- */
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; font-weight: 800; padding-top: 2rem; }
+        .carousel-container { position: relative; max-width: 1200px; margin: 0 auto; overflow: hidden; padding: 20px 0; }
+        .carousel-track { display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; scrollbar-width: none; }
+        .carousel-track::-webkit-scrollbar { display: none; }
+        
+        .expert-card {
+            flex: 0 0 320px; scroll-snap-align: center; background: transparent;
+            border: none; border-left: 2px solid rgba(59, 130, 246, 0.3
