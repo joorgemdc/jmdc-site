@@ -3,39 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JMDC Tools | Diagnóstico de Redes</title>
+    <title>JMDC Tools | Diagnóstico e Rede</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
-        /* --- ESTILOS GLOBAIS E IDENTIDADE VISUAL --- */
+        /* --- ESTILOS GLOBAIS --- */
         :root {
             --bg-color: #0a0f1d;
             --text-color: #e2e8f0;
             --primary: #3b82f6;
             --secondary: #1e293b;
             --accent: #10b981;
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --card-border: rgba(59, 130, 246, 0.2);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         
         body { 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            line-height: 1.6; 
-            overflow-x: hidden; 
-            position: relative;
+            background-color: var(--bg-color); color: var(--text-color); 
+            line-height: 1.6; overflow-x: hidden; position: relative;
+            display: flex; flex-direction: column; min-height: 100vh;
         }
 
-        /* FUNDO ANIMADO TRAVADO (Z-INDEX 0) */
+        /* FUNDO ANIMADO (BLINDADO Z-INDEX 0) */
         #network-canvas { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             z-index: 0; opacity: 0.3; pointer-events: none;
         }
 
-        /* CONTAINER PRINCIPAL BLINDADO (Z-INDEX 10) */
-        main { position: relative; z-index: 10; display: flex; flex-direction: column; min-height: 100vh; }
+        /* CONTAINER PRINCIPAL (Z-INDEX 10) */
+        main { position: relative; z-index: 10; flex: 1; }
 
-        /* --- CABEÇALHO PADRÃO --- */
+        /* --- CABEÇALHO --- */
         header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95);
@@ -51,52 +51,82 @@
         .nav-links { display: flex; list-style: none; gap: 2rem; }
         .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: var(--primary); }
-        .nav-locked { color: var(--primary) !important; font-weight: bold; } /* Destaca a página atual */
+        .nav-locked { color: var(--primary) !important; font-weight: bold; }
 
         .btn-client { color: var(--accent) !important; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 6px; }
         .btn-client:hover { background: rgba(16, 185, 129, 0.1); }
 
         .btn-whatsapp {
-            display: flex; align-items: center; gap: 8px;
-            background: #25D366; color: white; padding: 0.6rem 1.2rem;
-            border-radius: 8px; text-decoration: none; font-weight: bold;
+            display: flex; align-items: center; gap: 8px; background: #25D366; color: white; 
+            padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: bold;
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); transition: 0.3s; white-space: nowrap;
         }
         .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3); }
         .whatsapp-icon { width: 20px; height: 20px; fill: currentColor; }
 
-        /* --- ESTRUTURA DAS FERRAMENTAS --- */
-        .page-header { text-align: center; padding: 150px 5% 40px 5%; }
+        /* --- CABEÇALHO DA PÁGINA --- */
+        .page-header { text-align: center; padding: 140px 5% 40px 5%; }
         .page-header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; }
         .page-header span { color: var(--primary); }
         .page-header p { color: #94a3b8; font-size: 1.15rem; max-width: 800px; margin: 0 auto; }
 
-        .tool-section { padding: 40px 5%; text-align: center; margin-bottom: 2rem; }
-        .tool-title { color: var(--primary); margin-bottom: 15px; font-size: 2rem; font-weight: 800; }
-        .tool-desc { color: #94a3b8; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1rem; }
-        
-        .tool-container {
-            max-width: 1000px; margin: 0 auto; border-radius: 16px; overflow: hidden; 
-            border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            background: #000;
+        /* --- DASHBOARD DE FERRAMENTAS --- */
+        .tools-dashboard { max-width: 1200px; margin: 0 auto 50px auto; padding: 0 5%; }
+
+        /* SpeedTest Secão Ocupa Toda a Largura */
+        .speedtest-container {
+            width: 100%; border-radius: 16px; overflow: hidden; 
+            border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            background: #000; margin-bottom: 30px;
         }
+
+        /* Grid de Ferramentas Adicionais */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+        .tool-card {
+            background: var(--card-bg); backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border); border-radius: 16px; padding: 25px;
+            display: flex; flex-direction: column; transition: transform 0.3s ease;
+        }
+        .tool-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
-        /* Ajuste específico para o fundo do AWS Test (geralmente branco) */
-        .tool-container.light-bg { background: #ffffff; max-width: 1200px; }
+        .tool-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
+        .tool-icon { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 12px; border-radius: 10px; display: flex; }
+        .tool-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+        .tool-header h3 { font-size: 1.2rem; color: white; }
+
+        /* Estilos Internos das Ferramentas */
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .data-label { color: #94a3b8; font-weight: 500; }
+        .data-value { color: #e2e8f0; font-weight: bold; text-align: right; word-break: break-all; max-width: 60%; }
+        .data-value.highlight { color: var(--accent); }
+
+        .btn-tool {
+            width: 100%; padding: 12px; margin-top: auto; background: rgba(59, 130, 246, 0.1);
+            color: var(--primary); border: 1px solid var(--primary); border-radius: 8px;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-tool:hover { background: var(--primary); color: white; }
+
+        /* Gerador de Senhas */
+        .pass-display {
+            background: #0f172a; padding: 15px; border-radius: 8px; border: 1px dashed #334155;
+            text-align: center; font-family: monospace; font-size: 1.4rem; color: var(--accent);
+            margin-bottom: 15px; letter-spacing: 2px; overflow-wrap: break-word;
+        }
+        .pass-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; color: #94a3b8; }
+        .pass-controls input[type="range"] { flex: 1; margin: 0 15px; cursor: pointer; accent-color: var(--primary); }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
-        /* --- RESPONSIVIDADE --- */
+        /* Mobile */
         @media (max-width: 768px) {
             header { padding: 12px 15px !important; gap: 5px; }
             .logo-img { height: 30px !important; }
             .nav-links { display: none; }
             .btn-whatsapp { padding: 6px 12px !important; font-size: 0.75rem !important; }
-            .whatsapp-icon { width: 16px; height: 16px; }
-            
-            .page-header { padding-top: 120px; }
+            .page-header { padding-top: 110px; padding-bottom: 20px; }
             .page-header h1 { font-size: 2.2rem; }
-            .tool-title { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -124,15 +154,13 @@
         </header>
 
         <div class="page-header">
-            <h1>Diagnóstico de <span>Rede</span></h1>
-            <p>Ferramentas exclusivas para análise de banda, latência e estabilidade de infraestrutura crítica.</p>
+            <h1>Diagnóstico e <span>Ferramentas</span></h1>
+            <p>Suite técnica para análise de rede, segurança e infraestrutura.</p>
         </div>
 
-        <section class="tool-section">
-            <h2 class="tool-title">Performance de Conexão</h2>
-            <p class="tool-desc">Teste a largura de banda (Download/Upload), Jitter e Ping em tempo real utilizando servidores dedicados HTML5.</p>
+        <div class="tools-dashboard">
             
-            <div class="tool-container">
+            <div class="speedtest-container">
                 <iframe 
                     src="https://openspeedtest.com/Get-widget.php" 
                     width="100%" 
@@ -141,22 +169,58 @@
                     allow="autoplay; encrypted-media">
                 </iframe>
             </div>
-        </section>
 
-        <section class="tool-section">
-            <h2 class="tool-title">Roteamento AWS Global</h2>
-            <p class="tool-desc">Gere evidências técnicas imediatas verificando o tempo de resposta HTTP (Latência) entre sua rede atual e os Datacenters da Amazon Web Services pelo mundo.</p>
-            
-            <div class="tool-container light-bg" style="height: 600px;">
-                <iframe 
-                    src="https://aws-latency-test.com/" 
-                    width="100%" 
-                    height="100%" 
-                    frameborder="0" 
-                    scrolling="auto">
-                </iframe>
+            <div class="tools-grid">
+                
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                        <h3>Dados do Ambiente (Fingerprint)</h3>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="data-row"><span class="data-label">Sistema:</span> <span class="data-value" id="fg-os">Coletando...</span></div>
+                        <div class="data-row"><span class="data-label">Navegador:</span> <span class="data-value" id="fg-browser">Coletando...</span></div>
+                        <div class="data-row"><span class="data-label">Resolução:</span> <span class="data-value" id="fg-res">Coletando...</span></div>
+                        <div class="data-row"><span class="data-label">Cores (Lógicos):</span> <span class="data-value" id="fg-cores">Coletando...</span></div>
+                        <div class="data-row"><span class="data-label">Conexão WEB:</span> <span class="data-value highlight" id="fg-net">Coletando...</span></div>
+                    </div>
+                    <button class="btn-tool" style="margin-top: 15px;" onclick="copiarFingerprint()">Copiar para Chamado</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
+                        <h3>Meu IP Público</h3>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="data-row"><span class="data-label">Endereço IP:</span> <span class="data-value highlight" id="ip-address">Buscando...</span></div>
+                        <div class="data-row"><span class="data-label">Provedor (ISP):</span> <span class="data-value" id="ip-isp">...</span></div>
+                        <div class="data-row"><span class="data-label">ASN:</span> <span class="data-value" id="ip-asn">...</span></div>
+                        <div class="data-row"><span class="data-label">Localização:</span> <span class="data-value" id="ip-location">...</span></div>
+                    </div>
+                    <button class="btn-tool" style="margin-top: 15px;" onclick="fetchIP()">Atualizar Rede</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+                        <h3>Gerador Security</h3>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="pass-display" id="pass-output">JMDC@2026#</div>
+                        <div class="pass-controls">
+                            <span>Tamanho: <b id="pass-length-val">16</b></span>
+                            <input type="range" id="pass-length" min="8" max="32" value="16" oninput="updatePassLength()">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-tool" onclick="generatePassword()">Gerar</button>
+                        <button class="btn-tool" style="background: transparent;" onclick="copyPassword()">Copiar</button>
+                    </div>
+                </div>
+
             </div>
-        </section>
+        </div>
 
         <footer>
             <p>&copy; 2026 JMDC Tecnologia. Salvador, Bahia.</p>
@@ -164,6 +228,7 @@
     </main>
 
     <script>
+        // --- 1. FUNDO ANIMADO ---
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('network-canvas');
             if (canvas) {
@@ -188,7 +253,88 @@
                 }
                 initParticles(); animateParticles();
             }
+
+            // Iniciar Ferramentas Automáticas
+            coletarFingerprint();
+            fetchIP();
+            generatePassword();
         });
+
+        // --- 2. COLETOR FINGERPRINT ---
+        function coletarFingerprint() {
+            // OS Simples
+            let os = "Desconhecido";
+            if (navigator.userAgent.indexOf("Win") != -1) os = "Windows";
+            if (navigator.userAgent.indexOf("Mac") != -1) os = "MacOS";
+            if (navigator.userAgent.indexOf("Linux") != -1) os = "Linux";
+            if (navigator.userAgent.indexOf("Android") != -1) os = "Android";
+            if (navigator.userAgent.indexOf("like Mac") != -1) os = "iOS";
+            
+            // Navegador Simples
+            let browser = "Desconhecido";
+            if (navigator.userAgent.indexOf("Chrome") != -1) browser = "Chrome";
+            if (navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1) browser = "Safari";
+            if (navigator.userAgent.indexOf("Firefox") != -1) browser = "Firefox";
+            if (navigator.userAgent.indexOf("Edg") != -1) browser = "Edge";
+
+            const res = `${window.screen.width} x ${window.screen.height}`;
+            const cores = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : "N/A";
+            
+            // Qualidade da Conexão (Suportado no Chrome/Android)
+            let net = "Banda Larga / Wi-Fi";
+            if (navigator.connection && navigator.connection.effectiveType) {
+                net = navigator.connection.effectiveType.toUpperCase(); // Ex: 4G, 3G
+            }
+
+            document.getElementById('fg-os').innerText = os;
+            document.getElementById('fg-browser').innerText = browser;
+            document.getElementById('fg-res').innerText = res;
+            document.getElementById('fg-cores').innerText = cores;
+            document.getElementById('fg-net').innerText = net;
+        }
+
+        function copiarFingerprint() {
+            const data = `JMDC Support Fingerprint:\nOS: ${document.getElementById('fg-os').innerText}\nBrowser: ${document.getElementById('fg-browser').innerText}\nResolução: ${document.getElementById('fg-res').innerText}\nConexão: ${document.getElementById('fg-net').innerText}`;
+            navigator.clipboard.writeText(data);
+            alert("Dados copiados! Cole no chat do WhatsApp ou no CRM.");
+        }
+
+        // --- 3. SCANNER DE IP ---
+        async function fetchIP() {
+            document.getElementById('ip-address').innerText = "Buscando...";
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                document.getElementById('ip-address').innerText = data.ip;
+                document.getElementById('ip-isp').innerText = data.org || "N/A";
+                document.getElementById('ip-asn').innerText = data.asn || "N/A";
+                document.getElementById('ip-location').innerText = `${data.city}, ${data.region_code}`;
+            } catch (error) {
+                document.getElementById('ip-address').innerText = "Erro na Leitura";
+                document.getElementById('ip-isp').innerText = "Bloqueado pelo AdBlock";
+            }
+        }
+
+        // --- 4. GERADOR DE SENHAS ---
+        function updatePassLength() {
+            document.getElementById('pass-length-val').innerText = document.getElementById('pass-length').value;
+        }
+
+        function generatePassword() {
+            const length = document.getElementById('pass-length').value;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+            let retVal = "";
+            for (let i = 0, n = charset.length; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            document.getElementById('pass-output').innerText = retVal;
+        }
+
+        function copyPassword() {
+            const pass = document.getElementById('pass-output').innerText;
+            navigator.clipboard.writeText(pass);
+            alert("Senha copiada com segurança!");
+        }
     </script>
 </body>
 </html>
