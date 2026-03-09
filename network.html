@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JMDC Tools | Diagnóstico e Rede</title>
+    <title>JMDC Tools | Diagnóstico de Redes</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
@@ -14,6 +14,8 @@
             --primary: #3b82f6;
             --secondary: #1e293b;
             --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --card-bg: rgba(30, 41, 59, 0.4);
             --card-border: rgba(59, 130, 246, 0.2);
         }
@@ -26,13 +28,11 @@
             display: flex; flex-direction: column; min-height: 100vh;
         }
 
-        /* FUNDO ANIMADO (BLINDADO Z-INDEX 0) */
         #network-canvas { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             z-index: 0; opacity: 0.3; pointer-events: none;
         }
 
-        /* CONTAINER PRINCIPAL (Z-INDEX 10) */
         main { position: relative; z-index: 10; flex: 1; }
 
         /* --- CABEÇALHO --- */
@@ -71,34 +71,31 @@
         .page-header p { color: #94a3b8; font-size: 1.15rem; max-width: 800px; margin: 0 auto; }
 
         /* --- DASHBOARD DE FERRAMENTAS --- */
-        .tools-dashboard { max-width: 1200px; margin: 0 auto 50px auto; padding: 0 5%; }
+        .tools-dashboard { max-width: 1300px; margin: 0 auto 50px auto; padding: 0 5%; }
 
-        /* SpeedTest Secão Ocupa Toda a Largura */
         .speedtest-container {
             width: 100%; border-radius: 16px; overflow: hidden; 
             border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            background: #000; margin-bottom: 30px;
+            background: #000; margin-bottom: 40px;
         }
 
-        /* Grid de Ferramentas Adicionais */
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
 
         .tool-card {
             background: var(--card-bg); backdrop-filter: blur(10px);
             border: 1px solid var(--card-border); border-radius: 16px; padding: 25px;
             display: flex; flex-direction: column; transition: transform 0.3s ease;
         }
-        .tool-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .tool-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
         .tool-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
         .tool-icon { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 12px; border-radius: 10px; display: flex; }
         .tool-icon svg { width: 24px; height: 24px; stroke-width: 2; }
         .tool-header h3 { font-size: 1.2rem; color: white; }
 
-        /* Estilos Internos das Ferramentas */
-        .data-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; align-items: center; }
         .data-label { color: #94a3b8; font-weight: 500; }
-        .data-value { color: #e2e8f0; font-weight: bold; text-align: right; word-break: break-all; max-width: 60%; }
+        .data-value { color: #e2e8f0; font-weight: bold; text-align: right; word-break: break-all; max-width: 65%; }
         .data-value.highlight { color: var(--accent); }
 
         .btn-tool {
@@ -108,18 +105,49 @@
         }
         .btn-tool:hover { background: var(--primary); color: white; }
 
+        input[type="text"] {
+            width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155;
+            color: white; border-radius: 8px; outline: none; margin-bottom: 15px; font-size: 1rem; text-align: center;
+        }
+        input[type="text"]:focus { border-color: var(--primary); }
+
         /* Gerador de Senhas */
         .pass-display {
             background: #0f172a; padding: 15px; border-radius: 8px; border: 1px dashed #334155;
             text-align: center; font-family: monospace; font-size: 1.4rem; color: var(--accent);
-            margin-bottom: 15px; letter-spacing: 2px; overflow-wrap: break-word;
+            margin-bottom: 10px; letter-spacing: 2px; word-break: break-all;
         }
+        .pass-strength-info { font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 15px; line-height: 1.4; }
         .pass-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; color: #94a3b8; }
         .pass-controls input[type="range"] { flex: 1; margin: 0 15px; cursor: pointer; accent-color: var(--primary); }
 
+        /* Downloads */
+        .download-list { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        .download-list li { margin-bottom: 10px; }
+        .download-list a {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 15px; background: rgba(255,255,255,0.03); border-radius: 8px;
+            color: var(--text-color); text-decoration: none; border: 1px solid transparent; transition: 0.3s;
+        }
+        .download-list a:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--card-border); color: var(--primary); }
+
+        /* --- PLAYER MÚSICA VIVALDI --- */
+        .music-player {
+            position: fixed; bottom: 20px; left: 20px; z-index: 2000;
+            background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border); padding: 10px 15px; border-radius: 30px;
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .music-btn {
+            background: var(--primary); color: white; border: none; border-radius: 50%;
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .music-btn:hover { transform: scale(1.1); }
+        .music-label { font-size: 0.85rem; font-weight: 600; color: #e2e8f0; }
+
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
-        /* Mobile */
         @media (max-width: 768px) {
             header { padding: 12px 15px !important; gap: 5px; }
             .logo-img { height: 30px !important; }
@@ -127,12 +155,23 @@
             .btn-whatsapp { padding: 6px 12px !important; font-size: 0.75rem !important; }
             .page-header { padding-top: 110px; padding-bottom: 20px; }
             .page-header h1 { font-size: 2.2rem; }
+            .music-player { bottom: 15px; left: 15px; padding: 8px 12px; }
         }
     </style>
 </head>
 <body>
 
     <canvas id="network-canvas"></canvas>
+
+    <div id="youtube-player" style="display: none; position: absolute;"></div>
+
+    <div class="music-player">
+        <button class="music-btn" id="btn-play" onclick="toggleMusic()">
+            <svg id="icon-play" style="width: 16px; height: 16px; fill: white;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+            <svg id="icon-pause" style="width: 16px; height: 16px; fill: white; display: none;" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+        </button>
+        <span class="music-label">Ambiente JMDC</span>
+    </div>
 
     <main>
         <header>
@@ -163,10 +202,7 @@
             <div class="speedtest-container">
                 <iframe 
                     src="https://openspeedtest.com/Get-widget.php" 
-                    width="100%" 
-                    height="500px" 
-                    frameborder="0" 
-                    allow="autoplay; encrypted-media">
+                    width="100%" height="500px" frameborder="0" allow="autoplay; encrypted-media">
                 </iframe>
             </div>
 
@@ -174,48 +210,83 @@
                 
                 <div class="tool-card">
                     <div class="tool-header">
-                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
-                        <h3>Dados do Ambiente (Fingerprint)</h3>
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
+                        <h3>Meu IP Público</h3>
                     </div>
                     <div style="flex: 1;">
-                        <div class="data-row"><span class="data-label">Sistema:</span> <span class="data-value" id="fg-os">Coletando...</span></div>
-                        <div class="data-row"><span class="data-label">Navegador:</span> <span class="data-value" id="fg-browser">Coletando...</span></div>
-                        <div class="data-row"><span class="data-label">Resolução:</span> <span class="data-value" id="fg-res">Coletando...</span></div>
-                        <div class="data-row"><span class="data-label">Cores (Lógicos):</span> <span class="data-value" id="fg-cores">Coletando...</span></div>
-                        <div class="data-row"><span class="data-label">Conexão WEB:</span> <span class="data-value highlight" id="fg-net">Coletando...</span></div>
+                        <div class="data-row"><span class="data-label">IPv4:</span> <span class="data-value highlight" id="ip-v4">Buscando...</span></div>
+                        <div class="data-row"><span class="data-label">IPv6:</span> <span class="data-value highlight" id="ip-v6">Buscando...</span></div>
+                        <div class="data-row"><span class="data-label">Dual Stack:</span> <span class="data-value" id="ip-dual">...</span></div>
+                        <div class="data-row"><span class="data-label">Provedor (ISP):</span> <span class="data-value" id="ip-isp">...</span></div>
+                    </div>
+                    <button class="btn-tool" style="margin-top: 15px;" onclick="fetchIP()">Atualizar Conexão</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                        <h3>Coletor de Ambiente</h3>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="data-row"><span class="data-label">Sistema OS:</span> <span class="data-value" id="fg-os">...</span></div>
+                        <div class="data-row"><span class="data-label">Navegador:</span> <span class="data-value" id="fg-browser">...</span></div>
+                        <div class="data-row"><span class="data-label">Resolução:</span> <span class="data-value" id="fg-res">...</span></div>
+                        <div class="data-row"><span class="data-label">CPU Lógica:</span> <span class="data-value" id="fg-cores">...</span></div>
+                        <div class="data-row"><span class="data-label">Conexão:</span> <span class="data-value highlight" id="fg-net">...</span></div>
                     </div>
                     <button class="btn-tool" style="margin-top: 15px;" onclick="copiarFingerprint()">Copiar para Chamado</button>
                 </div>
 
                 <div class="tool-card">
                     <div class="tool-header">
-                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
-                        <h3>Meu IP Público</h3>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="data-row"><span class="data-label">Endereço IP:</span> <span class="data-value highlight" id="ip-address">Buscando...</span></div>
-                        <div class="data-row"><span class="data-label">Provedor (ISP):</span> <span class="data-value" id="ip-isp">...</span></div>
-                        <div class="data-row"><span class="data-label">ASN:</span> <span class="data-value" id="ip-asn">...</span></div>
-                        <div class="data-row"><span class="data-label">Localização:</span> <span class="data-value" id="ip-location">...</span></div>
-                    </div>
-                    <button class="btn-tool" style="margin-top: 15px;" onclick="fetchIP()">Atualizar Rede</button>
-                </div>
-
-                <div class="tool-card">
-                    <div class="tool-header">
                         <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
-                        <h3>Gerador Security</h3>
+                        <h3>Gerador de Senhas</h3>
                     </div>
                     <div style="flex: 1;">
-                        <div class="pass-display" id="pass-output">JMDC@2026#</div>
+                        <div class="pass-display" id="pass-output">...</div>
+                        <div class="pass-strength-info">
+                            Tempo estimado para quebra por<br>Força Bruta Computacional (GPU):<br>
+                            <span id="pass-time" style="font-size: 1.1rem; display: block; margin-top: 5px;">Calculando...</span>
+                        </div>
                         <div class="pass-controls">
-                            <span>Tamanho: <b id="pass-length-val">16</b></span>
-                            <input type="range" id="pass-length" min="8" max="32" value="16" oninput="updatePassLength()">
+                            <span>Caracteres: <b id="pass-length-val">16</b></span>
+                            <input type="range" id="pass-length" min="8" max="32" value="16" oninput="generatePassword()">
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn-tool" onclick="generatePassword()">Gerar</button>
                         <button class="btn-tool" style="background: transparent;" onclick="copyPassword()">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                        <h3>Ping Test (HTTP)</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <input type="text" id="ping-target" placeholder="Ex: google.com" value="google.com">
+                        <div style="text-align: center; margin: 15px 0;">
+                            <span style="font-size: 0.9rem; color: #94a3b8;">Latência Estimada:</span><br>
+                            <span id="ping-result" style="font-size: 2.5rem; font-weight: bold; color: var(--text-color);">-- ms</span>
+                        </div>
+                    </div>
+                    <button class="btn-tool" onclick="executarPing()">Testar Resposta</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>
+                        <h3>Gerenciador de Arquivos</h3>
+                    </div>
+                    <div style="flex: 1;">
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px;">Downloads essenciais para suporte N1/N2:</p>
+                        <ul class="download-list">
+                            <li><a href="https://anydesk.com/pt/downloads/" target="_blank"><span>AnyDesk Cliente</span> <span style="color:var(--primary)">↓</span></a></li>
+                            <li><a href="https://rustdesk.com/" target="_blank"><span>RustDesk (Open Source)</span> <span style="color:var(--primary)">↓</span></a></li>
+                            <li><a href="https://mikrotik.com/download" target="_blank"><span>MikroTik Winbox</span> <span style="color:var(--primary)">↓</span></a></li>
+                            <li><a href="https://www.advanced-ip-scanner.com/br/" target="_blank"><span>Advanced IP Scanner</span> <span style="color:var(--primary)">↓</span></a></li>
+                        </ul>
                     </div>
                 </div>
 
@@ -228,8 +299,50 @@
     </main>
 
     <script>
-        // --- 1. FUNDO ANIMADO ---
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let ytPlayer;
+        let isYtReady = false;
+        let isPlaying = false;
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('youtube-player', {
+                height: '0', width: '0',
+                videoId: 'bsV6LuV724I', // ID do Vídeo Clássico de Vivaldi
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'bsV6LuV724I' },
+                events: { 'onReady': () => { isYtReady = true; } }
+            });
+        }
+
+        function toggleMusic() {
+            if (!isYtReady || !ytPlayer || typeof ytPlayer.playVideo !== 'function') {
+                alert("Aguarde um instante, o maestro está afinando os instrumentos...");
+                return;
+            }
+            
+            const iconPlay = document.getElementById('icon-play');
+            const iconPause = document.getElementById('icon-pause');
+            
+            if(isPlaying) {
+                ytPlayer.pauseVideo();
+                iconPlay.style.display = 'block';
+                iconPause.style.display = 'none';
+            } else {
+                ytPlayer.playVideo();
+                iconPlay.style.display = 'none';
+                iconPause.style.display = 'block';
+            }
+            isPlaying = !isPlaying;
+        }
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // Fundo Animado
             const canvas = document.getElementById('network-canvas');
             if (canvas) {
                 const ctx = canvas.getContext('2d');
@@ -254,86 +367,138 @@
                 initParticles(); animateParticles();
             }
 
-            // Iniciar Ferramentas Automáticas
+            // Inicializa ferramentas
             coletarFingerprint();
             fetchIP();
             generatePassword();
         });
 
-        // --- 2. COLETOR FINGERPRINT ---
-        function coletarFingerprint() {
-            // OS Simples
-            let os = "Desconhecido";
-            if (navigator.userAgent.indexOf("Win") != -1) os = "Windows";
-            if (navigator.userAgent.indexOf("Mac") != -1) os = "MacOS";
-            if (navigator.userAgent.indexOf("Linux") != -1) os = "Linux";
-            if (navigator.userAgent.indexOf("Android") != -1) os = "Android";
-            if (navigator.userAgent.indexOf("like Mac") != -1) os = "iOS";
+        // Scanner IP Dual Stack
+        function fetchIP() {
+            document.getElementById('ip-v4').innerText = "Buscando...";
+            document.getElementById('ip-v6').innerText = "Buscando...";
+            document.getElementById('ip-dual').innerText = "Processando...";
             
-            // Navegador Simples
-            let browser = "Desconhecido";
-            if (navigator.userAgent.indexOf("Chrome") != -1) browser = "Chrome";
-            if (navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1) browser = "Safari";
-            if (navigator.userAgent.indexOf("Firefox") != -1) browser = "Firefox";
-            if (navigator.userAgent.indexOf("Edg") != -1) browser = "Edge";
+            let hasV4 = false, hasV6 = false;
 
-            const res = `${window.screen.width} x ${window.screen.height}`;
-            const cores = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : "N/A";
-            
-            // Qualidade da Conexão (Suportado no Chrome/Android)
-            let net = "Banda Larga / Wi-Fi";
-            if (navigator.connection && navigator.connection.effectiveType) {
-                net = navigator.connection.effectiveType.toUpperCase(); // Ex: 4G, 3G
+            fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
+                .then(data => { document.getElementById('ip-v4').innerText = data.ip; hasV4 = true; checkDual(); })
+                .catch(() => { document.getElementById('ip-v4').innerText = "Não detectado"; checkDual(); });
+
+            fetch('https://api6.ipify.org?format=json')
+                .then(res => res.json())
+                .then(data => { document.getElementById('ip-v6').innerText = data.ip; hasV6 = true; checkDual(); })
+                .catch(() => { document.getElementById('ip-v6').innerText = "Não detectado"; checkDual(); });
+
+            function checkDual() {
+                if(hasV4 && hasV6) {
+                    document.getElementById('ip-dual').innerText = "Sim (IPv4 + IPv6)";
+                    document.getElementById('ip-dual').style.color = "var(--success)";
+                } else {
+                    document.getElementById('ip-dual').innerText = "Não";
+                    document.getElementById('ip-dual').style.color = "var(--warning)";
+                }
             }
+
+            fetch('https://ipapi.co/json/')
+                .then(res => res.json())
+                .then(data => document.getElementById('ip-isp').innerText = data.org || "Desconhecido")
+                .catch(() => document.getElementById('ip-isp').innerText = "Bloqueado");
+        }
+
+        // Fingerprint
+        function coletarFingerprint() {
+            let os = "Desconhecido", browser = "Desconhecido";
+            const ua = navigator.userAgent;
+            
+            if (ua.indexOf("Win") != -1) os = "Windows";
+            else if (ua.indexOf("Mac") != -1) os = "MacOS / iOS";
+            else if (ua.indexOf("Linux") != -1) os = "Linux";
+            else if (ua.indexOf("Android") != -1) os = "Android";
+            
+            if (ua.indexOf("Chrome") != -1) browser = "Chrome";
+            else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) browser = "Safari";
+            else if (ua.indexOf("Firefox") != -1) browser = "Firefox";
 
             document.getElementById('fg-os').innerText = os;
             document.getElementById('fg-browser').innerText = browser;
-            document.getElementById('fg-res').innerText = res;
-            document.getElementById('fg-cores').innerText = cores;
-            document.getElementById('fg-net').innerText = net;
+            document.getElementById('fg-res').innerText = `${window.screen.width}x${window.screen.height}`;
+            document.getElementById('fg-cores').innerText = navigator.hardwareConcurrency || "N/A";
+            
+            if (navigator.connection) document.getElementById('fg-net').innerText = navigator.connection.effectiveType.toUpperCase() || "WIFI/LAN";
+            else document.getElementById('fg-net').innerText = "Banda Larga";
         }
 
         function copiarFingerprint() {
-            const data = `JMDC Support Fingerprint:\nOS: ${document.getElementById('fg-os').innerText}\nBrowser: ${document.getElementById('fg-browser').innerText}\nResolução: ${document.getElementById('fg-res').innerText}\nConexão: ${document.getElementById('fg-net').innerText}`;
+            const data = `JMDC Support Fingerprint:\nOS: ${document.getElementById('fg-os').innerText}\nNavegador: ${document.getElementById('fg-browser').innerText}\nResolução: ${document.getElementById('fg-res').innerText}`;
             navigator.clipboard.writeText(data);
-            alert("Dados copiados! Cole no chat do WhatsApp ou no CRM.");
+            alert("Dados copiados para o chamado!");
         }
 
-        // --- 3. SCANNER DE IP ---
-        async function fetchIP() {
-            document.getElementById('ip-address').innerText = "Buscando...";
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                document.getElementById('ip-address').innerText = data.ip;
-                document.getElementById('ip-isp').innerText = data.org || "N/A";
-                document.getElementById('ip-asn').innerText = data.asn || "N/A";
-                document.getElementById('ip-location').innerText = `${data.city}, ${data.region_code}`;
-            } catch (error) {
-                document.getElementById('ip-address').innerText = "Erro na Leitura";
-                document.getElementById('ip-isp').innerText = "Bloqueado pelo AdBlock";
-            }
-        }
-
-        // --- 4. GERADOR DE SENHAS ---
-        function updatePassLength() {
-            document.getElementById('pass-length-val').innerText = document.getElementById('pass-length').value;
-        }
-
+        // Gerador de Senhas com Entropia
         function generatePassword() {
             const length = document.getElementById('pass-length').value;
-            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+            document.getElementById('pass-length-val').innerText = length;
+            
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]";
             let retVal = "";
-            for (let i = 0, n = charset.length; i < length; ++i) {
-                retVal += charset.charAt(Math.floor(Math.random() * n));
+            for (let i = 0; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * charset.length));
             }
             document.getElementById('pass-output').innerText = retVal;
+            calcularEntropia(length, charset.length);
+        }
+
+        function calcularEntropia(length, pool) {
+            const combos = Math.pow(pool, length);
+            const hashesPerSec = 100000000000; 
+            const seconds = combos / hashesPerSec;
+
+            let timeStr = "";
+            if (seconds < 60) timeStr = "Instantâneo (Crítica)";
+            else if (seconds < 3600) timeStr = `${Math.floor(seconds/60)} Minutos`;
+            else if (seconds < 86400) timeStr = `${Math.floor(seconds/3600)} Horas`;
+            else if (seconds < 31536000) timeStr = `${Math.floor(seconds/86400)} Dias`;
+            else if (seconds < 3153600000) timeStr = `${Math.floor(seconds/31536000)} Anos`;
+            else timeStr = "+ de 1000 Séculos (Segura)";
+
+            const span = document.getElementById('pass-time');
+            span.innerText = timeStr;
+            
+            if(seconds < 86400) span.style.color = "var(--danger)";
+            else if (seconds < 31536000) span.style.color = "var(--warning)";
+            else span.style.color = "var(--success)";
         }
 
         function copyPassword() {
-            const pass = document.getElementById('pass-output').innerText;
-            navigator.clipboard.writeText(pass);
+            navigator.clipboard.writeText(document.getElementById('pass-output').innerText);
             alert("Senha copiada com segurança!");
+        }
+
+        // Ping HTTP Fake
+        function executarPing() {
+            let target = document.getElementById('ping-target').value.trim();
+            if(!target) target = "google.com";
+            if(!target.startsWith('http')) target = 'https://' + target;
+
+            const res = document.getElementById('ping-result');
+            res.innerText = "Testando...";
+            res.style.color = "var(--text-color)";
+
+            const bypassCache = target + (target.includes('?') ? '&' : '?') + 'rnd=' + Math.random();
+            const start = performance.now();
+
+            fetch(bypassCache, { mode: 'no-cors', cache: 'no-store' })
+                .then(() => {
+                    const time = Math.round(performance.now() - start);
+                    res.innerText = time + " ms";
+                    res.style.color = time < 150 ? "var(--success)" : "var(--warning)";
+                })
+                .catch(() => {
+                    res.innerText = "Bloqueado";
+                    res.style.color = "var(--danger)";
+                });
         }
     </script>
 </body>
