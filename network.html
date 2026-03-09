@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JMDC Tools | Diagnóstico de Redes</title>
+    <title>JMDC Tools | Diagnóstico e Redes</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
@@ -64,22 +64,17 @@
         .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3); }
         .whatsapp-icon { width: 20px; height: 20px; fill: currentColor; }
 
-        /* --- CABEÇALHO DA PÁGINA --- */
+        /* --- TÍTULO DA PÁGINA --- */
         .page-header { text-align: center; padding: 140px 5% 40px 5%; }
         .page-header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; }
         .page-header span { color: var(--primary); }
         .page-header p { color: #94a3b8; font-size: 1.15rem; max-width: 800px; margin: 0 auto; }
 
-        /* --- DASHBOARD DE FERRAMENTAS --- */
+        /* --- DASHBOARD --- */
         .tools-dashboard { max-width: 1300px; margin: 0 auto 50px auto; padding: 0 5%; }
 
-        .speedtest-container {
-            width: 100%; border-radius: 16px; overflow: hidden; 
-            border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            background: #000; margin-bottom: 40px;
-        }
-
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        /* 1. TOPO: CARDS DE FERRAMENTAS */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
 
         .tool-card {
             background: var(--card-bg); backdrop-filter: blur(10px);
@@ -111,7 +106,6 @@
         }
         input[type="text"]:focus { border-color: var(--primary); }
 
-        /* Gerador de Senhas */
         .pass-display {
             background: #0f172a; padding: 15px; border-radius: 8px; border: 1px dashed #334155;
             text-align: center; font-family: monospace; font-size: 1.4rem; color: var(--accent);
@@ -121,17 +115,33 @@
         .pass-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; color: #94a3b8; }
         .pass-controls input[type="range"] { flex: 1; margin: 0 15px; cursor: pointer; accent-color: var(--primary); }
 
-        /* Downloads */
-        .download-list { list-style: none; padding: 0; margin: 0 0 15px 0; }
-        .download-list li { margin-bottom: 10px; }
-        .download-list a {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 15px; background: rgba(255,255,255,0.03); border-radius: 8px;
-            color: var(--text-color); text-decoration: none; border: 1px solid transparent; transition: 0.3s;
+        /* 2. MEIO: GERENCIADOR DE ARQUIVOS (VERDE) */
+        .download-section { margin: 60px 0; }
+        .download-title { text-align: center; color: var(--accent); font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
+        .download-desc { text-align: center; color: #94a3b8; margin-bottom: 30px; font-size: 1.1rem; }
+        .download-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        
+        .download-card {
+            background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent);
+            border-radius: 12px; padding: 25px; text-align: center; text-decoration: none;
+            color: var(--text-color); display: flex; flex-direction: column; align-items: center;
+            gap: 15px; transition: all 0.3s ease;
         }
-        .download-list a:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--card-border); color: var(--primary); }
+        .download-card:hover {
+            background: var(--accent); color: var(--bg-color); transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+        .download-card:hover .download-icon { color: var(--bg-color); }
+        .download-icon { width: 45px; height: 45px; color: var(--accent); transition: 0.3s; }
 
-        /* --- PLAYER MÚSICA VIVALDI --- */
+        /* 3. FINAL: SPEEDTEST */
+        .speedtest-container {
+            width: 100%; border-radius: 16px; overflow: hidden; 
+            border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            background: #000; margin-top: 40px; margin-bottom: 40px;
+        }
+
+        /* --- PLAYER DE MÚSICA FIXO --- */
         .music-player {
             position: fixed; bottom: 20px; left: 20px; z-index: 2000;
             background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px);
@@ -199,13 +209,6 @@
 
         <div class="tools-dashboard">
             
-            <div class="speedtest-container">
-                <iframe 
-                    src="https://openspeedtest.com/Get-widget.php" 
-                    width="100%" height="500px" frameborder="0" allow="autoplay; encrypted-media">
-                </iframe>
-            </div>
-
             <div class="tools-grid">
                 
                 <div class="tool-card">
@@ -245,7 +248,7 @@
                     <div style="flex: 1;">
                         <div class="pass-display" id="pass-output">...</div>
                         <div class="pass-strength-info">
-                            Tempo estimado para quebra por<br>Força Bruta Computacional (GPU):<br>
+                            Tempo para quebra (Força Bruta GPU):<br>
                             <span id="pass-time" style="font-size: 1.1rem; display: block; margin-top: 5px;">Calculando...</span>
                         </div>
                         <div class="pass-controls">
@@ -273,24 +276,47 @@
                     </div>
                     <button class="btn-tool" onclick="executarPing()">Testar Resposta</button>
                 </div>
-
-                <div class="tool-card">
-                    <div class="tool-header">
-                        <div class="tool-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>
-                        <h3>Gerenciador de Arquivos</h3>
-                    </div>
-                    <div style="flex: 1;">
-                        <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px;">Downloads essenciais para suporte N1/N2:</p>
-                        <ul class="download-list">
-                            <li><a href="https://anydesk.com/pt/downloads/" target="_blank"><span>AnyDesk Cliente</span> <span style="color:var(--primary)">↓</span></a></li>
-                            <li><a href="https://rustdesk.com/" target="_blank"><span>RustDesk (Open Source)</span> <span style="color:var(--primary)">↓</span></a></li>
-                            <li><a href="https://mikrotik.com/download" target="_blank"><span>MikroTik Winbox</span> <span style="color:var(--primary)">↓</span></a></li>
-                            <li><a href="https://www.advanced-ip-scanner.com/br/" target="_blank"><span>Advanced IP Scanner</span> <span style="color:var(--primary)">↓</span></a></li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
+
+            <div class="download-section">
+                <h2 class="download-title">Gerenciador de Arquivos</h2>
+                <p class="download-desc">Ferramentas oficiais homologadas para acesso e suporte técnico JMDC.</p>
+                
+                <div class="download-grid">
+                    <a href="https://anydesk.com/pt/downloads/" target="_blank" class="download-card">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                        <span style="font-weight: bold; font-size: 1.15rem;">AnyDesk</span>
+                        <span style="font-size: 0.85rem;">Suporte Remoto</span>
+                    </a>
+                    
+                    <a href="https://rustdesk.com/" target="_blank" class="download-card">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        <span style="font-weight: bold; font-size: 1.15rem;">RustDesk</span>
+                        <span style="font-size: 0.85rem;">Alternativa Open Source</span>
+                    </a>
+                    
+                    <a href="https://mikrotik.com/download" target="_blank" class="download-card">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+                        <span style="font-weight: bold; font-size: 1.15rem;">Winbox</span>
+                        <span style="font-size: 0.85rem;">Gerenciador MikroTik</span>
+                    </a>
+
+                    <a href="https://www.advanced-ip-scanner.com/br/" target="_blank" class="download-card">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><path d="M11 8v3l2 2"></path></svg>
+                        <span style="font-weight: bold; font-size: 1.15rem;">IP Scanner</span>
+                        <span style="font-size: 0.85rem;">Varredura de Rede</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="speedtest-container">
+                <h2 style="text-align: center; color: var(--primary); font-size: 2rem; font-weight: 800; padding: 20px 0 10px 0;">Performance de Conexão</h2>
+                <iframe 
+                    src="https://openspeedtest.com/Get-widget.php" 
+                    width="100%" height="500px" frameborder="0" allow="autoplay; encrypted-media">
+                </iframe>
+            </div>
+
         </div>
 
         <footer>
@@ -311,15 +337,15 @@
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('youtube-player', {
                 height: '0', width: '0',
-                videoId: 'bsV6LuV724I', // ID do Vídeo Clássico de Vivaldi
-                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'bsV6LuV724I' },
+                videoId: 'IGlURY9Na-Q', // ID do Vivaldi Winter 2 Horas
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'IGlURY9Na-Q' },
                 events: { 'onReady': () => { isYtReady = true; } }
             });
         }
 
         function toggleMusic() {
             if (!isYtReady || !ytPlayer || typeof ytPlayer.playVideo !== 'function') {
-                alert("Aguarde um instante, o maestro está afinando os instrumentos...");
+                alert("Aguarde um instante, o maestro Vivaldi está afinando os instrumentos...");
                 return;
             }
             
@@ -373,7 +399,7 @@
             generatePassword();
         });
 
-        // Scanner IP Dual Stack
+        // --- SCANNER IP DUAL STACK ---
         function fetchIP() {
             document.getElementById('ip-v4').innerText = "Buscando...";
             document.getElementById('ip-v6').innerText = "Buscando...";
@@ -407,7 +433,7 @@
                 .catch(() => document.getElementById('ip-isp').innerText = "Bloqueado");
         }
 
-        // Fingerprint
+        // --- FINGERPRINT ---
         function coletarFingerprint() {
             let os = "Desconhecido", browser = "Desconhecido";
             const ua = navigator.userAgent;
@@ -431,12 +457,12 @@
         }
 
         function copiarFingerprint() {
-            const data = `JMDC Support Fingerprint:\nOS: ${document.getElementById('fg-os').innerText}\nNavegador: ${document.getElementById('fg-browser').innerText}\nResolução: ${document.getElementById('fg-res').innerText}`;
+            const data = `JMDC Support Fingerprint:\nOS: ${document.getElementById('fg-os').innerText}\nNavegador: ${document.getElementById('fg-browser').innerText}\nResolução: ${document.getElementById('fg-res').innerText}\nConexão: ${document.getElementById('fg-net').innerText}`;
             navigator.clipboard.writeText(data);
             alert("Dados copiados para o chamado!");
         }
 
-        // Gerador de Senhas com Entropia
+        // --- GERADOR DE SENHAS & ENTROPIA ---
         function generatePassword() {
             const length = document.getElementById('pass-length').value;
             document.getElementById('pass-length-val').innerText = length;
@@ -476,7 +502,7 @@
             alert("Senha copiada com segurança!");
         }
 
-        // Ping HTTP Fake
+        // --- PING HTTP FAKE ---
         function executarPing() {
             let target = document.getElementById('ping-target').value.trim();
             if(!target) target = "google.com";
