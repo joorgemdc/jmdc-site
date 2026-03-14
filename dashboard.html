@@ -7,7 +7,13 @@
     <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
-        :root { --bg-color: #0a0f1d; --text-color: #e2e8f0; --primary: #3b82f6; --secondary: #1e293b; --accent: #10b981; --danger: #ef4444; --card-bg: rgba(30, 41, 59, 0.5); --card-border: rgba(59, 130, 246, 0.2); }
+        /* --- ESTILOS GLOBAIS --- */
+        :root {
+            --bg-color: #0a0f1d; --text-color: #e2e8f0; --primary: #3b82f6; 
+            --secondary: #1e293b; --accent: #10b981; --danger: #ef4444; 
+            --warning: #f59e0b; --card-bg: rgba(30, 41, 59, 0.5); --card-border: rgba(59, 130, 246, 0.2);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; position: relative; display: flex; flex-direction: column; min-height: 100vh; }
         #network-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.2; pointer-events: none; }
@@ -18,6 +24,7 @@
 
         main { position: relative; z-index: 10; flex: 1; display: none; padding-top: 100px; }
 
+        /* --- CABEÇALHO --- */
         header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95); backdrop-filter: blur(10px); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(59, 130, 246, 0.15); }
         .logo-link { display: flex; align-items: center; text-decoration: none; }
         .logo-img { height: 40px; width: auto; transition: transform 0.3s ease; }
@@ -29,6 +36,7 @@
         .btn-logout { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 6px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-logout:hover { background: rgba(239, 68, 68, 0.1); }
 
+        /* --- DASHBOARD GRID --- */
         .dashboard-container { max-width: 1300px; margin: 0 auto; padding: 40px 5%; width: 100%; }
         
         .welcome-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; flex-wrap: wrap; gap: 20px; }
@@ -41,8 +49,12 @@
         .btn-action:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
 
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .dash-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 16px; padding: 25px; transition: 0.3s ease; display: flex; flex-direction: column; }
+        .dash-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 16px; padding: 25px; transition: 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .dash-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .dash-card.clickable { cursor: pointer; }
+        .dash-card.clickable::after { content: 'Visualizar ↗'; position: absolute; bottom: 25px; right: 25px; font-size: 0.8rem; color: var(--primary); font-weight: bold; opacity: 0; transition: 0.3s; }
+        .dash-card.clickable:hover::after { opacity: 1; right: 20px; }
+
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: white; }
         .card-icon { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 10px; border-radius: 8px; display: flex; }
@@ -51,24 +63,50 @@
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
 
-        /* Modal de Chamados */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.8); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; }
-        .modal-content { background: var(--secondary); border: 1px solid var(--card-border); border-radius: 16px; padding: 30px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .modal-close { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
-        .modal-close:hover { color: var(--danger); }
-        .modal-title { font-size: 1.5rem; font-weight: bold; color: white; margin-bottom: 20px; }
+        /* --- MODAL DE ABERTURA DE CHAMADO (Avançado) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; width: 90%; max-width: 700px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .modal-close:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .modal-title { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .modal-subtitle { color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px; }
         
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; font-weight: 600; }
-        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 1rem; }
-        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
+        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
+        .file-upload-area { border: 2px dashed #334155; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; }
+        .file-upload-area:hover { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); color: white; }
+
+        /* --- PAINEL LATERAL DE CHAMADOS (Offcanvas) --- */
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .ticket-sidebar { position: fixed; top: 0; right: -500px; width: 100%; max-width: 450px; height: 100vh; background: #0f172a; z-index: 1600; border-left: 1px solid var(--card-border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; }
+        .ticket-sidebar.active { right: 0; }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-header h2 { font-size: 1.4rem; color: white; }
+        .sidebar-body { padding: 25px; flex: 1; overflow-y: auto; }
+        
+        /* Placeholder para os itens do chamado na sidebar */
+        .ticket-item { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 10px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
+        .ticket-item:hover { border-color: var(--primary); }
+        .ticket-item-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .ticket-id { color: var(--primary); font-weight: bold; font-size: 0.85rem; }
+        .ticket-status { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid var(--warning); }
+        .ticket-subject { color: white; font-weight: 600; font-size: 1rem; margin-bottom: 5px; }
+        .ticket-date { color: #64748b; font-size: 0.8rem; }
+
+        /* --- ADMIN PANEL --- */
         #admin-panel { display: none; margin-top: 40px; }
         .admin-card { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .admin-card .card-icon { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+        .admin-card:hover { border-color: var(--danger); }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
-        @media (max-width: 768px) { header { padding: 12px 15px !important; } .nav-links { display: none; } .dashboard-container { padding: 20px 5%; } .welcome-header h1 { font-size: 1.8rem; flex-direction: column; align-items: flex-start; gap: 5px; } }
+        @media (max-width: 768px) { header { padding: 12px 15px !important; } .nav-links { display: none; } .dashboard-container { padding: 20px 5%; } .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } }
     </style>
 </head>
 <body>
@@ -113,13 +151,13 @@
                     <p class="card-desc">Serviços operando dentro da normalidade.</p>
                 </div>
 
-                <div class="dash-card">
+                <div class="dash-card clickable" onclick="openSidebar()">
                     <div class="card-header">
                         <div class="card-title">Chamados Abertos</div>
                         <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
                     </div>
                     <div class="card-value" id="ticket-count">0</div>
-                    <p class="card-desc">Histórico de incidentes relatados.</p>
+                    <p class="card-desc">Clique para visualizar o histórico e interações.</p>
                 </div>
 
                 <div class="dash-card">
@@ -141,7 +179,7 @@
                             <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
                         </div>
                         <div class="card-value">--</div>
-                        <p class="card-desc">Módulo em desenvolvimento para gerir requisições.</p>
+                        <p class="card-desc">Módulo em desenvolvimento para gerir requisições de todos os clientes.</p>
                     </div>
                 </div>
             </div>
@@ -152,37 +190,85 @@
         </footer>
     </main>
 
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <div class="ticket-sidebar" id="ticket-sidebar">
+        <div class="sidebar-header">
+            <h2>Meus Chamados</h2>
+            <button class="modal-close" style="position: relative; top: 0; right: 0;" onclick="closeSidebar()">×</button>
+        </div>
+        <div class="sidebar-body" id="ticket-list-container">
+            <p style="color: #64748b; text-align: center; margin-top: 50px;">Aguardando sincronização com o banco de dados...</p>
+            </div>
+    </div>
+
     <div class="modal-overlay" id="ticket-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">×</button>
-            <h3 class="modal-title">Relatar Incidente</h3>
+            <h3 class="modal-title">Novo Chamado Técnico</h3>
+            <p class="modal-subtitle">Nossa equipe de NOC analisará sua solicitação imediatamente.</p>
+            
             <form id="ticketForm">
-                <div class="form-group">
-                    <label>Categoria do Problema</label>
-                    <select id="ticket-category" required>
-                        <option value="Rede/Internet">Queda de Rede / Internet</option>
-                        <option value="Servidor/Nuvem">Falha em Servidor / Nuvem</option>
-                        <option value="Equipamento">Problema em Computador / Equipamento</option>
-                        <option value="Outros">Outros / Dúvidas</option>
-                    </select>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Categoria do Incidente</label>
+                        <select id="ticket-category" required>
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="Rede/Internet">Queda de Rede / Roteamento</option>
+                            <option value="Servidor/Nuvem">Indisponibilidade de Servidor</option>
+                            <option value="Equipamento">Falha de Hardware/Desktop</option>
+                            <option value="Sistema">Erro em Sistema/Software</option>
+                            <option value="Outros">Outros / Requisição Geral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>SLA (Nível de Urgência)</label>
+                        <select id="ticket-priority" required>
+                            <option value="Baixa">Baixa (Dúvidas/Solicitações)</option>
+                            <option value="Média" selected>Média (Impacto parcial)</option>
+                            <option value="Alta">Alta (Sistema parado)</option>
+                            <option value="Crítica">Crítica (Operação 100% inativa)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Assunto Breve</label>
+                        <input type="text" id="ticket-subject" required placeholder="Ex: Matriz sem comunicação VPN">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Descrição Detalhada do Problema</label>
+                        <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas da falha, equipamentos afetados e desde quando o problema ocorre..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <div class="file-upload-area">
+                            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24" style="margin-bottom: 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <br>Clique para anexar um print ou arquivo de log (Opcional)
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Assunto Breve</label>
-                    <input type="text" id="ticket-subject" required placeholder="Ex: Roteador sem acesso externo">
-                </div>
-                <div class="form-group">
-                    <label>Descrição Detalhada</label>
-                    <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas da falha..."></textarea>
-                </div>
-                <button type="submit" class="btn-action" style="width: 100%; justify-content: center;" id="btn-submit-ticket">Enviar Chamado Técnico</button>
+                <button type="submit" class="btn-action" style="width: 100%; justify-content: center; margin-top: 10px;" id="btn-submit-ticket">Protocolar Chamado</button>
             </form>
         </div>
     </div>
 
     <script>
+        // Funções do Modal
         function openModal() { document.getElementById('ticket-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('ticket-modal').style.display = 'none'; document.getElementById('ticketForm').reset(); }
         
+        // Funções da Sidebar
+        function openSidebar() { 
+            document.getElementById('sidebar-overlay').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('sidebar-overlay').style.opacity = '1';
+                document.getElementById('ticket-sidebar').classList.add('active');
+            }, 10);
+        }
+        function closeSidebar() {
+            document.getElementById('ticket-sidebar').classList.remove('active');
+            document.getElementById('sidebar-overlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
+        }
+
+        // Fundo Animado
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('network-canvas');
             if (canvas) {
@@ -225,7 +311,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        let currentUserData = null; // Armazena info global para o chamado
+        let currentUserData = null; 
 
         // 1. GUARDA DE ROTA E CARREGAMENTO
         onAuthStateChanged(auth, async (user) => {
@@ -252,8 +338,8 @@
                             document.getElementById('main-content').style.display = 'block';
                         }, 500);
                     } else {
-                        document.getElementById('loader-text').innerText = "Perfil não localizado. Encerrando...";
-                        setTimeout(() => signOut(auth), 2000);
+                        document.getElementById('loader-text').innerText = "Perfil não localizado. Redirecionando...";
+                        setTimeout(() => signOut(auth), 2500);
                     }
                 } catch (error) {
                     document.getElementById('loader-text').innerText = "Falha de conexão com o banco.";
@@ -264,13 +350,14 @@
             }
         });
 
-        // 2. GRAVAÇÃO DE CHAMADOS NO FIRESTORE
+        // 2. GRAVAÇÃO DE CHAMADOS NO FIRESTORE (Com Severidade)
         document.getElementById('ticketForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-ticket');
-            btn.innerText = "Enviando..."; btn.disabled = true;
+            btn.innerText = "Protocolando..."; btn.disabled = true;
 
             const category = document.getElementById('ticket-category').value;
+            const priority = document.getElementById('ticket-priority').value;
             const subject = document.getElementById('ticket-subject').value.trim();
             const desc = document.getElementById('ticket-desc').value.trim();
             const user = auth.currentUser;
@@ -281,24 +368,25 @@
                     empresa: currentUserData.empresa,
                     solicitante: currentUserData.nome,
                     categoria: category,
+                    severidade: priority,
                     assunto: subject,
                     descricao: desc,
                     status: "Aberto",
                     dataAbertura: serverTimestamp()
                 });
                 
-                alert("Chamado técnico aberto com sucesso! Nossa equipe foi notificada.");
+                alert("Incidente protocolado com sucesso! A equipe de NOC foi acionada.");
                 closeModal();
                 
-                // Incrementa o contador na tela visualmente
+                // Atualiza o contador de chamados abertos no card visual
                 const countEl = document.getElementById('ticket-count');
                 countEl.innerText = parseInt(countEl.innerText) + 1;
                 
             } catch (error) {
                 console.error("Erro ao abrir chamado:", error);
-                alert("Ocorreu um erro ao registrar o chamado. Tente novamente.");
+                alert("Ocorreu um erro na rede ao registrar o chamado. Tente novamente.");
             } finally {
-                btn.innerText = "Enviar Chamado Técnico"; btn.disabled = false;
+                btn.innerText = "Protocolar Chamado"; btn.disabled = false;
             }
         });
 
