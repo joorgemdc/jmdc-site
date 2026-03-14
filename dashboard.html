@@ -32,7 +32,7 @@
             z-index: 0; opacity: 0.2; pointer-events: none;
         }
 
-        /* --- TELA DE CARREGAMENTO (Proteção visual enquanto checa o login) --- */
+        /* --- TELA DE CARREGAMENTO --- */
         #loader {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: var(--bg-color); z-index: 9999; display: flex;
@@ -69,16 +69,22 @@
         .dashboard-container { max-width: 1300px; margin: 0 auto; padding: 40px 5%; width: 100%; }
         
         .welcome-header { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; }
-        .welcome-header h1 { font-size: 2.5rem; font-weight: 800; color: #ffffff; }
+        .welcome-header h1 { font-size: 2.5rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 15px; }
         .welcome-header span { color: var(--primary); }
-        .welcome-header p { color: #94a3b8; font-size: 1.1rem; }
+        .welcome-header p { color: #94a3b8; font-size: 1.1rem; margin-top: 10px; }
+
+        .admin-badge {
+            background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger);
+            padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: bold;
+            display: none; letter-spacing: 1px;
+        }
 
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
 
         .dash-card {
             background: var(--card-bg); backdrop-filter: blur(10px);
             border: 1px solid var(--card-border); border-radius: 16px; padding: 25px;
-            transition: 0.3s ease;
+            transition: 0.3s ease; display: flex; flex-direction: column;
         }
         .dash-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
@@ -90,8 +96,13 @@
         .card-value { font-size: 2.5rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 10px; }
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
 
-        /* Status System */
-        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); }
+        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
+
+        /* Painel Exclusivo de Admin */
+        #admin-panel { display: none; margin-top: 40px; }
+        .admin-card { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .admin-card .card-icon { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+        .admin-card:hover { border-color: var(--danger); }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
@@ -99,7 +110,7 @@
             header { padding: 12px 15px !important; }
             .nav-links { display: none; }
             .dashboard-container { padding: 20px 5%; }
-            .welcome-header h1 { font-size: 2rem; }
+            .welcome-header h1 { font-size: 1.8rem; flex-direction: column; align-items: flex-start; gap: 5px; }
         }
     </style>
 </head>
@@ -109,7 +120,7 @@
 
     <div id="loader">
         <div class="spinner"></div>
-        <p style="color: #94a3b8; font-weight: bold; letter-spacing: 1px;">Autenticando Infraestrutura...</p>
+        <p style="color: #94a3b8; font-weight: bold; letter-spacing: 1px;" id="loader-text">Autenticando Infraestrutura...</p>
     </div>
 
     <main id="main-content">
@@ -122,26 +133,25 @@
                     <li><a href="index.html">Início</a></li>
                     <li><a href="network.html">Ferramentas</a></li>
                 </ul>
-                <button class="btn-logout" id="btn-logout">Sair do Painel</button>
+                <button class="btn-logout" id="btn-logout">Sair da Sessão</button>
             </nav>
         </header>
 
         <div class="dashboard-container">
             
             <div class="welcome-header">
-                <h1>Bem-vindo(a), <span id="user-name">Carregando...</span></h1>
+                <h1>Bem-vindo(a), <span id="user-name">Carregando...</span> <div class="admin-badge" id="admin-badge">SUPERUSUÁRIO</div></h1>
                 <p>Governança e Status da Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
             </div>
 
             <div class="dash-grid">
-                
                 <div class="dash-card">
                     <div class="card-header">
                         <div class="card-title">Status do Ambiente</div>
                         <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
                     </div>
-                    <div class="status-badge" id="user-status">ATIVO</div>
-                    <p class="card-desc" style="margin-top: 15px;">Todos os serviços operando dentro da normalidade.</p>
+                    <div><span class="status-badge" id="user-status">ATIVO</span></div>
+                    <p class="card-desc">Todos os serviços operando dentro da normalidade.</p>
                 </div>
 
                 <div class="dash-card">
@@ -161,8 +171,22 @@
                     <div class="card-value">R$ 0,00</div>
                     <p class="card-desc">Sua infraestrutura está em dia.</p>
                 </div>
-
             </div>
+
+            <div id="admin-panel">
+                <h2 style="color: var(--danger); margin-bottom: 20px; font-size: 1.5rem; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 10px;">Gestão Global JMDC</h2>
+                <div class="dash-grid">
+                    <div class="dash-card admin-card">
+                        <div class="card-header">
+                            <div class="card-title">Clientes Ativos</div>
+                            <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                        </div>
+                        <div class="card-value">--</div>
+                        <p class="card-desc">Módulo em desenvolvimento para listar clientes.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <footer>
@@ -200,7 +224,6 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Mesmas credenciais
         const firebaseConfig = {
             apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
             authDomain: "jmdc-crm.firebaseapp.com",
@@ -215,10 +238,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 1. GUARDA DE ROTA (Verifica se está logado)
+        // 1. GUARDA DE ROTA E LEITURA
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Usuário está logado. Busca os dados no Banco.
                 try {
                     const docRef = doc(db, "clientes", user.uid);
                     const docSnap = await getDoc(docRef);
@@ -226,38 +248,44 @@
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
                         
-                        // Injeta os dados do banco no HTML
+                        // Injeta os dados no HTML
                         document.getElementById('user-name').innerText = userData.nome;
                         document.getElementById('user-company').innerText = userData.empresa;
                         document.getElementById('user-status').innerText = userData.status.toUpperCase();
+
+                        // Verifica se é o Mestre (Admin)
+                        if(userData.nivelAcesso === "admin") {
+                            document.getElementById('admin-badge').style.display = 'inline-block';
+                            document.getElementById('admin-panel').style.display = 'block';
+                        }
                         
-                        // Esconde o loader e mostra o dashboard
+                        // Libera a tela
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => {
                             document.getElementById('loader').style.display = 'none';
-                            document.getElementById('main-content').style.display = 'flex';
+                            document.getElementById('main-content').style.display = 'block';
                         }, 500);
 
                     } else {
-                        console.log("Documento não encontrado!");
-                        alert("Erro ao buscar perfil. Contate o suporte.");
+                        // Se logou mas não tem documento no Firestore
+                        document.getElementById('loader-text').innerText = "Perfil não localizado. Encerrando...";
+                        setTimeout(() => signOut(auth), 2000);
                     }
                 } catch (error) {
-                    console.error("Erro ao ler Firestore:", error);
+                    console.error("Erro Firestore:", error);
+                    document.getElementById('loader-text').innerText = "Falha de conexão. Tente recarregar a página.";
+                    document.getElementById('loader-text').style.color = "var(--danger)";
                 }
             } else {
-                // Usuário não está logado. Expulsa para o crm.html
+                // Usuário NÃO logado - Joga pro CRM para logar
                 window.location.href = "crm.html";
             }
         });
 
         // 2. LÓGICA DE LOGOUT
         document.getElementById('btn-logout').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                // Ao deslogar, o onAuthStateChanged acima vai capturar a mudança e redirecionar automaticamente.
-            }).catch((error) => {
-                console.error("Erro ao sair:", error);
-            });
+            signOut(auth).catch((error) => console.error("Erro ao sair:", error));
+            // O onAuthStateChanged vai detectar a saída automaticamente e redirecionar
         });
     </script>
 </body>
