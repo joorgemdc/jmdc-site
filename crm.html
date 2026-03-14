@@ -1,95 +1,45 @@
-<script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMDC | Área do Cliente</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <style>
+        /* --- ESTILOS GLOBAIS --- */
+        :root {
+            --bg-color: #0a0f1d;
+            --text-color: #e2e8f0;
+            --primary: #3b82f6;
+            --secondary: #1e293b;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --card-border: rgba(59, 130, 246, 0.3);
+        }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
-            authDomain: "jmdc-crm.firebaseapp.com",
-            projectId: "jmdc-crm",
-            storageBucket: "jmdc-crm.firebasestorage.app",
-            messagingSenderId: "495316438549",
-            appId: "1:495316438549:web:f884f5834773cb87b3881c",
-            measurementId: "G-ZB1GSMC1XW"
-        };
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); color: var(--text-color); 
+            line-height: 1.6; overflow-x: hidden; position: relative;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        #network-canvas { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            z-index: 0; opacity: 0.3; pointer-events: none;
+        }
 
-        const exibirAlerta = window.showAlert || function(msg) { alert(msg); };
+        main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 5% 40px 5%; }
 
-        // --- OBSERVADOR DE ESTADO (ROTEAMENTO BLINDADO) ---
-        // Se o Firebase confirmar que o usuário tem um token válido, joga para o painel.
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.location.href = "dashboard.html";
-            }
-        });
+        /* --- CABEÇALHO --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95);
+            backdrop-filter: blur(10px); position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+        }
 
-        // --- PROCESSO DE CADASTRO ---
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btn-do-register');
-            btn.innerText = "Processando..."; btn.disabled = true;
-
-            const nome = document.getElementById('reg-nome').value.trim();
-            const sobrenome = document.getElementById('reg-sobrenome').value.trim();
-            const empresa = document.getElementById('reg-empresa').value.trim();
-            const telefone = document.getElementById('reg-telefone').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const pass = document.getElementById('reg-pass').value;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
-
-                await setDoc(doc(db, "clientes", user.uid), {
-                    nome: nome,
-                    sobrenome: sobrenome,
-                    empresa: empresa,
-                    telefone: telefone,
-                    email: email,
-                    dataCadastro: serverTimestamp(),
-                    status: "ativo",
-                    nivelAcesso: "cliente" // Você alterará isso manualmente no console para "admin"
-                });
-
-                exibirAlerta("Conta provisionada com sucesso! Redirecionando...", true);
-                // O onAuthStateChanged assumirá o roteamento a partir daqui.
-
-            } catch (error) {
-                console.error(error);
-                if (error.code === 'auth/email-already-in-use') exibirAlerta("Este e-mail já possui cadastro.");
-                else if (error.code === 'auth/weak-password') exibirAlerta("A senha deve ter no mínimo 6 caracteres.");
-                else exibirAlerta("Erro na comunicação com o banco de dados.");
-                
-                btn.innerText = "Provisionar Conta"; btn.disabled = false;
-            }
-        });
-
-        // --- PROCESSO DE LOGIN ---
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btn-do-login');
-            btn.innerText = "Autenticando..."; btn.disabled = true;
-
-            const email = document.getElementById('log-email').value.trim();
-            const pass = document.getElementById('log-pass').value;
-
-            try {
-                exibirAlerta("Analisando credenciais...", true);
-                await signInWithEmailAndPassword(auth, email, pass);
-                // O onAuthStateChanged assumirá o roteamento a partir daqui.
-
-            } catch (error) {
-                console.error(error);
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    exibirAlerta("Credenciais inválidas. Verifique o e-mail e a senha.");
-                } else {
-                    exibirAlerta("Falha na autenticação. Tente novamente.");
-                }
-                btn.innerText = "Acessar Painel"; btn.disabled = false;
-            }
-        });
-    </script>
+        .logo-link { display
