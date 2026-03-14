@@ -1,204 +1,95 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JMDC | Área do Cliente</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <style>
-        /* --- ESTILOS GLOBAIS --- */
-        :root {
-            --bg-color: #0a0f1d;
-            --text-color: #e2e8f0;
-            --primary: #3b82f6;
-            --secondary: #1e293b;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --card-bg: rgba(30, 41, 59, 0.6);
-            --card-border: rgba(59, 130, 246, 0.3);
-        }
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        
-        body { 
-            background-color: var(--bg-color); color: var(--text-color); 
-            line-height: 1.6; overflow-x: hidden; position: relative;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
+            authDomain: "jmdc-crm.firebaseapp.com",
+            projectId: "jmdc-crm",
+            storageBucket: "jmdc-crm.firebasestorage.app",
+            messagingSenderId: "495316438549",
+            appId: "1:495316438549:web:f884f5834773cb87b3881c",
+            measurementId: "G-ZB1GSMC1XW"
+        };
 
-        #network-canvas { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            z-index: 0; opacity: 0.3; pointer-events: none;
-        }
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 5% 40px 5%; }
+        const exibirAlerta = window.showAlert || function(msg) { alert(msg); };
 
-        /* --- CABEÇALHO --- */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95);
-            backdrop-filter: blur(10px); position: fixed; width: 100%; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-        }
+        // --- OBSERVADOR DE ESTADO (ROTEAMENTO BLINDADO) ---
+        // Se o Firebase confirmar que o usuário tem um token válido, joga para o painel.
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "dashboard.html";
+            }
+        });
 
-        .logo-link { display: flex; align-items: center; text-decoration: none; }
-        .logo-img { height: 40px; width: auto; transition: transform 0.3s ease; }
-        .logo-img:hover { transform: scale(1.05); }
+        // --- PROCESSO DE CADASTRO ---
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-do-register');
+            btn.innerText = "Processando..."; btn.disabled = true;
 
-        nav { display: flex; align-items: center; gap: 2rem; }
-        .nav-links { display: flex; list-style: none; gap: 2rem; }
-        .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary); }
+            const nome = document.getElementById('reg-nome').value.trim();
+            const sobrenome = document.getElementById('reg-sobrenome').value.trim();
+            const empresa = document.getElementById('reg-empresa').value.trim();
+            const telefone = document.getElementById('reg-telefone').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
 
-        .btn-client { color: var(--accent) !important; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 6px; }
-        .btn-client:hover { background: rgba(16, 185, 129, 0.1); }
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
 
-        /* --- CONTAINER DE AUTENTICAÇÃO --- */
-        .auth-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 40px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-        }
+                await setDoc(doc(db, "clientes", user.uid), {
+                    nome: nome,
+                    sobrenome: sobrenome,
+                    empresa: empresa,
+                    telefone: telefone,
+                    email: email,
+                    dataCadastro: serverTimestamp(),
+                    status: "ativo",
+                    nivelAcesso: "cliente" // Você alterará isso manualmente no console para "admin"
+                });
 
-        .auth-header { text-align: center; margin-bottom: 30px; }
-        .auth-header h2 { font-size: 2rem; font-weight: 800; color: #ffffff; }
-        .auth-header span { color: var(--primary); }
-        .auth-header p { color: #94a3b8; font-size: 0.9rem; margin-top: 5px; }
+                exibirAlerta("Conta provisionada com sucesso! Redirecionando...", true);
+                // O onAuthStateChanged assumirá o roteamento a partir daqui.
 
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; font-weight: 600; }
-        .input-group input {
-            width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.8); 
-            border: 1px solid #334155; color: white; border-radius: 8px; 
-            outline: none; font-size: 1rem; transition: 0.3s;
-        }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/email-already-in-use') exibirAlerta("Este e-mail já possui cadastro.");
+                else if (error.code === 'auth/weak-password') exibirAlerta("A senha deve ter no mínimo 6 caracteres.");
+                else exibirAlerta("Erro na comunicação com o banco de dados.");
+                
+                btn.innerText = "Provisionar Conta"; btn.disabled = false;
+            }
+        });
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        // --- PROCESSO DE LOGIN ---
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-do-login');
+            btn.innerText = "Autenticando..."; btn.disabled = true;
 
-        .btn-submit {
-            width: 100%; padding: 14px; margin-top: 10px; background: var(--primary); 
-            color: white; border: none; border-radius: 8px; font-weight: bold; 
-            font-size: 1.1rem; cursor: pointer; transition: 0.3s;
-        }
-        .btn-submit:hover { background: #2563eb; transform: translateY(-2px); }
-        .btn-submit:disabled { background: #475569; cursor: not-allowed; transform: none; }
+            const email = document.getElementById('log-email').value.trim();
+            const pass = document.getElementById('log-pass').value;
 
-        .auth-toggle { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #94a3b8; }
-        .auth-toggle a { color: var(--primary); text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .auth-toggle a:hover { color: #60a5fa; text-decoration: underline; }
+            try {
+                exibirAlerta("Analisando credenciais...", true);
+                await signInWithEmailAndPassword(auth, email, pass);
+                // O onAuthStateChanged assumirá o roteamento a partir daqui.
 
-        .alert-box { display: none; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; font-weight: bold; text-align: center; }
-        .alert-error { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: #fca5a5; }
-        .alert-success { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent); color: #6ee7b7; }
-
-        .hidden { display: none !important; }
-
-        @media (max-width: 768px) {
-            header { padding: 12px 15px !important; }
-            .nav-links { display: none; }
-            .auth-container { padding: 30px 20px; }
-            .grid-2 { grid-template-columns: 1fr; gap: 0; }
-        }
-    </style>
-</head>
-<body>
-
-    <canvas id="network-canvas"></canvas>
-
-    <header>
-        <a href="index.html" class="logo-link">
-            <img src="images/logo-blue.png" alt="JMDC Tecnologia" class="logo-img">
-        </a>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="index.html">Início</a></li>
-                <li><a href="network.html">1-Tools</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <div class="auth-container">
-            
-            <div id="alert-msg" class="alert-box"></div>
-
-            <div id="form-login">
-                <div class="auth-header">
-                    <h2>Portal do <span>Cliente</span></h2>
-                    <p>Acesse seu painel de governança e infraestrutura.</p>
-                </div>
-                <form id="loginForm">
-                    <div class="input-group">
-                        <label>E-mail Corporativo</label>
-                        <input type="email" id="log-email" required placeholder="contato@suaempresa.com">
-                    </div>
-                    <div class="input-group">
-                        <label>Senha de Acesso</label>
-                        <input type="password" id="log-pass" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn-submit" id="btn-do-login">Acessar Painel</button>
-                </form>
-                <div class="auth-toggle">
-                    Ainda não é parceiro? <a id="btn-show-register">Solicite um cadastro</a>
-                </div>
-            </div>
-
-            <div id="form-register" class="hidden">
-                <div class="auth-header">
-                    <h2>Novo <span>Parceiro</span></h2>
-                    <p>Preencha os dados para provisionar seu ambiente.</p>
-                </div>
-                <form id="registerForm">
-                    <div class="grid-2">
-                        <div class="input-group">
-                            <label>Nome</label>
-                            <input type="text" id="reg-nome" required>
-                        </div>
-                        <div class="input-group">
-                            <label>Sobrenome</label>
-                            <input type="text" id="reg-sobrenome" required>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Nome da Empresa</label>
-                        <input type="text" id="reg-empresa" required placeholder="Razão Social ou Nome Fantasia">
-                    </div>
-                    <div class="input-group">
-                        <label>WhatsApp / Telefone</label>
-                        <input type="tel" id="reg-telefone" required placeholder="(00) 00000-0000">
-                    </div>
-                    <div class="input-group">
-                        <label>E-mail Corporativo</label>
-                        <input type="email" id="reg-email" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Defina uma Senha Segura</label>
-                        <input type="password" id="reg-pass" required placeholder="Mínimo 6 caracteres">
-                    </div>
-                    <button type="submit" class="btn-submit" id="btn-do-register">Provisionar Conta</button>
-                </form>
-                <div class="auth-toggle">
-                    Já possui acesso? <a id="btn-show-login">Faça Login aqui</a>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('network-canvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                let w, h, particles = [];
-                const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
-                window.addEventListener('resize', resize); resize();
-                function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    exibirAlerta("Credenciais inválidas. Verifique o e-mail e a senha.");
+                } else {
+                    exibirAlerta("Falha na autenticação. Tente novamente.");
+                }
+                btn.innerText = "Acessar Painel"; btn.disabled = false;
+            }
+        });
+    </script>
