@@ -79,8 +79,8 @@
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
         .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
-        .file-upload-area { border: 2px dashed #334155; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; position: relative; }
-        .file-upload-area.dragover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); }
+        .file-upload-area { border: 2px dashed #334155; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; position: relative; }
+        .file-upload-area.dragover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); color: white; }
         .file-upload-area input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .attachment-preview { margin-top: 10px; font-size: 0.85rem; color: var(--accent); font-weight: bold; }
 
@@ -100,14 +100,18 @@
         .ticket-subject { color: white; font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
         .ticket-date { color: #64748b; font-size: 0.85rem; }
 
-        /* Ticket View Modal */
+        /* Interação / Chat Modal */
         .chat-container { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 15px; height: 250px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .chat-msg { background: rgba(59, 130, 246, 0.1); padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: #e2e8f0; align-self: flex-start; max-width: 85%; }
+        .chat-msg { background: rgba(59, 130, 246, 0.1); padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: #e2e8f0; align-self: flex-start; max-width: 85%; word-break: break-word;}
         .chat-msg.staff { background: rgba(16, 185, 129, 0.1); align-self: flex-end; border: 1px solid rgba(16, 185, 129, 0.2); }
         .chat-author { font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px; font-weight: bold; }
-        .chat-input-group { display: flex; gap: 10px; }
-        .chat-input-group input { flex: 1; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
+        .chat-input-group { display: flex; gap: 10px; flex-direction: column; }
+        .chat-input-group input[type="text"] { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
         .attachment-badge { display: inline-block; padding: 5px 10px; background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 0.8rem; margin-top: 10px; text-decoration: none; color: var(--primary); }
+        
+        .chat-reply-upload { border: 1px dashed #334155; padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; color: #94a3b8; font-size: 0.8rem; position: relative; transition: 0.3s; }
+        .chat-reply-upload:hover { border-color: var(--primary); color: white; }
+        .chat-reply-upload input[type="file"] { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
 
         /* Admin */
         #admin-panel { display: none; margin-top: 40px; }
@@ -165,7 +169,7 @@
 
                 <div class="dash-card clickable" onclick="openSidebar()">
                     <div class="card-header">
-                        <div class="card-title">Chamados Ativos</div>
+                        <div class="card-title">Meus Chamados</div>
                         <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
                     </div>
                     <div class="card-value" id="ticket-count">0</div>
@@ -185,13 +189,13 @@
             <div id="admin-panel">
                 <h2 style="color: var(--danger); margin-bottom: 20px; font-size: 1.5rem; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 10px;">Visão Global da Operação</h2>
                 <div class="dash-grid">
-                    <div class="dash-card admin-card">
+                    <div class="dash-card admin-card clickable" onclick="openSidebar()">
                         <div class="card-header">
-                            <div class="card-title">Fila de Chamados Geral</div>
+                            <div class="card-title">Fila Geral (Todos os Clientes)</div>
                             <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
                         </div>
-                        <div class="card-value">--</div>
-                        <p class="card-desc">Em breve: Moderação e triagem para toda a carteira de clientes.</p>
+                        <div class="card-value" id="admin-ticket-count">0</div>
+                        <p class="card-desc">Clique para visualizar chamados em aberto de toda a carteira.</p>
                     </div>
                 </div>
             </div>
@@ -205,7 +209,7 @@
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
     <div class="ticket-sidebar" id="ticket-sidebar">
         <div class="sidebar-header">
-            <h2>Meus Chamados</h2>
+            <h2 id="sidebar-title">Meus Chamados</h2>
             <button class="modal-close" style="position: relative; top: 0; right: 0;" onclick="closeSidebar()">×</button>
         </div>
         <div class="sidebar-body" id="ticket-list-container">
@@ -243,19 +247,19 @@
                     </div>
                     <div class="form-group full-width">
                         <label>Assunto Breve</label>
-                        <input type="text" id="ticket-subject" required placeholder="Ex: Servidor Proxmox inacessível">
+                        <input type="text" id="ticket-subject" required placeholder="Ex: Servidor inacessível">
                     </div>
                     <div class="form-group full-width">
                         <label>Descrição Detalhada</label>
-                        <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas, equipamentos afetados, etc..."></textarea>
+                        <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas, equipamentos afetados..."></textarea>
                     </div>
                     <div class="form-group full-width">
-                        <div class="file-upload-area" id="drop-zone">
-                            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24" style="margin-bottom: 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <div class="file-upload-area" id="drop-zone-new">
+                            <svg fill="none" stroke="currentColor" width="24" height="24" style="margin-bottom: 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <br>Arraste uma evidência, cole (Ctrl+V) ou clique para anexar.
                             <input type="file" id="ticket-file" accept="image/*,.pdf,.txt,.log">
                         </div>
-                        <div class="attachment-preview" id="file-preview"></div>
+                        <div class="attachment-preview" id="file-preview-new"></div>
                     </div>
                 </div>
                 <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-submit-ticket">Gerar Requisição Técnica</button>
@@ -276,12 +280,17 @@
             <div class="chat-container" id="vt-chat">
                 </div>
 
-            <div id="vt-attachment-area"></div>
-
             <form id="replyForm" style="margin-top: 15px;">
                 <div class="chat-input-group">
                     <input type="text" id="vt-reply-text" placeholder="Digite sua mensagem ou atualização..." required>
-                    <button type="submit" class="btn-action" style="padding: 10px 20px;" id="btn-reply">Enviar</button>
+                    
+                    <div class="chat-reply-upload" id="drop-zone-reply">
+                        📎 Anexar evidência (Arraste, Ctrl+V ou Clique)
+                        <input type="file" id="reply-file" accept="image/*,.pdf,.txt,.log">
+                    </div>
+                    <div class="attachment-preview" id="file-preview-reply"></div>
+
+                    <button type="submit" class="btn-action" style="padding: 12px; width: 100%;" id="btn-reply">Enviar Resposta</button>
                 </div>
                 <div style="text-align: right; margin-top: 15px;">
                     <button type="button" class="btn-logout" id="btn-resolve-ticket">Encerrar Chamado (Resolvido)</button>
@@ -291,11 +300,26 @@
     </div>
 
     <script>
-        // Funções de Interface
+        let newTicketFile = null;
+        let replyTicketFile = null;
+
+        // Controle de Modais
         function openNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'flex'; }
-        function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; document.getElementById('newTicketForm').reset(); document.getElementById('file-preview').innerText = ''; attachedFile = null; }
-        function closeViewTicketModal() { document.getElementById('view-ticket-modal').style.display = 'none'; activeTicketId = null; }
+        function closeNewTicketModal() { 
+            document.getElementById('new-ticket-modal').style.display = 'none'; 
+            document.getElementById('newTicketForm').reset(); 
+            document.getElementById('file-preview-new').innerText = ''; 
+            newTicketFile = null; 
+        }
         
+        function closeViewTicketModal() { 
+            document.getElementById('view-ticket-modal').style.display = 'none'; 
+            window.activeTicketId = null; 
+            document.getElementById('replyForm').reset();
+            document.getElementById('file-preview-reply').innerText = '';
+            replyTicketFile = null;
+        }
+
         function openSidebar() { 
             document.getElementById('sidebar-overlay').style.display = 'block';
             setTimeout(() => { document.getElementById('sidebar-overlay').style.opacity = '1'; document.getElementById('ticket-sidebar').classList.add('active'); }, 10);
@@ -305,30 +329,44 @@
             setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
         }
 
-        // Lógica de Upload (Arrastar e Colar)
-        let attachedFile = null;
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('ticket-file');
-        const preview = document.getElementById('file-preview');
+        // Lógica de Upload Roteada (Novo Chamado vs Interação)
+        const dzNew = document.getElementById('drop-zone-new');
+        const fiNew = document.getElementById('ticket-file');
+        const dzRep = document.getElementById('drop-zone-reply');
+        const fiRep = document.getElementById('reply-file');
+        
+        fiNew.addEventListener('change', (e) => handleFile(e.target.files[0], 'new'));
+        dzNew.addEventListener('dragover', (e) => { e.preventDefault(); dzNew.classList.add('dragover'); });
+        dzNew.addEventListener('dragleave', () => dzNew.classList.remove('dragover'));
+        dzNew.addEventListener('drop', (e) => { e.preventDefault(); dzNew.classList.remove('dragover'); handleFile(e.dataTransfer.files[0], 'new'); });
+        
+        fiRep.addEventListener('change', (e) => handleFile(e.target.files[0], 'reply'));
+        dzRep.addEventListener('dragover', (e) => { e.preventDefault(); dzRep.classList.add('dragover'); });
+        dzRep.addEventListener('dragleave', () => dzRep.classList.remove('dragover'));
+        dzRep.addEventListener('drop', (e) => { e.preventDefault(); dzRep.classList.remove('dragover'); handleFile(e.dataTransfer.files[0], 'reply'); });
 
-        fileInput.addEventListener('change', (e) => { handleFile(e.target.files[0]); });
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
-        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
         window.addEventListener('paste', (e) => {
-            if(document.getElementById('new-ticket-modal').style.display === 'flex') {
-                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-                for (let index in items) {
-                    const item = items[index];
-                    if (item.kind === 'file') { handleFile(item.getAsFile()); break; }
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let index in items) {
+                const item = items[index];
+                if (item.kind === 'file') { 
+                    const file = item.getAsFile();
+                    if (document.getElementById('new-ticket-modal').style.display === 'flex') handleFile(file, 'new');
+                    else if (document.getElementById('view-ticket-modal').style.display === 'flex') handleFile(file, 'reply');
+                    break; 
                 }
             }
         });
 
-        function handleFile(file) {
+        function handleFile(file, type) {
             if(!file) return;
-            attachedFile = file;
-            preview.innerText = `📎 Anexo: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            if(type === 'new') {
+                newTicketFile = file;
+                document.getElementById('file-preview-new').innerText = `📎 Anexo: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            } else {
+                replyTicketFile = file;
+                document.getElementById('file-preview-reply').innerText = `📎 Anexo pronto para envio: ${file.name}`;
+            }
         }
 
         // Fundo Animado
@@ -376,9 +414,9 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
         let currentUserData = null; 
-        window.activeTicketId = null; // Exposto globalmente para o botão "Resolver"
+        window.activeTicketId = null;
 
-        // 1. GUARDA DE ROTA E PERFIS (RBAC)
+        // 1. GUARDA DE ROTA E PERFIS
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -388,27 +426,36 @@
                         document.getElementById('user-name').innerText = currentUserData.nome;
                         document.getElementById('user-company').innerText = currentUserData.empresa;
                         
-                        // Sistema de Permissões
+                        let isAdminOrSupport = false;
+
                         if(currentUserData.nivelAcesso === "admin") {
                             document.getElementById('admin-badge').style.display = 'inline-block';
                             document.getElementById('admin-panel').style.display = 'block';
+                            document.getElementById('sidebar-title').innerText = "Fila Global de Chamados";
+                            isAdminOrSupport = true;
                         } else if(currentUserData.nivelAcesso === "suporte") {
                             document.getElementById('suporte-badge').style.display = 'inline-block';
                             document.getElementById('admin-panel').style.display = 'block';
+                            document.getElementById('sidebar-title').innerText = "Fila Global de Chamados";
+                            isAdminOrSupport = true;
                         }
                         
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 500);
 
-                        // 2. LISTAGEM REATIVA DE CHAMADOS
-                        const q = query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
+                        // 2. LISTAGEM REATIVA (Cliente vs Admin)
+                        let q = isAdminOrSupport ? query(collection(db, "chamados")) : query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
+
                         onSnapshot(q, (snapshot) => {
                             const listContainer = document.getElementById('ticket-list-container');
                             const countEl = document.getElementById('ticket-count');
+                            const adminCountEl = document.getElementById('admin-ticket-count');
 
                             if(snapshot.empty) {
-                                listContainer.innerHTML = '<p style="color: #64748b; text-align: center; margin-top: 50px;">Nenhum chamado no histórico.</p>';
-                                countEl.innerText = "0"; return;
+                                listContainer.innerHTML = '<p style="color: #64748b; text-align: center; margin-top: 50px;">Nenhum chamado aberto.</p>';
+                                countEl.innerText = "0"; 
+                                if(adminCountEl) adminCountEl.innerText = "0";
+                                return;
                             }
 
                             let html = ''; let activeCount = 0; let tickets = [];
@@ -427,43 +474,41 @@
                                 let dateStr = ticket.dataAbertura ? new Date(ticket.dataAbertura.toDate()).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'}) : 'Hoje';
                                 let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--success)" : "var(--primary)");
                                 let bgStatus = ticket.status === "Aberto" ? "rgba(245, 158, 11, 0.1)" : (ticket.status === "Resolvido" ? "rgba(16, 185, 129, 0.1)" : "rgba(59, 130, 246, 0.1)");
-                                
-                                // Fix para tickets legados
-                                let prioridade = ticket.severidade || "Não definido";
+                                let pLevel = ticket.severidade || "Normal";
 
                                 html += `
                                 <div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}')">
                                     <div class="ticket-item-header">
-                                        <span class="ticket-id">${ticket.idInterno || ticket.docId.substring(0,8)}</span>
+                                        <span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span>
                                         <span class="ticket-status" style="color: ${statusColor}; background: ${bgStatus}; border-color: ${statusColor};">${ticket.status}</span>
                                     </div>
                                     <div class="ticket-subject">${ticket.assunto}</div>
-                                    <div class="ticket-date">${dateStr} • Nível: ${prioridade}</div>
+                                    <div class="ticket-date">${dateStr} • Nível: ${pLevel} ${isAdminOrSupport ? '• ' + ticket.empresa : ''}</div>
                                 </div>`;
                             });
 
-                            listContainer.innerHTML = html; countEl.innerText = activeCount;
+                            listContainer.innerHTML = html; 
+                            countEl.innerText = activeCount;
+                            if(adminCountEl) adminCountEl.innerText = activeCount;
                         });
 
                     } else {
-                        document.getElementById('loader-text').innerText = "Perfil bloqueado.";
                         setTimeout(() => signOut(auth), 2000);
                     }
                 } catch (error) { console.error(error); }
             } else { window.location.href = "crm.html"; }
         });
 
-        // Simulação de Gatilho de E-mail (A ser ligado ao Formspree/Firebase Ext)
-        async function dispararNotificacaoEmail(ticketId, assunto) {
-            console.log(`Disparando notificação de email para joorgemdc@gmail.com referente ao chamado ${ticketId}`);
-            // Exemplo futuro: fetch('https://formspree.io/f/SEU_ID', { method: 'POST', body: JSON.stringify({ email: 'joorgemdc@gmail.com', msg: 'Novo chamado: ' + assunto }) });
+        // Simulação de Email
+        function dispararNotificacaoEmail(ticketId, assunto) {
+            console.log(`Email de notificação para joorgemdc@gmail.com agendado: Chamado ${ticketId} - ${assunto}`);
         }
 
-        // 3. ABERTURA DE NOVO CHAMADO (Com Transação de ID e Storage)
+        // 3. ABERTURA DE NOVO CHAMADO E UPLOAD
         document.getElementById('newTicketForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-ticket');
-            btn.innerText = "Criando e Anexando..."; btn.disabled = true;
+            btn.innerText = "Processando..."; btn.disabled = true;
 
             const user = auth.currentUser;
             const category = document.getElementById('ticket-category').value;
@@ -472,7 +517,6 @@
             const desc = document.getElementById('ticket-desc').value.trim();
 
             try {
-                // Gera o ID Sequencial (ANO-MES-DIA-SEQ)
                 const counterRef = doc(db, "metadata", "chamadosCounter");
                 const generatedId = await runTransaction(db, async (transaction) => {
                     const counterDoc = await transaction.get(counterRef);
@@ -485,17 +529,16 @@
                     return `${ano}-${mes}-${dia}-${String(seq).padStart(4, '0')}`;
                 });
 
-                // Faz upload do anexo se existir
                 let attachmentUrl = null;
-                if(typeof attachedFile !== 'undefined' && attachedFile !== null) {
-                    const storageRef = ref(storage, `chamados/${generatedId}/${attachedFile.name}`);
-                    const snapshot = await uploadBytesResumable(storageRef, attachedFile);
-                    attachmentUrl = await getDownloadURL(snapshot.ref);
+                if(newTicketFile) {
+                    try {
+                        const storageRef = ref(storage, `chamados/${generatedId}/${newTicketFile.name}`);
+                        const snapshot = await uploadBytesResumable(storageRef, newTicketFile);
+                        attachmentUrl = await getDownloadURL(snapshot.ref);
+                    } catch(e) { console.error("Storage Blocked:", e); alert("Anexo recusado (Verifique se ativou o Storage no Firebase). O chamado será aberto sem anexo."); }
                 }
 
-                // Salva no Firestore
-                const newTicketRef = doc(collection(db, "chamados"));
-                await setDoc(newTicketRef, {
+                await setDoc(doc(collection(db, "chamados")), {
                     idInterno: generatedId,
                     uidCliente: user.uid,
                     empresa: currentUserData.empresa,
@@ -505,31 +548,25 @@
                     assunto: subject,
                     status: "Aberto",
                     dataAbertura: serverTimestamp(),
-                    historico: [{
-                        autor: currentUserData.nome,
-                        tipo: "cliente",
-                        texto: desc,
-                        anexo: attachmentUrl,
-                        data: new Date().toISOString()
-                    }]
+                    historico: [{ autor: currentUserData.nome, tipo: "cliente", texto: desc, anexo: attachmentUrl, data: new Date().toISOString() }]
                 });
                 
                 dispararNotificacaoEmail(generatedId, subject);
-                alert(`Chamado ${generatedId} aberto com sucesso!`);
+                alert(`Chamado ${generatedId} protocolado!`);
                 closeNewTicketModal();
             } catch (error) {
-                console.error("Erro transacional:", error);
-                alert("Falha na geração do chamado. Tente novamente.");
+                console.error(error); alert("Falha na geração do chamado.");
             } finally { btn.innerText = "Gerar Requisição Técnica"; btn.disabled = false; }
         });
 
-        // 4. LÓGICA DE INTERAÇÃO E VISUALIZAÇÃO DE CHAMADO
+        // 4. INTERAÇÃO E CHAT (Com Upload de Resposta)
         let currentTicketSnapshot = null;
         window.loadTicketDetails = function(docId) {
             window.activeTicketId = docId;
             document.getElementById('view-ticket-modal').style.display = 'flex';
+            closeSidebar();
             
-            if(currentTicketSnapshot) currentTicketSnapshot(); // Limpa listener antigo
+            if(currentTicketSnapshot) currentTicketSnapshot();
 
             currentTicketSnapshot = onSnapshot(doc(db, "chamados", docId), (docSnap) => {
                 if(!docSnap.exists()) return;
@@ -545,7 +582,6 @@
                 document.getElementById('vt-priority').innerText = data.severidade || "Padrão";
                 document.getElementById('vt-date').innerText = data.dataAbertura ? new Date(data.dataAbertura.toDate()).toLocaleString('pt-BR') : "...";
 
-                // Renderiza o Histórico de Chat
                 const chatContainer = document.getElementById('vt-chat');
                 chatContainer.innerHTML = '';
                 const hist = data.historico || [];
@@ -565,58 +601,62 @@
                 });
                 chatContainer.scrollTop = chatContainer.scrollHeight;
                 
-                // Trava input se resolvido
                 const repForm = document.getElementById('replyForm');
                 if(data.status === "Resolvido") repForm.style.display = "none";
                 else repForm.style.display = "block";
             });
         };
 
-        // Enviar Resposta
+        // Enviar Resposta com Anexo
         document.getElementById('replyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!window.activeTicketId) return;
             const input = document.getElementById('vt-reply-text');
             const texto = input.value.trim();
             const btn = document.getElementById('btn-reply');
-            btn.disabled = true;
+            btn.innerText = "Enviando..."; btn.disabled = true;
 
             try {
+                let replyAttachmentUrl = null;
+                if(replyTicketFile) {
+                    try {
+                        const replyStorageRef = ref(storage, `chamados/${window.activeTicketId}/reply_${Date.now()}_${replyTicketFile.name}`);
+                        const snapshot = await uploadBytesResumable(replyStorageRef, replyTicketFile);
+                        replyAttachmentUrl = await getDownloadURL(snapshot.ref);
+                    } catch(e) { console.error("Reply Storage Blocked:", e); alert("Não foi possível anexar o arquivo na resposta."); }
+                }
+
                 await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                    status: "Em Andamento", // Muda status ao responder
+                    status: "Em Andamento",
                     historico: arrayUnion({
                         autor: currentUserData.nome,
                         tipo: currentUserData.nivelAcesso || "cliente",
                         texto: texto,
-                        anexo: null,
+                        anexo: replyAttachmentUrl,
                         data: new Date().toISOString()
                     })
                 });
+                
                 input.value = '';
+                document.getElementById('file-preview-reply').innerText = '';
+                replyTicketFile = null;
             } catch (err) { console.error(err); alert("Erro ao enviar mensagem."); }
-            finally { btn.disabled = false; }
+            finally { btn.innerText = "Enviar Resposta"; btn.disabled = false; }
         });
 
-        // Botão de Encerrar
         document.getElementById('btn-resolve-ticket').addEventListener('click', async () => {
             if(!window.activeTicketId) return;
-            if(!confirm("Tem certeza que deseja marcar este chamado como Resolvido?")) return;
-            
+            if(!confirm("Tem certeza que deseja encerrar este chamado?")) return;
             try {
                 await updateDoc(doc(db, "chamados", window.activeTicketId), {
                     status: "Resolvido",
-                    historico: arrayUnion({
-                        autor: "Sistema", tipo: "admin",
-                        texto: "O chamado foi marcado como Resolvido pelo usuário.",
-                        data: new Date().toISOString()
-                    })
+                    historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado marcado como Resolvido.", data: new Date().toISOString() })
                 });
                 alert("Chamado encerrado.");
                 closeViewTicketModal();
             } catch(e) { console.error(e); }
         });
 
-        // Logout
         document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
     </script>
 </body>
