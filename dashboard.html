@@ -7,50 +7,18 @@
     <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
-        /* --- ESTILOS GLOBAIS --- */
-        :root {
-            --bg-color: #0a0f1d;
-            --text-color: #e2e8f0;
-            --primary: #3b82f6;
-            --secondary: #1e293b;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --card-bg: rgba(30, 41, 59, 0.5);
-            --card-border: rgba(59, 130, 246, 0.2);
-        }
-
+        :root { --bg-color: #0a0f1d; --text-color: #e2e8f0; --primary: #3b82f6; --secondary: #1e293b; --accent: #10b981; --danger: #ef4444; --card-bg: rgba(30, 41, 59, 0.5); --card-border: rgba(59, 130, 246, 0.2); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; position: relative; display: flex; flex-direction: column; min-height: 100vh; }
+        #network-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.2; pointer-events: none; }
         
-        body { 
-            background-color: var(--bg-color); color: var(--text-color); 
-            line-height: 1.6; overflow-x: hidden; position: relative;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-
-        #network-canvas { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            z-index: 0; opacity: 0.2; pointer-events: none;
-        }
-
-        /* --- TELA DE CARREGAMENTO --- */
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: var(--bg-color); z-index: 9999; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-        }
+        #loader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(59, 130, 246, 0.3); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         main { position: relative; z-index: 10; flex: 1; display: none; padding-top: 100px; }
 
-        /* --- CABEÇALHO --- */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95);
-            backdrop-filter: blur(10px); position: fixed; width: 100%; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95); backdrop-filter: blur(10px); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(59, 130, 246, 0.15); }
         .logo-link { display: flex; align-items: center; text-decoration: none; }
         .logo-img { height: 40px; width: auto; transition: transform 0.3s ease; }
         .logo-img:hover { transform: scale(1.05); }
@@ -58,60 +26,49 @@
         .nav-links { display: flex; list-style: none; gap: 2rem; }
         .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: var(--primary); }
-        
-        .btn-logout { 
-            background: transparent; color: var(--danger); border: 1px solid var(--danger); 
-            padding: 6px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; 
-        }
+        .btn-logout { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 6px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-logout:hover { background: rgba(239, 68, 68, 0.1); }
 
-        /* --- DASHBOARD GRID --- */
         .dashboard-container { max-width: 1300px; margin: 0 auto; padding: 40px 5%; width: 100%; }
         
-        .welcome-header { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; }
+        .welcome-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; flex-wrap: wrap; gap: 20px; }
         .welcome-header h1 { font-size: 2.5rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 15px; }
         .welcome-header span { color: var(--primary); }
         .welcome-header p { color: #94a3b8; font-size: 1.1rem; margin-top: 10px; }
+        .admin-badge { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; display: none; letter-spacing: 1px; }
 
-        .admin-badge {
-            background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger);
-            padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: bold;
-            display: none; letter-spacing: 1px;
-        }
+        .btn-action { background: var(--primary); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .btn-action:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
 
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-
-        .dash-card {
-            background: var(--card-bg); backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border); border-radius: 16px; padding: 25px;
-            transition: 0.3s ease; display: flex; flex-direction: column;
-        }
+        .dash-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 16px; padding: 25px; transition: 0.3s ease; display: flex; flex-direction: column; }
         .dash-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: white; }
         .card-icon { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 10px; border-radius: 8px; display: flex; }
         .card-icon svg { width: 24px; height: 24px; }
-        
         .card-value { font-size: 2.5rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 10px; }
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
-
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
 
-        /* Painel Exclusivo de Admin */
+        /* Modal de Chamados */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.8); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: var(--secondary); border: 1px solid var(--card-border); border-radius: 16px; padding: 30px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .modal-close:hover { color: var(--danger); }
+        .modal-title { font-size: 1.5rem; font-weight: bold; color: white; margin-bottom: 20px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; font-weight: 600; }
+        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 1rem; }
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        
         #admin-panel { display: none; margin-top: 40px; }
         .admin-card { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-        .admin-card .card-icon { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-        .admin-card:hover { border-color: var(--danger); }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
-        @media (max-width: 768px) {
-            header { padding: 12px 15px !important; }
-            .nav-links { display: none; }
-            .dashboard-container { padding: 20px 5%; }
-            .welcome-header h1 { font-size: 1.8rem; flex-direction: column; align-items: flex-start; gap: 5px; }
-        }
+        @media (max-width: 768px) { header { padding: 12px 15px !important; } .nav-links { display: none; } .dashboard-container { padding: 20px 5%; } .welcome-header h1 { font-size: 1.8rem; flex-direction: column; align-items: flex-start; gap: 5px; } }
     </style>
 </head>
 <body>
@@ -138,10 +95,12 @@
         </header>
 
         <div class="dashboard-container">
-            
             <div class="welcome-header">
-                <h1>Bem-vindo(a), <span id="user-name">Carregando...</span> <div class="admin-badge" id="admin-badge">SUPERUSUÁRIO</div></h1>
-                <p>Governança e Status da Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
+                <div>
+                    <h1>Bem-vindo(a), <span id="user-name">Carregando...</span> <div class="admin-badge" id="admin-badge">SUPERUSUÁRIO</div></h1>
+                    <p>Governança e Status da Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
+                </div>
+                <button class="btn-action" onclick="openModal()"><svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round"/></svg> Abrir Chamado</button>
             </div>
 
             <div class="dash-grid">
@@ -151,7 +110,7 @@
                         <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
                     </div>
                     <div><span class="status-badge" id="user-status">ATIVO</span></div>
-                    <p class="card-desc">Todos os serviços operando dentro da normalidade.</p>
+                    <p class="card-desc">Serviços operando dentro da normalidade.</p>
                 </div>
 
                 <div class="dash-card">
@@ -159,8 +118,8 @@
                         <div class="card-title">Chamados Abertos</div>
                         <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
                     </div>
-                    <div class="card-value">0</div>
-                    <p class="card-desc">Nenhum incidente crítico relatado.</p>
+                    <div class="card-value" id="ticket-count">0</div>
+                    <p class="card-desc">Histórico de incidentes relatados.</p>
                 </div>
 
                 <div class="dash-card">
@@ -168,7 +127,7 @@
                         <div class="card-title">Faturas Pendentes</div>
                         <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
                     </div>
-                    <div class="card-value">R$ 0,00</div>
+                    <div class="card-value" style="color: var(--accent);">R$ 0,00</div>
                     <p class="card-desc">Sua infraestrutura está em dia.</p>
                 </div>
             </div>
@@ -178,15 +137,14 @@
                 <div class="dash-grid">
                     <div class="dash-card admin-card">
                         <div class="card-header">
-                            <div class="card-title">Clientes Ativos</div>
+                            <div class="card-title">Fila de Chamados Geral</div>
                             <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
                         </div>
                         <div class="card-value">--</div>
-                        <p class="card-desc">Módulo em desenvolvimento para listar clientes.</p>
+                        <p class="card-desc">Módulo em desenvolvimento para gerir requisições.</p>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <footer>
@@ -194,7 +152,37 @@
         </footer>
     </main>
 
+    <div class="modal-overlay" id="ticket-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h3 class="modal-title">Relatar Incidente</h3>
+            <form id="ticketForm">
+                <div class="form-group">
+                    <label>Categoria do Problema</label>
+                    <select id="ticket-category" required>
+                        <option value="Rede/Internet">Queda de Rede / Internet</option>
+                        <option value="Servidor/Nuvem">Falha em Servidor / Nuvem</option>
+                        <option value="Equipamento">Problema em Computador / Equipamento</option>
+                        <option value="Outros">Outros / Dúvidas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assunto Breve</label>
+                    <input type="text" id="ticket-subject" required placeholder="Ex: Roteador sem acesso externo">
+                </div>
+                <div class="form-group">
+                    <label>Descrição Detalhada</label>
+                    <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas da falha..."></textarea>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%; justify-content: center;" id="btn-submit-ticket">Enviar Chamado Técnico</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        function openModal() { document.getElementById('ticket-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('ticket-modal').style.display = 'none'; document.getElementById('ticketForm').reset(); }
+        
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('network-canvas');
             if (canvas) {
@@ -222,7 +210,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
@@ -237,8 +225,9 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        let currentUserData = null; // Armazena info global para o chamado
 
-        // 1. GUARDA DE ROTA E LEITURA
+        // 1. GUARDA DE ROTA E CARREGAMENTO
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -246,46 +235,76 @@
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
-                        const userData = docSnap.data();
+                        currentUserData = docSnap.data();
                         
-                        // Injeta os dados no HTML
-                        document.getElementById('user-name').innerText = userData.nome;
-                        document.getElementById('user-company').innerText = userData.empresa;
-                        document.getElementById('user-status').innerText = userData.status.toUpperCase();
+                        document.getElementById('user-name').innerText = currentUserData.nome;
+                        document.getElementById('user-company').innerText = currentUserData.empresa;
+                        document.getElementById('user-status').innerText = currentUserData.status.toUpperCase();
 
-                        // Verifica se é o Mestre (Admin)
-                        if(userData.nivelAcesso === "admin") {
+                        if(currentUserData.nivelAcesso === "admin") {
                             document.getElementById('admin-badge').style.display = 'inline-block';
                             document.getElementById('admin-panel').style.display = 'block';
                         }
                         
-                        // Libera a tela
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => {
                             document.getElementById('loader').style.display = 'none';
                             document.getElementById('main-content').style.display = 'block';
                         }, 500);
-
                     } else {
-                        // Se logou mas não tem documento no Firestore
                         document.getElementById('loader-text').innerText = "Perfil não localizado. Encerrando...";
                         setTimeout(() => signOut(auth), 2000);
                     }
                 } catch (error) {
-                    console.error("Erro Firestore:", error);
-                    document.getElementById('loader-text').innerText = "Falha de conexão. Tente recarregar a página.";
+                    document.getElementById('loader-text').innerText = "Falha de conexão com o banco.";
                     document.getElementById('loader-text').style.color = "var(--danger)";
                 }
             } else {
-                // Usuário NÃO logado - Joga pro CRM para logar
-                window.location.href = "crm.html";
+                window.location.href = "crm.html"; // Expulsa não autenticados
             }
         });
 
-        // 2. LÓGICA DE LOGOUT
+        // 2. GRAVAÇÃO DE CHAMADOS NO FIRESTORE
+        document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-ticket');
+            btn.innerText = "Enviando..."; btn.disabled = true;
+
+            const category = document.getElementById('ticket-category').value;
+            const subject = document.getElementById('ticket-subject').value.trim();
+            const desc = document.getElementById('ticket-desc').value.trim();
+            const user = auth.currentUser;
+
+            try {
+                await addDoc(collection(db, "chamados"), {
+                    uidCliente: user.uid,
+                    empresa: currentUserData.empresa,
+                    solicitante: currentUserData.nome,
+                    categoria: category,
+                    assunto: subject,
+                    descricao: desc,
+                    status: "Aberto",
+                    dataAbertura: serverTimestamp()
+                });
+                
+                alert("Chamado técnico aberto com sucesso! Nossa equipe foi notificada.");
+                closeModal();
+                
+                // Incrementa o contador na tela visualmente
+                const countEl = document.getElementById('ticket-count');
+                countEl.innerText = parseInt(countEl.innerText) + 1;
+                
+            } catch (error) {
+                console.error("Erro ao abrir chamado:", error);
+                alert("Ocorreu um erro ao registrar o chamado. Tente novamente.");
+            } finally {
+                btn.innerText = "Enviar Chamado Técnico"; btn.disabled = false;
+            }
+        });
+
+        // 3. LÓGICA DE LOGOUT
         document.getElementById('btn-logout').addEventListener('click', () => {
-            signOut(auth).catch((error) => console.error("Erro ao sair:", error));
-            // O onAuthStateChanged vai detectar a saída automaticamente e redirecionar
+            signOut(auth);
         });
     </script>
 </body>
