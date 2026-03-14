@@ -64,7 +64,7 @@
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
 
-        /* Modais */
+        /* Modais Gerais */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; width: 90%; max-width: 700px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; z-index: 10;}
@@ -79,7 +79,7 @@
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
         .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
-        .file-upload-area { border: 2px dashed #334155; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; position: relative; }
+        .file-upload-area { border: 2px dashed #334155; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; position: relative; }
         .file-upload-area.dragover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); color: white; }
         .file-upload-area input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .attachment-preview { margin-top: 10px; font-size: 0.85rem; color: var(--accent); font-weight: bold; }
@@ -398,7 +398,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+        // IMPORTAÇÃO CORRIGIDA PARA MÉTODOS NÃO-RESUMABLE (FALHA RÁPIDA E SEGURA)
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
@@ -504,7 +505,7 @@
             console.log(`Email de notificação para joorgemdc@gmail.com agendado: Chamado ${ticketId} - ${assunto}`);
         }
 
-        // 3. ABERTURA DE NOVO CHAMADO E UPLOAD
+        // 3. ABERTURA DE NOVO CHAMADO E UPLOAD COM FALLBACK
         document.getElementById('newTicketForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-ticket');
@@ -533,9 +534,13 @@
                 if(newTicketFile) {
                     try {
                         const storageRef = ref(storage, `chamados/${generatedId}/${newTicketFile.name}`);
-                        const snapshot = await uploadBytesResumable(storageRef, newTicketFile);
+                        // Usando uploadBytes (não resumable) para falhar rápido se o Firebase Storage bloquear
+                        const snapshot = await uploadBytes(storageRef, newTicketFile);
                         attachmentUrl = await getDownloadURL(snapshot.ref);
-                    } catch(e) { console.error("Storage Blocked:", e); alert("Anexo recusado (Verifique se ativou o Storage no Firebase). O chamado será aberto sem anexo."); }
+                    } catch(storageErr) {
+                        console.error("Storage Erro:", storageErr);
+                        alert("⚠️ O arquivo não pôde ser anexado (Verifique se ativou as Regras do Storage no painel do Firebase). O chamado será aberto SEM a imagem para não travar.");
+                    }
                 }
 
                 await setDoc(doc(collection(db, "chamados")), {
@@ -552,14 +557,14 @@
                 });
                 
                 dispararNotificacaoEmail(generatedId, subject);
-                alert(`Chamado ${generatedId} protocolado!`);
+                alert(`Chamado ${generatedId} protocolado com sucesso!`);
                 closeNewTicketModal();
             } catch (error) {
-                console.error(error); alert("Falha na geração do chamado.");
+                console.error(error); alert("Falha ao registrar dados no banco de dados.");
             } finally { btn.innerText = "Gerar Requisição Técnica"; btn.disabled = false; }
         });
 
-        // 4. INTERAÇÃO E CHAT (Com Upload de Resposta)
+        // 4. INTERAÇÃO E CHAT (Com Upload de Resposta com Fallback)
         let currentTicketSnapshot = null;
         window.loadTicketDetails = function(docId) {
             window.activeTicketId = docId;
@@ -611,53 +616,3 @@
         document.getElementById('replyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!window.activeTicketId) return;
-            const input = document.getElementById('vt-reply-text');
-            const texto = input.value.trim();
-            const btn = document.getElementById('btn-reply');
-            btn.innerText = "Enviando..."; btn.disabled = true;
-
-            try {
-                let replyAttachmentUrl = null;
-                if(replyTicketFile) {
-                    try {
-                        const replyStorageRef = ref(storage, `chamados/${window.activeTicketId}/reply_${Date.now()}_${replyTicketFile.name}`);
-                        const snapshot = await uploadBytesResumable(replyStorageRef, replyTicketFile);
-                        replyAttachmentUrl = await getDownloadURL(snapshot.ref);
-                    } catch(e) { console.error("Reply Storage Blocked:", e); alert("Não foi possível anexar o arquivo na resposta."); }
-                }
-
-                await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                    status: "Em Andamento",
-                    historico: arrayUnion({
-                        autor: currentUserData.nome,
-                        tipo: currentUserData.nivelAcesso || "cliente",
-                        texto: texto,
-                        anexo: replyAttachmentUrl,
-                        data: new Date().toISOString()
-                    })
-                });
-                
-                input.value = '';
-                document.getElementById('file-preview-reply').innerText = '';
-                replyTicketFile = null;
-            } catch (err) { console.error(err); alert("Erro ao enviar mensagem."); }
-            finally { btn.innerText = "Enviar Resposta"; btn.disabled = false; }
-        });
-
-        document.getElementById('btn-resolve-ticket').addEventListener('click', async () => {
-            if(!window.activeTicketId) return;
-            if(!confirm("Tem certeza que deseja encerrar este chamado?")) return;
-            try {
-                await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                    status: "Resolvido",
-                    historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado marcado como Resolvido.", data: new Date().toISOString() })
-                });
-                alert("Chamado encerrado.");
-                closeViewTicketModal();
-            } catch(e) { console.error(e); }
-        });
-
-        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
-    </script>
-</body>
-</html>
