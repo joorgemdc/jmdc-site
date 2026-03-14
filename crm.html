@@ -216,9 +216,7 @@
                 } initParticles(); animateParticles();
             }
         });
-    </script>
-
-    <script type="module">
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -300,14 +298,10 @@
 
                 showAlert("Conta provisionada com sucesso!", true);
                 
+                // Roteamento Definitivo para o Dashboard após cadastro
                 setTimeout(() => {
-                    btn.innerText = "Provisionar Conta"; btn.disabled = false;
-                    document.getElementById('registerForm').reset();
-                    // Alterna de volta para o login
-                    formRegister.classList.add('hidden');
-                    formLogin.classList.remove('hidden');
-                    alertBox.style.display = 'none';
-                }, 2500);
+                    window.location.href = "dashboard.html";
+                }, 2000);
 
             } catch (error) {
                 console.error(error);
@@ -333,11 +327,11 @@
 
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                showAlert("Acesso liberado!", true);
+                showAlert("Acesso liberado! Redirecionando...", true);
                 
+                // Roteamento Definitivo para o Dashboard após login
                 setTimeout(() => {
-                    alert("Aguardando construção do Painel Dashboard.");
-                    btn.innerText = "Acessar Painel"; btn.disabled = false;
+                    window.location.href = "dashboard.html";
                 }, 1500);
 
             } catch (error) {
