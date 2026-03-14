@@ -12,6 +12,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; position: relative; display: flex; flex-direction: column; min-height: 100vh; }
         #network-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.3; pointer-events: none; }
         main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 5% 40px 5%; }
+        
         header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; background: rgba(10, 15, 29, 0.95); backdrop-filter: blur(10px); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(59, 130, 246, 0.15); }
         .logo-link { display: flex; align-items: center; text-decoration: none; }
         .logo-img { height: 40px; width: auto; transition: transform 0.3s ease; }
@@ -21,7 +22,7 @@
         .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover { color: var(--primary); }
 
-        .auth-container { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); border-radius: 16px; padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
+        .auth-container { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); border-radius: 16px; padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); position: relative; }
         .auth-header { text-align: center; margin-bottom: 30px; }
         .auth-header h2 { font-size: 2rem; font-weight: 800; color: #ffffff; }
         .auth-header span { color: var(--primary); }
@@ -37,4 +38,218 @@
         .btn-submit:hover { background: #2563eb; transform: translateY(-2px); }
         .btn-submit:disabled { background: #475569; cursor: not-allowed; transform: none; }
 
-        .auth-toggle { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #94a3b8; display: flex; flex-direction: column; gap: 8
+        .auth-toggle { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #94a3b8; display: flex; flex-direction: column; gap: 8px; }
+        .auth-toggle a { color: var(--primary); text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .auth-toggle a:hover { color: #60a5fa; text-decoration: underline; }
+
+        .alert-box { display: none; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; font-weight: bold; text-align: center; }
+        .alert-error { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: #fca5a5; }
+        .alert-success { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent); color: #6ee7b7; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) { header { padding: 12px 15px !important; } .nav-links { display: none; } .auth-container { padding: 30px 20px; } .grid-2 { grid-template-columns: 1fr; gap: 0; } }
+    </style>
+</head>
+<body>
+
+    <canvas id="network-canvas"></canvas>
+
+    <header>
+        <a href="index.html" class="logo-link">
+            <img src="images/logo-blue.png" alt="JMDC Tecnologia" class="logo-img">
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="network.html">Ferramentas</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="auth-container">
+            <div id="alert-msg" class="alert-box"></div>
+
+            <div id="form-login">
+                <div class="auth-header">
+                    <h2>Portal do <span>Cliente</span></h2>
+                    <p>Acesse seu painel de governança e infraestrutura.</p>
+                </div>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label>E-mail Corporativo</label>
+                        <input type="email" id="log-email" required placeholder="contato@suaempresa.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Senha de Acesso</label>
+                        <input type="password" id="log-pass" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-submit" id="btn-do-login">Acessar Painel</button>
+                </form>
+                <div class="auth-toggle">
+                    <a id="btn-forgot-pass" style="font-weight: normal; font-size: 0.85rem;">Esqueci minha senha</a>
+                    <span>Ainda não é parceiro? <a id="btn-show-register">Solicite um cadastro</a></span>
+                </div>
+            </div>
+
+            <div id="form-register" class="hidden">
+                <div class="auth-header">
+                    <h2>Novo <span>Parceiro</span></h2>
+                    <p>Preencha os dados para provisionar seu ambiente.</p>
+                </div>
+                <form id="registerForm">
+                    <div class="grid-2">
+                        <div class="input-group"><label>Nome</label><input type="text" id="reg-nome" required></div>
+                        <div class="input-group"><label>Sobrenome</label><input type="text" id="reg-sobrenome" required></div>
+                    </div>
+                    <div class="input-group"><label>Nome da Empresa</label><input type="text" id="reg-empresa" required></div>
+                    <div class="input-group"><label>WhatsApp / Telefone</label><input type="tel" id="reg-telefone" required></div>
+                    <div class="input-group"><label>E-mail Corporativo</label><input type="email" id="reg-email" required></div>
+                    <div class="input-group"><label>Defina uma Senha</label><input type="password" id="reg-pass" required placeholder="Mínimo 6 caracteres"></div>
+                    <button type="submit" class="btn-submit" id="btn-do-register">Provisionar Conta</button>
+                </form>
+                <div class="auth-toggle">
+                    <span>Já possui acesso? <a id="btn-show-login">Faça Login aqui</a></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('network-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let w, h, particles = [];
+                const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+                window.addEventListener('resize', resize); resize();
+                function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
+                function animateParticles() { 
+                    ctx.clearRect(0,0,w,h); 
+                    particles.forEach((p,i)=>{
+                        p.x+=p.vx; p.y+=p.vy; 
+                        if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
+                        ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle='#3b82f6'; ctx.fill();
+                        for(let j=i;j<particles.length;j++){
+                            let dx=p.x-particles[j].x, dy=p.y-particles[j].y, d=Math.hypot(dx,dy);
+                            if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(59,130,246,${1-d/100})`;ctx.lineWidth=0.5;ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
+                        }
+                    }); requestAnimationFrame(animateParticles);
+                } initParticles(); animateParticles();
+            }
+        });
+
+        const formLogin = document.getElementById('form-login');
+        const formRegister = document.getElementById('form-register');
+        const alertBox = document.getElementById('alert-msg');
+
+        document.getElementById('btn-show-register').addEventListener('click', () => { 
+            formLogin.classList.add('hidden'); formRegister.classList.remove('hidden'); alertBox.style.display = 'none'; 
+        });
+        document.getElementById('btn-show-login').addEventListener('click', () => { 
+            formRegister.classList.add('hidden'); formLogin.classList.remove('hidden'); alertBox.style.display = 'none'; 
+        });
+
+        window.showAlert = function(msg, isSuccess = false) {
+            alertBox.innerText = msg; alertBox.style.display = 'block';
+            if(isSuccess) { alertBox.classList.remove('alert-error'); alertBox.classList.add('alert-success'); } 
+            else { alertBox.classList.remove('alert-success'); alertBox.classList.add('alert-error'); }
+        };
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // CREDENCIAIS ATUALIZADAS JMDC
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
+            authDomain: "jmdc-crm.firebaseapp.com",
+            projectId: "jmdc-crm",
+            storageBucket: "jmdc-crm.firebasestorage.app",
+            messagingSenderId: "495316438549",
+            appId: "1:495316438549:web:61d6c18462b66afcb3881c",
+            measurementId: "G-MC8VF92S0J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const exibirAlerta = window.showAlert;
+
+        let isSubmitting = false; // Trava para evitar redirecionamento cruzado
+
+        // Roteamento Automático (Se já estiver logado, joga pro Dashboard)
+        onAuthStateChanged(auth, (user) => {
+            if (user && !isSubmitting) {
+                window.location.replace("dashboard.html");
+            }
+        });
+
+        // Recuperação de Senha
+        document.getElementById('btn-forgot-pass').addEventListener('click', async () => {
+            const email = document.getElementById('log-email').value.trim();
+            if(!email) { exibirAlerta("Digite seu e-mail no campo acima antes de solicitar a redefinição."); return; }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                exibirAlerta("Link de redefinição enviado para o seu e-mail!", true);
+            } catch (error) {
+                console.error(error);
+                exibirAlerta("Erro ao enviar e-mail. Verifique se o endereço está correto.");
+            }
+        });
+
+        // Cadastro
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            isSubmitting = true;
+            const btn = document.getElementById('btn-do-register');
+            btn.innerText = "Processando..."; btn.disabled = true;
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, document.getElementById('reg-email').value.trim(), document.getElementById('reg-pass').value);
+                
+                await setDoc(doc(db, "clientes", userCred.user.uid), {
+                    nome: document.getElementById('reg-nome').value.trim(),
+                    sobrenome: document.getElementById('reg-sobrenome').value.trim(),
+                    empresa: document.getElementById('reg-empresa').value.trim(),
+                    telefone: document.getElementById('reg-telefone').value.trim(),
+                    email: document.getElementById('reg-email').value.trim(),
+                    dataCadastro: serverTimestamp(),
+                    status: "ativo",
+                    nivelAcesso: "cliente"
+                });
+
+                exibirAlerta("Conta provisionada! Redirecionando...", true);
+                setTimeout(() => { window.location.replace("dashboard.html"); }, 1500);
+
+            } catch (error) {
+                isSubmitting = false;
+                if (error.code === 'auth/email-already-in-use') exibirAlerta("Este e-mail já possui cadastro.");
+                else if (error.code === 'auth/weak-password') exibirAlerta("A senha deve ter no mínimo 6 caracteres.");
+                else exibirAlerta("Erro de conexão com o banco de dados.");
+                btn.innerText = "Provisionar Conta"; btn.disabled = false;
+            }
+        });
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            isSubmitting = true;
+            const btn = document.getElementById('btn-do-login');
+            btn.innerText = "Autenticando..."; btn.disabled = true;
+
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('log-email').value.trim(), document.getElementById('log-pass').value);
+                exibirAlerta("Acesso liberado! Redirecionando...", true);
+                setTimeout(() => { window.location.replace("dashboard.html"); }, 1000);
+            } catch (error) {
+                isSubmitting = false;
+                exibirAlerta("Credenciais inválidas ou conta inexistente.");
+                btn.innerText = "Acessar Painel"; btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
