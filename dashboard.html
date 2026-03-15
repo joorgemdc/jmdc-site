@@ -65,6 +65,7 @@
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
 
+        /* Modais */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; width: 90%; max-width: 700px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .modal-content.large { max-width: 1100px; }
@@ -79,6 +80,7 @@
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; color-scheme: dark; }
         .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
+        /* Sidebar e Chat */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .ticket-sidebar { position: fixed; top: 0; right: -500px; width: 100%; max-width: 450px; height: 100vh; background: #0f172a; z-index: 1600; border-left: 1px solid var(--card-border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s ease; display: flex; flex-direction: column; }
         .ticket-sidebar.active { right: 0; }
@@ -94,6 +96,7 @@
         .chat-input-group { display: flex; gap: 10px; flex-direction: column; }
         .chat-input-group input[type="text"] { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
 
+        /* Tabelas Administrativas */
         .finance-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap; }
         .tab-btn { background: transparent; color: #94a3b8; border: none; font-size: 1rem; font-weight: bold; cursor: pointer; padding: 5px 10px; transition: 0.3s; }
         .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
@@ -123,7 +126,7 @@
     <div class="payment-success-overlay" id="payment-success-overlay">
         <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm4.5 7.5l-5 5a1 1 0 0 1-1.5 0l-2-2a1 1 0 1 1 1.5-1.5L9 10.6l4.3-4.3a1 1 0 1 1 1.4 1.5z"/></svg>
         <h2>Pagamento Confirmado!</h2>
-        <p>A baixa da sua fatura foi processada e seu ambiente está regularizado.</p>
+        <p>A baixa da fatura foi processada e o ambiente está regularizado.</p>
     </div>
 
     <div id="loader">
@@ -194,9 +197,9 @@
                         <p class="card-desc">Tickets atribuídos à sua responsabilidade.</p>
                     </div>
                     <div class="dash-card admin-card clickable" id="card-clientes-list" style="display:none;" onclick="openClientesListModal()">
-                        <div class="card-header"><div class="card-title">Carteira de Clientes</div></div>
+                        <div class="card-header"><div class="card-title">Carteira de Usuários</div></div>
                         <div class="card-value" id="admin-clientes-count">0</div>
-                        <p class="card-desc">Gerencie portfólio, acesse faturas e contatos.</p>
+                        <p class="card-desc">Gerencie o portfólio, acessos e contatos.</p>
                     </div>
                 </div>
             </div>
@@ -250,10 +253,11 @@
             <h3 class="modal-title" id="nt-modal-title">Novo Ticket</h3>
             <form id="newTicketForm">
                 <input type="hidden" id="nt-edit-id">
+                <input type="hidden" id="nt-edit-interno">
+                
                 <div class="form-grid">
-                    
                     <div class="form-group full-width" id="nt-admin-box" style="display:none; background:rgba(59,130,246,0.1); padding:15px; border-radius:8px; border:1px solid var(--primary);">
-                        <h4 style="color:var(--primary); margin-bottom:10px;">Gestão de Abertura (Admin)</h4>
+                        <h4 style="color:var(--primary); margin-bottom:10px;">Gestão de Abertura (N3)</h4>
                         <div class="form-grid" style="gap:10px;">
                             <div class="form-group" style="margin:0;"><label>Vincular Cliente</label><select id="nt-cliente-vinculo"><option value="self">-- Meu Próprio Usuário --</option></select></div>
                             <div class="form-group" style="margin:0;"><label>Atribuir Responsável</label><select id="nt-resp-vinculo"><option value="">-- Sem atribuição --</option></select></div>
@@ -297,11 +301,15 @@
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeViewTicketModal()">×</button>
             
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <h3 class="modal-title" id="vt-id">#ID</h3><span class="status-badge" id="vt-status">Aberto</span>
+            <div style="display: flex; flex-direction: column; margin-bottom: 15px; padding-right: 30px;">
+                <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 5px;">
+                    <h3 class="modal-title" id="vt-id" style="margin:0;">#ID</h3>
+                    <span class="status-badge" id="vt-status" style="margin:0;">Aberto</span>
+                    <span id="vt-nf-tag" style="display:none; color:var(--warning); font-weight:bold; font-size:0.8rem; background:rgba(245,158,11,0.2); padding:3px 8px; border-radius:4px;">[EMITE NF]</span>
+                </div>
+                <p class="modal-subtitle" style="margin: 0;"><strong id="vt-subject">Assunto</strong></p>
+                <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">Aberto em: <span id="vt-date">...</span></p>
             </div>
-            <p class="modal-subtitle" style="margin-bottom: 5px;"><strong id="vt-subject">Assunto</strong></p>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span></p>
             
             <div class="chat-container" id="vt-chat"></div>
 
@@ -313,6 +321,7 @@
                     <div class="form-grid" style="gap:10px;">
                         <div class="form-group full-width" style="margin:0;">
                             <select id="vt-change-status" onchange="toggleStatusReason()">
+                                <option value="Aberto">Aberto</option>
                                 <option value="Em andamento">Em andamento</option>
                                 <option value="Aguardando aprovação">Aguardando aprovação</option>
                                 <option value="Aguardando pagamento">Aguardando pagamento</option>
@@ -327,7 +336,10 @@
                             <input type="text" id="vt-status-reason" placeholder="Descreva o motivo desta alteração...">
                         </div>
                     </div>
-                    <button type="button" class="btn-action btn-outline" style="width: 100%; margin-top: 10px; padding: 10px;" id="btn-update-status">Aplicar Novo Status</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                        <button type="button" class="btn-action btn-outline" style="padding: 8px 15px; font-size: 0.85rem;" id="btn-assume-ticket">Atribuir a Mim</button>
+                        <button type="button" class="btn-action" style="padding: 8px 15px;" id="btn-update-status">Aplicar Novo Status</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -498,6 +510,7 @@
             if(isEdit && ticketId) {
                 const t = window.globalTickets.find(x => x.docId === ticketId);
                 if(t) {
+                    document.getElementById('nt-edit-interno').value = t.idInterno;
                     document.getElementById('ticket-category').value = t.categoria; document.getElementById('ticket-priority').value = t.severidade;
                     document.getElementById('ticket-subject').value = t.assunto;
                     if(window.currentUserData.nivelAcesso === 'admin') {
@@ -509,9 +522,9 @@
             }
             document.getElementById('new-ticket-modal').style.display = 'flex'; 
         }
+        
         function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; }
         function closeViewTicketModal() { document.getElementById('view-ticket-modal').style.display = 'none'; window.activeTicketId = null; window.activeTicketClientId = null; document.getElementById('replyForm').reset(); }
-        
         function openClientBillingModal() { document.getElementById('client-billing-modal').style.display = 'flex'; }
         function closeClientBillingModal() { document.getElementById('client-billing-modal').style.display = 'none'; }
         function openMyAccountModal() { document.getElementById('my-account-modal').style.display = 'flex'; }
@@ -555,8 +568,7 @@
         document.getElementById('transacao-vinculo').addEventListener('change', (e) => { const desc = document.getElementById('desc-transacao'); if(e.target.value === 'avulso') { desc.value = ''; desc.placeholder = "Descrição ou nome avulso"; } else { desc.value = e.target.options[e.target.selectedIndex].text; } });
 
         function toggleStatusReason() {
-            const val = document.getElementById('vt-change-status').value;
-            const rBox = document.getElementById('vt-reason-box');
+            const val = document.getElementById('vt-change-status').value; const rBox = document.getElementById('vt-reason-box');
             if(val === "Pausado" || val === "Pendente do nosso lado" || val === "Pendente do lado do cliente" || val === "Finalizando") { rBox.style.display = 'block'; } else { rBox.style.display = 'none'; }
         }
 
@@ -565,8 +577,7 @@
         function showGreenSuccess() { const ov = document.getElementById('payment-success-overlay'); ov.style.display = 'flex'; setTimeout(() => ov.style.opacity = '1', 10); setTimeout(() => { ov.style.opacity = '0'; setTimeout(() => ov.style.display = 'none', 500); }, 20000); }
         
         const mPhone = (e) => { let v = e.target.value.replace(/\D/g, ''); if (v.length > 11) v = v.slice(0, 11); if (v.length > 2 && v.length <= 6) v = `(${v.slice(0,2)}) ${v.slice(2)}`; else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`; e.target.value = v; };
-        document.getElementById('ce-telefone').addEventListener('input', mPhone);
-        document.getElementById('ef-wpp').addEventListener('input', mPhone);
+        document.getElementById('ce-telefone').addEventListener('input', mPhone); document.getElementById('ef-wpp').addEventListener('input', mPhone);
 
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('network-canvas');
@@ -581,7 +592,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, setDoc, addDoc, deleteDoc, serverTimestamp, Timestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, getDocs, collection, setDoc, addDoc, deleteDoc, serverTimestamp, Timestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo", authDomain: "jmdc-crm.firebaseapp.com", projectId: "jmdc-crm", storageBucket: "jmdc-crm.firebasestorage.app", messagingSenderId: "495316438549", appId: "1:495316438549:web:61d6c18462b66afcb3881c" };
         const app = initializeApp(firebaseConfig); window.auth = getAuth(app); const db = getFirestore(app);
@@ -594,6 +605,7 @@
         const formatMoney = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
         const sanitizePhone = (p) => p ? p.replace(/\D/g, '') : '';
 
+        // LOGIN E CONSTRUÇÃO DAS VISÕES (RBAC)
         onAuthStateChanged(window.auth, async (user) => {
             if (user) {
                 onSnapshot(doc(db, "clientes", user.uid), (docSnap) => {
@@ -612,8 +624,7 @@
                         let isStaff = window.currentUserData.nivelAcesso === "n1" || window.currentUserData.nivelAcesso === "n2" || window.currentUserData.nivelAcesso === "admin";
                         
                         if(isStaff) {
-                            document.getElementById('client-panel').style.display = 'none';
-                            document.getElementById('operacional-panel').style.display = 'block';
+                            document.getElementById('client-panel').style.display = 'none'; document.getElementById('operacional-panel').style.display = 'block';
                             
                             if(window.currentUserData.nivelAcesso === "n1") document.getElementById('n1-badge').style.display = 'inline-block';
                             if(window.currentUserData.nivelAcesso === "n2") document.getElementById('n2-badge').style.display = 'inline-block';
@@ -629,7 +640,6 @@
                                     snap.forEach(c => { 
                                         let data = c.data(); data.id = c.id; window.globalClientes.push(data);
                                         if(data.nivelAcesso === 'n1' || data.nivelAcesso === 'n2' || data.nivelAcesso === 'admin') window.globalStaff.push(data);
-                                        
                                         tbody.innerHTML += `<tr><td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td><td>${data.nome} ${data.sobrenome}<br><span style="font-size:0.75rem; color:#64748b;">${data.telefone}</span></td><td>${data.email}</td><td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td><td><span class="status-badge" style="margin:0; font-size:0.7rem;">${data.nivelAcesso.toUpperCase()}</span></td><td><button class="btn-icon" onclick="openClientEditModal('edit', '${data.id}')">✏️</button> <button class="btn-icon" style="color:var(--danger);" onclick="window.deleteCliente('${data.id}')">🗑️</button></td></tr>`;
                                     }); document.getElementById('admin-clientes-count').innerText = window.globalClientes.length;
                                 });
@@ -639,17 +649,23 @@
                                     snap.forEach(f => { let data = f.data(); data.id = f.id; window.globalFornecedores.push(data); tbody.innerHTML += `<tr><td><strong>${data.nome}</strong></td><td>${data.chavePix} <button onclick="navigator.clipboard.writeText('${data.chavePix}'); alert('Copiado!')" style="background:transparent; border:none; cursor:pointer; filter:invert(1);">📋</button></td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">Comprovante</a> ${data.telefone}</td><td><button class="btn-icon" onclick="window.openEditFornecedor('${data.id}')">✏️</button><button class="btn-icon" style="color:var(--danger);" onclick="window.deleteFornecedor('${data.id}')">🗑️</button></td></tr>`; });
                                 });
 
+                                // MOTOR FINANCEIRO REESCRITO (Datas)
                                 onSnapshot(collection(db, "faturas"), (snap) => {
                                     window.globalFaturas = []; let tRec = 0; let tPag = 0; let fatBrutoMes = 0; let fatLiquidoMes = 0; let baseTributavel = 0; let clientesNotaSet = new Set();
-                                    let mesAtual = new Date().getMonth(); let anoAtual = new Date().getFullYear();
+                                    const dataHoje = new Date(); const mesAtual = dataHoje.getMonth(); const anoAtual = dataHoje.getFullYear();
 
                                     snap.forEach(f => {
                                         let data = f.data(); data.id = f.id; window.globalFaturas.push(data);
                                         if(data.status === "Pendente") { if(data.tipo === "receita") tRec += data.valor; if(data.tipo === "despesa") tPag += data.valor; }
                                         else if (data.status === "Pago") {
-                                            let dPgto = data.dataPagamento ? data.dataPagamento.toDate() : (data.dataCriacao ? data.dataCriacao.toDate() : new Date());
+                                            let msPgto = data.dataPagamento ? data.dataPagamento.toMillis() : (data.dataCriacao ? data.dataCriacao.toMillis() : Date.now());
+                                            let dPgto = new Date(msPgto);
+                                            
                                             if(dPgto.getMonth() === mesAtual && dPgto.getFullYear() === anoAtual) {
-                                                if(data.tipo === "receita") { fatBrutoMes += data.valor; fatLiquidoMes += data.valor; if(data.emiteNota) { baseTributavel += data.valor; if(data.uidCliente) clientesNotaSet.add(data.uidCliente); } }
+                                                if(data.tipo === "receita") { 
+                                                    fatBrutoMes += data.valor; fatLiquidoMes += data.valor; 
+                                                    if(data.emiteNota) { baseTributavel += data.valor; if(data.uidCliente) clientesNotaSet.add(data.uidCliente); }
+                                                }
                                                 if(data.tipo === "despesa") { fatLiquidoMes -= data.valor; }
                                             }
                                         }
@@ -659,6 +675,7 @@
                                     document.getElementById('admin-receber').innerText = formatMoney(tRec); document.getElementById('admin-pagar').innerText = formatMoney(tPag); document.getElementById('admin-balanco').innerText = formatMoney(tRec - tPag);
                                     document.getElementById('admin-faturamento-bruto').innerText = formatMoney(fatBrutoMes); document.getElementById('admin-faturamento-liquido').innerText = `Líquido: ${formatMoney(fatLiquidoMes)}`;
                                     document.getElementById('admin-imposto').innerText = formatMoney(imposto); document.getElementById('admin-base-tributavel').innerText = `Base: ${formatMoney(baseTributavel)} (${clientesNotaSet.size} clientes)`;
+                                    
                                     if(document.getElementById('admin-finance-modal').style.display === 'flex') window.renderFinanceTable();
                                 });
                             }
@@ -677,8 +694,8 @@
             } else { window.location.href = "crm.html"; }
         });
 
-        // CLIENTES CRUD
-        window.deleteCliente = async function(id) { if(!confirm("Excluir usuário do CRM? O histórico será mantido.")) return; try { await deleteDoc(doc(db, "clientes", id)); alert("Removido."); } catch(e) { console.error(e); } };
+        // CRUD CLIENTES
+        window.deleteCliente = async function(id) { if(!confirm("Excluir usuário permanentemente? O histórico de chamados será mantido.")) return; try { await deleteDoc(doc(db, "clientes", id)); alert("Removido."); } catch(e) { console.error(e); } };
 
         document.getElementById('clientEditForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const btn = document.getElementById('btn-submit-ce'); btn.disabled = true; const uid = document.getElementById('ce-uid').value;
@@ -690,16 +707,12 @@
             } catch(err) { console.error(err); alert("Erro."); } finally { btn.disabled = false; }
         });
 
-        // FORNECEDORES CRUD
-        window.openEditFornecedor = function(id) {
-            document.getElementById('fornecedorEditForm').reset(); document.getElementById('ef-id').value = id === 'new' ? '' : id; document.getElementById('ef-title').innerText = id === 'new' ? 'Novo Fornecedor' : 'Editar Fornecedor';
-            if(id !== 'new') { const f = window.globalFornecedores.find(x => x.id === id); if(f) { document.getElementById('ef-nome').value = f.nome; document.getElementById('ef-pix').value = f.chavePix; document.getElementById('ef-wpp').value = f.telefone; } }
-            document.getElementById('edit-fornecedor-modal').style.display = 'flex';
-        };
+        // CRUD FORNECEDORES
         window.deleteFornecedor = async function(id) { if(confirm("Excluir fornecedor?")) await deleteDoc(doc(db, "fornecedores", id)); };
         document.getElementById('fornecedorEditForm').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('ef-id').value; const dados = { nome: document.getElementById('ef-nome').value.trim(), chavePix: document.getElementById('ef-pix').value.trim(), telefone: document.getElementById('ef-wpp').value.trim() }; try { if(!id) { dados.dataCadastro = serverTimestamp(); await addDoc(collection(db, "fornecedores"), dados); } else { await updateDoc(doc(db, "fornecedores", id), dados); } closeEditFornecedor(); alert("Salvo!"); } catch(e) { console.error(e); } });
 
-        document.getElementById('btn-reset-password').addEventListener('click', async () => { if(confirm(`Enviar e-mail para ${window.currentUserData.email}?`)) { try { await sendPasswordResetEmail(auth, window.currentUserData.email); alert("E-mail enviado!"); } catch(e) { alert("Erro ao enviar e-mail."); } } });
+        document.getElementById('btn-reset-password').addEventListener('click', async () => { if(confirm(`Enviar e-mail para ${window.currentUserData.email}?`)) { try { await sendPasswordResetEmail(window.auth, window.currentUserData.email); alert("E-mail enviado!"); } catch(e) { alert("Erro ao enviar e-mail."); } } });
+        document.getElementById('btn-logout').addEventListener('click', () => { signOut(window.auth); });
 
         // FINANCEIRO TABLE & TRANSAÇÕES CRUD
         window.renderFinanceTable = function() {
@@ -719,7 +732,7 @@
                 let btnDel = `<button class="btn-icon" style="color:var(--danger);" onclick="window.deleteTransacao('${f.id}', ${f.valor}, '${f.tipo}', '${f.uidCliente}', '${f.status}')">🗑️</button>`;
                 let tags = (f.recorrente ? `<span style="font-size:0.7rem; background:rgba(239,68,68,0.2); color:var(--danger); padding:2px 5px; border-radius:4px; margin-left:5px;">FIXA</span>` : '') + (f.emiteNota ? `<span style="font-size:0.7rem; background:rgba(245,158,11,0.2); color:var(--warning); padding:2px 5px; border-radius:4px; margin-left:5px;">NOTA</span>` : '');
                 
-                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btnBx} ${btnEd} ${btnDel}</td></tr>`;
+                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td style="white-space: nowrap;">${btnBx} ${btnEd} ${btnDel}</td></tr>`;
             });
             container.innerHTML = html + `</tbody></table>`;
         };
@@ -796,10 +809,26 @@
             const a = document.createElement('a'); a.href = url; a.download = `JMDC_Financeiro_${new Date().toISOString().split('T')[0]}.csv`; a.click(); window.URL.revokeObjectURL(url);
         };
 
-        // TICKETS CRUD
+        // TICKETS CRUD & CASCATA DE DELEÇÃO
         window.deleteTicket = async function(id) {
-            if(!confirm("Excluir este Ticket permanentemente?")) return;
-            try { await deleteDoc(doc(db, "chamados", id)); } catch(e) { console.error(e); }
+            if(!confirm("Excluir este Ticket permanentemente? Faturas 'Pendentes' atreladas a ele serão canceladas automaticamente.")) return;
+            try {
+                const tSnap = await getDoc(doc(db, "chamados", id));
+                if(tSnap.exists()) {
+                    const idOS = tSnap.data().idInterno;
+                    const qFaturas = query(collection(db, "faturas"), where("origem", "==", `OS #${idOS}`));
+                    const snapFaturas = await getDocs(qFaturas);
+                    snapFaturas.forEach(async (fDoc) => {
+                        const fData = fDoc.data();
+                        if (fData.status === 'Pendente' && fData.uidCliente && fData.uidCliente !== 'avulso') {
+                            const cRef = doc(db, "clientes", fData.uidCliente); const cSnap = await getDoc(cRef);
+                            if(cSnap.exists()) await updateDoc(cRef, { faturaPendente: Math.max(0, (cSnap.data().faturaPendente || 0) - fData.valor) });
+                        }
+                        await deleteDoc(doc(db, "faturas", fDoc.id));
+                    });
+                }
+                await deleteDoc(doc(db, "chamados", id));
+            } catch(e) { console.error(e); }
         };
 
         window.refreshTicketList = function() {
@@ -817,14 +846,13 @@
                 
                 html += `<div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')">
                     <div class="ticket-item-header"><span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span><span style="display:flex; align-items:center; gap:10px;"><span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span> ${adminBtns}</span></div>
-                    <div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria}</div></div>`;
+                    <div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria} • ${ticket.empresa}</div></div>`;
             }); listContainer.innerHTML = html;
         };
 
-        // SALVAR NOVO OU EDITAR TICKET
         document.getElementById('newTicketForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const btn = document.getElementById('btn-submit-ticket'); btn.disabled = true;
-            const isEdit = document.getElementById('nt-edit-id').value;
+            const isEdit = document.getElementById('nt-edit-id').value; const idInterno = document.getElementById('nt-edit-interno').value;
             const cat = document.getElementById('ticket-category').value; const prio = document.getElementById('ticket-priority').value;
             const sub = document.getElementById('ticket-subject').value.trim(); const desc = document.getElementById('ticket-desc').value.trim();
             const emiteNf = document.getElementById('nt-emite-nota') ? document.getElementById('nt-emite-nota').checked : false;
@@ -835,14 +863,10 @@
                     if(window.currentUserData.nivelAcesso === 'admin') {
                         updateData.emiteNota = emiteNf;
                         const cliVinculo = document.getElementById('nt-cliente-vinculo').value;
-                        if(cliVinculo && cliVinculo !== 'self') {
-                            updateData.uidCliente = cliVinculo; const c = window.globalClientes.find(x => x.id === cliVinculo); if(c) updateData.empresa = c.empresa;
-                        }
-                        const resp = document.getElementById('nt-resp-vinculo').value;
-                        if(resp) updateData.atribuidoPara = resp;
+                        if(cliVinculo && cliVinculo !== 'self') { updateData.uidCliente = cliVinculo; const c = window.globalClientes.find(x => x.id === cliVinculo); if(c) updateData.empresa = c.empresa; }
+                        const resp = document.getElementById('nt-resp-vinculo').value; if(resp) updateData.atribuidoPara = resp;
                     }
-                    await updateDoc(doc(db, "chamados", isEdit), updateData);
-                    alert("Ticket atualizado!");
+                    await updateDoc(doc(db, "chamados", isEdit), updateData); alert("Ticket atualizado!");
                 } else {
                     const counterRef = doc(db, "metadata", "chamadosCounter");
                     const generatedId = await runTransaction(db, async (transaction) => {
@@ -866,20 +890,17 @@
                         historico: [{ autor: window.currentUserData.nome, tipo: window.currentUserData.nivelAcesso, texto: desc, data: new Date().toISOString() }]
                     });
 
-                    // FATURAMENTO AUTOMÁTICO SE HOUVER VALOR (Admin)
                     if(valSrv > 0 && window.currentUserData.nivelAcesso === 'admin') {
                         await addDoc(collection(db, "faturas"), { tipo: "receita", uidCliente: fUid, nomeCliente: fEmpresa, valor: valSrv, origem: `OS #${generatedId}`, status: "Pendente", emiteNota: emiteNf, dataCriacao: serverTimestamp() });
                         await updateDoc(doc(db, "clientes", fUid), { faturaPendente: increment(valSrv) });
-                        await updateDoc(doc(db, "chamados", generatedId), { historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: `Serviço orçado em ${formatMoney(valSrv)}.`, data: new Date().toISOString() }) });
                     }
-
-                    alert(`Ticket ${generatedId} salvo!`);
+                    alert(`Ticket ${generatedId} aberto!`);
                 }
                 closeNewTicketModal();
             } catch (error) { console.error(error); } finally { btn.disabled = false; }
         });
 
-        // VIEW TICKET E ATUALIZAÇÃO DE STATUS COM MOTIVO
+        // VIEW TICKET E ATUALIZAÇÃO STATUS
         window.loadTicketDetails = function(docId, uidDonoChamado) {
             window.activeTicketId = docId; window.activeTicketClientId = uidDonoChamado;
             document.getElementById('view-ticket-modal').style.display = 'flex'; closeSidebar();
@@ -891,32 +912,18 @@
                 document.getElementById('vt-status').innerText = data.status;
                 document.getElementById('vt-date').innerText = data.dataAbertura ? new Date(data.dataAbertura.toDate()).toLocaleString('pt-BR') : "...";
                 
-                // Controle de exibição de componentes baseado no RBAC
                 const isStaff = window.currentUserData.nivelAcesso === "admin" || window.currentUserData.nivelAcesso === "n1" || window.currentUserData.nivelAcesso === "n2";
-                const isAdmin = window.currentUserData.nivelAcesso === "admin";
-
                 if(isStaff) {
-                    document.getElementById('assign-bar').style.display = 'flex';
                     document.getElementById('vt-admin-status-box').style.display = 'block';
-                    
-                    const btnAssume = document.getElementById('btn-assume-ticket');
-                    if(data.atribuidoPara) { document.getElementById('vt-assigned').innerText = data.atribuidoPara; btnAssume.style.display = data.atribuidoPara === window.currentUserData.nome ? 'none' : 'block'; btnAssume.innerText = "Reatribuir a Mim"; } 
-                    else { document.getElementById('vt-assigned').innerText = "Não atribuído"; btnAssume.style.display = 'block'; btnAssume.innerText = "Assumir Ticket"; }
-                    
-                    document.getElementById('vt-change-status').value = data.status; toggleStatusReason();
-                }
+                    document.getElementById('vt-change-status').value = data.status; window.toggleStatusReason();
+                } else { document.getElementById('vt-admin-status-box').style.display = 'none'; }
 
-                if(isAdmin) {
-                    document.getElementById('admin-billing-section').style.display = 'block';
+                if(window.currentUserData.nivelAcesso === "admin") {
                     document.getElementById('vt-nf-tag').style.display = data.emiteNota ? 'inline' : 'none';
                     if(data.dataServico) {
                         document.getElementById('vt-agendamento-display').style.display = 'inline';
                         let dtSrv = new Date(data.dataServico); document.getElementById('vt-scheduled-date').innerText = dtSrv.toLocaleDateString('pt-BR') + ' às ' + dtSrv.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
                     } else { document.getElementById('vt-agendamento-display').style.display = 'none'; }
-                } else {
-                    document.getElementById('admin-billing-section').style.display = 'none';
-                    document.getElementById('vt-nf-tag').style.display = 'none';
-                    document.getElementById('vt-agendamento-display').style.display = 'none';
                 }
 
                 const chatContainer = document.getElementById('vt-chat'); chatContainer.innerHTML = '';
@@ -928,40 +935,16 @@
         // MUDAR STATUS TICKET
         document.getElementById('btn-update-status').addEventListener('click', async () => {
             const st = document.getElementById('vt-change-status').value;
-            const rBox = document.getElementById('vt-reason-box');
-            let motivo = document.getElementById('vt-status-reason').value.trim();
-            
-            if(rBox.style.display === 'block' && !motivo) { alert("Por favor, preencha o motivo da alteração de status."); return; }
-            
-            let textoHistorico = `Status atualizado para: **${st}**.`;
-            if(motivo) textoHistorico += ` Motivo: ${motivo}`;
-
-            await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                status: st, historico: arrayUnion({ autor: window.currentUserData.nome, tipo: window.currentUserData.nivelAcesso, texto: textoHistorico, data: new Date().toISOString() })
-            });
-            document.getElementById('vt-status-reason').value = '';
-            alert("Status atualizado!");
+            const rBox = document.getElementById('vt-reason-box'); let motivo = document.getElementById('vt-status-reason').value.trim();
+            if(rBox.style.display === 'block' && !motivo) { alert("Preencha o motivo."); return; }
+            let textoHistorico = `Status operacional atualizado para: **${st}**.`; if(motivo) textoHistorico += ` Motivo: ${motivo}`;
+            await updateDoc(doc(db, "chamados", window.activeTicketId), { status: st, historico: arrayUnion({ autor: window.currentUserData.nome, tipo: window.currentUserData.nivelAcesso, texto: textoHistorico, data: new Date().toISOString() }) });
+            document.getElementById('vt-status-reason').value = ''; alert("Status atualizado!");
         });
 
-        // FATURAR DENTRO DO TICKET (Apenas Admin)
-        document.getElementById('btn-launch-bill').addEventListener('click', async () => {
-            const val = parseFloat(document.getElementById('bill-amount').value); const dataSrv = document.getElementById('bill-date').value;
-            let msg = "";
-            if(!isNaN(val) && val > 0) {
-                if(!confirm(`Faturar ${formatMoney(val)}?`)) return;
-                const tSnap = await getDoc(doc(db, "chamados", window.activeTicketId));
-                await addDoc(collection(db, "faturas"), { tipo: "receita", uidCliente: window.activeTicketClientId, nomeCliente: tSnap.exists() ? tSnap.data().empresa : "Avulso", valor: val, origem: `OS #${tSnap.data().idInterno}`, status: "Pendente", emiteNota: tSnap.data().emiteNota || false, dataCriacao: serverTimestamp() });
-                await updateDoc(doc(db, "clientes", window.activeTicketClientId), { faturaPendente: increment(val) });
-                msg += `Serviço orçado em ${formatMoney(val)}. `;
-            }
-            if(dataSrv) { await updateDoc(doc(db, "chamados", window.activeTicketId), { dataServico: dataSrv }); let dt = new Date(dataSrv); msg += `Agendado para ${dt.toLocaleDateString('pt-BR')} às ${dt.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}.`; }
-            if(msg !== "") { await updateDoc(doc(db, "chamados", window.activeTicketId), { historico: arrayUnion({ autor: window.currentUserData.nome, tipo: "admin", texto: msg, data: new Date().toISOString() }) }); document.getElementById('bill-amount').value = ''; document.getElementById('bill-date').value = ''; }
-        });
-
-        // REPLY INTERAÇÃO TICKET
         document.getElementById('replyForm').addEventListener('submit', async (e) => { e.preventDefault(); if(!window.activeTicketId) return; const input = document.getElementById('vt-reply-text'); await updateDoc(doc(db, "chamados", window.activeTicketId), { historico: arrayUnion({ autor: window.currentUserData.nome, tipo: window.currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() }) }); input.value = ''; });
         document.getElementById('btn-assume-ticket').addEventListener('click', async () => { if(window.activeTicketId) await updateDoc(doc(db, "chamados", window.activeTicketId), { atribuidoPara: window.currentUserData.nome, status: "Em andamento", historico: arrayUnion({ autor: "Sistema", tipo: window.currentUserData.nivelAcesso, texto: `Ticket assumido por ${window.currentUserData.nome}.`, data: new Date().toISOString() }) }); });
-        document.getElementById('btn-logout').addEventListener('click', () => { signOut(window.auth); });
+        
     </script>
 </body>
 </html>
