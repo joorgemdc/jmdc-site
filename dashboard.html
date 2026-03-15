@@ -16,7 +16,6 @@
         .spinner { width: 50px; height: 50px; border: 4px solid rgba(59, 130, 246, 0.3); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Pop-up de Sucesso de Pagamento */
         .payment-success-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(16, 185, 129, 0.95); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; opacity: 0; transition: opacity 0.5s ease; backdrop-filter: blur(10px); }
         .payment-success-overlay svg { width: 120px; height: 120px; margin-bottom: 20px; animation: scaleIn 0.5s ease-out; }
         .payment-success-overlay h2 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
@@ -88,13 +87,7 @@
         .chat-msg { background: rgba(59, 130, 246, 0.1); padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: #e2e8f0; align-self: flex-start; max-width: 85%; word-break: break-word;}
         .chat-msg.staff { background: rgba(16, 185, 129, 0.1); align-self: flex-end; border: 1px solid rgba(16, 185, 129, 0.2); }
         .chat-author { font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px; font-weight: bold; }
-        .chat-input-group { display: flex; gap: 10px; flex-direction: column; }
-        .chat-input-group input[type="text"] { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
         
-        .admin-billing-module { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none; }
-        .billing-input-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .billing-input-group input, .billing-input-group select { flex: 1; padding: 10px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 6px; outline: none; min-width: 150px;}
-
         /* Tabelas Administrativas */
         .finance-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap; }
         .tab-btn { background: transparent; color: #94a3b8; border: none; font-size: 1rem; font-weight: bold; cursor: pointer; padding: 5px 10px; transition: 0.3s; }
@@ -103,9 +96,17 @@
         .admin-table th, .admin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
         .admin-table th { color: #94a3b8; font-weight: 600; }
         .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+        
         .btn-baixa { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         .btn-baixa:hover { background: #059669; }
+        .btn-edit-icon { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; opacity: 0.7; transition: 0.3s; margin-left: 5px; }
+        .btn-edit-icon:hover { opacity: 1; transform: scale(1.1); }
         .btn-wpp { background: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-right: 5px; }
+
+        /* Campos Formulário Financeiro Compactos */
+        .fin-input-box { display: flex; flex-direction: column; gap: 5px; }
+        .fin-input-box label { font-size: 0.8rem; color: #94a3b8; }
+        .fin-input-box input, .fin-input-box select { padding: 10px; background: rgba(10,15,29,0.8); border: 1px solid #334155; color: white; border-radius: 6px; outline: none; }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
         @media (max-width: 768px) { header { padding: 12px 15px !important; } .nav-links { display: none; } .dashboard-container { padding: 20px 5%; } .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } .admin-table { display: block; overflow-x: auto; } }
@@ -161,13 +162,11 @@
                         <div><span class="status-badge" id="user-status">ATIVO</span></div>
                         <p class="card-desc">Serviços operando dentro da normalidade.</p>
                     </div>
-
                     <div class="dash-card clickable" onclick="openSidebar('client')">
                         <div class="card-header"><div class="card-title">Meus Chamados</div></div>
                         <div class="card-value" id="client-ticket-count">0</div>
                         <p class="card-desc">Gerencie seu histórico de requisições.</p>
                     </div>
-
                     <div class="dash-card clickable" onclick="openClientBillingModal()">
                         <div class="card-header"><div class="card-title">Faturas Pendentes</div></div>
                         <div class="card-value" style="color: var(--accent);" id="fatura-pendente">R$ 0,00</div>
@@ -180,7 +179,7 @@
                 <div class="section-title"><svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Módulo Operacional (NOC)</div>
                 <div class="dash-grid">
                     <div class="dash-card admin-card clickable" onclick="openSidebar('admin_all')">
-                        <div class="card-header"><div class="card-title">Fila Global (Todos)</div></div>
+                        <div class="card-header"><div class="card-title">Fila Global</div></div>
                         <div class="card-value" id="admin-all-tickets">0</div>
                         <p class="card-desc">Chamados em aberto de toda a carteira.</p>
                     </div>
@@ -192,7 +191,7 @@
                     <div class="dash-card admin-card clickable" onclick="openClientesListModal()">
                         <div class="card-header"><div class="card-title">Carteira de Clientes</div></div>
                         <div class="card-value" id="admin-clientes-count">0</div>
-                        <p class="card-desc">Gerencie o portfólio, acesse faturas e contatos.</p>
+                        <p class="card-desc">Gerencie portfólio, acesse faturas e contatos.</p>
                     </div>
                 </div>
 
@@ -273,28 +272,16 @@
     <div class="modal-overlay" id="view-ticket-modal">
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeViewTicketModal()">×</button>
-            <div class="assign-bar" id="assign-bar" style="display: none;">
-                <div><strong style="color: var(--primary);">Responsável:</strong> <span id="vt-assigned">Não atribuído</span></div>
-                <button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem;" id="btn-assume-ticket">Atribuir a Mim</button>
-            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <h3 class="modal-title" id="vt-id">#ID</h3><span class="status-badge" id="vt-status">Aberto</span>
             </div>
             <p class="modal-subtitle" style="margin-bottom: 5px;"><strong id="vt-subject">Assunto</strong></p>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span> <span id="vt-agendamento-display" style="display:none; color: var(--accent); font-weight: bold;"> | Confirmado para: <span id="vt-scheduled-date"></span></span></p>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span></p>
             
             <div class="chat-container" id="vt-chat"></div>
 
             <form id="replyForm" style="margin-top: 15px;">
                 <div class="chat-input-group"><input type="text" id="vt-reply-text" placeholder="Digite sua resposta..." required><button type="submit" class="btn-action" style="padding: 12px; width: 100%;">Enviar Interação</button></div>
-                <div class="admin-billing-module" id="admin-billing-section">
-                    <h4>Precificação e Agendamento</h4>
-                    <div class="billing-input-group">
-                        <input type="number" id="bill-amount" placeholder="Valor (Ex: 150.00)" step="0.01" min="0">
-                        <input type="datetime-local" id="bill-date" title="Data/Hora do Serviço">
-                        <button type="button" class="btn-action" style="background: var(--accent); border: none;" id="btn-launch-bill">Registrar Dados</button>
-                    </div>
-                </div>
                 <div style="text-align: right; margin-top: 15px;"><button type="button" class="btn-logout" id="btn-resolve-ticket">Encerrar Chamado</button></div>
             </form>
         </div>
@@ -305,7 +292,7 @@
             <button class="modal-close" onclick="closeClientesListModal()">×</button>
             <h3 class="modal-title">Carteira de Clientes</h3>
             <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                <p class="modal-subtitle">Controle de acesso, saldos e comunicação direta.</p>
+                <p class="modal-subtitle">Controle de acesso, saldos e comunicação.</p>
                 <button class="btn-action btn-outline" style="padding: 5px 15px; font-size: 0.85rem;" onclick="openClientEditModal('new')">+ Novo Cliente</button>
             </div>
             <div id="clientes-list-container" style="max-height: 60vh; overflow-y: auto;">
@@ -329,13 +316,7 @@
                     <div class="form-group full-width"><label>Empresa (Razão Social)</label><input type="text" id="ce-empresa" required></div>
                     <div class="form-group full-width"><label>Endereço Completo</label><input type="text" id="ce-endereco" placeholder="Rua, Número, Bairro, CEP"></div>
                     <div class="form-group"><label>WhatsApp</label><input type="tel" id="ce-telefone" required></div>
-                    <div class="form-group">
-                        <label>Tipo de Faturamento</label>
-                        <select id="ce-tipoFaturamento">
-                            <option value="avulso">Avulso (Sob Demanda)</option>
-                            <option value="mensal">Contrato Mensal</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Tipo Faturamento</label><select id="ce-tipoFaturamento"><option value="avulso">Avulso</option><option value="mensal">Contrato Mensal</option></select></div>
                     <div class="form-group full-width" id="ce-email-group"><label>E-mail de Login</label><input type="email" id="ce-email"></div>
                     <div class="form-group full-width" id="ce-pass-group"><label>Senha Provisória</label><input type="password" id="ce-pass" minlength="6"></div>
                 </div>
@@ -357,13 +338,13 @@
                 <div class="form-grid">
                     <div class="form-group full-width"><label>Razão Social / Nome</label><input type="text" id="forn-nome" required></div>
                     <div class="form-group"><label>Chave PIX</label><input type="text" id="forn-pix" required></div>
-                    <div class="form-group"><label>WhatsApp</label><input type="text" id="forn-wpp" required></div>
+                    <div class="form-group"><label>WhatsApp</label><input type="tel" id="forn-wpp" required placeholder="(XX) 9XXXX-XXXX"></div>
                 </div>
                 <button type="submit" class="btn-action" style="padding: 10px;">Salvar Fornecedor</button>
             </form>
 
             <table class="admin-table" id="fornecedores-table">
-                <thead><tr><th>Fornecedor</th><th>Chave PIX</th><th>WhatsApp</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Fornecedor</th><th>Chave PIX</th><th>WhatsApp</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -392,34 +373,53 @@
                 <button class="tab-btn active" id="tab-receber" onclick="switchFinanceTab('receber')">Contas a Receber</button>
                 <button class="tab-btn" id="tab-pagar" onclick="switchFinanceTab('pagar')">Contas a Pagar</button>
                 <button class="tab-btn" id="tab-historico" onclick="switchFinanceTab('historico')">Histórico de Transações</button>
-                <div style="margin-left: auto;">
-                    <button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem; background: var(--secondary); border: 1px solid var(--primary);" onclick="exportarRelatorio()">Exportar Relatório</button>
-                </div>
+                <div style="margin-left: auto;"><button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem; background: var(--secondary); border: 1px solid var(--primary);" onclick="exportarRelatorio()">Exportar Relatório</button></div>
             </div>
 
             <div id="finance-list-container" style="max-height: 40vh; overflow-y: auto; margin-bottom: 20px;"></div>
 
             <div id="form-finance-area" style="display: none; background: rgba(30, 41, 59, 0.5); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
                 <h4 style="color: white; margin-bottom: 15px;" id="finance-form-title">Lançar Nova Transação</h4>
-                <form id="novaTransacaoForm" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
-                    <div style="flex: 2; min-width: 200px;">
-                        <label style="font-size: 0.8rem; color:#94a3b8;" id="label-desc-transacao">Vincular Entidade</label>
-                        <select id="transacao-vinculo" style="width: 100%; padding: 10px; border-radius: 6px; background: rgba(10,15,29,0.8); border: 1px solid #334155; color: white; margin-bottom:5px;">
-                            <option value="avulso">-- Lançamento Avulso (Sem Vínculo) --</option>
-                            </select>
-                        <input type="text" id="desc-transacao" placeholder="Descrição ou nome avulso" required style="width: 100%; padding: 10px; border-radius: 6px; background: rgba(10,15,29,0.8); border: 1px solid #334155; color: white;">
+                <form id="novaTransacaoForm" style="display: flex; gap: 15px; align-items: flex-start; flex-wrap: wrap;">
+                    
+                    <div class="fin-input-box" style="flex: 2; min-width: 250px;">
+                        <label id="label-desc-transacao">Vincular Entidade</label>
+                        <select id="transacao-vinculo" style="margin-bottom:5px;"><option value="avulso">-- Avulso (Sem Vínculo) --</option></select>
+                        <input type="text" id="desc-transacao" placeholder="Descrição ou nome avulso" required>
                     </div>
-                    <div style="flex: 1; min-width: 120px;">
-                        <label style="font-size: 0.8rem; color:#94a3b8;">Valor</label>
-                        <input type="number" id="valor-transacao" step="0.01" required style="width: 100%; padding: 10px; border-radius: 6px; background: rgba(10,15,29,0.8); border: 1px solid #334155; color: white;">
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; padding-bottom: 10px;">
-                        <div><input type="checkbox" id="transacao-fixa"> <label for="transacao-fixa" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer;">Fixa (Mensal)</label></div>
+
+                    <div class="fin-input-box" style="flex: 1; min-width: 100px;"><label>Valor (R$)</label><input type="number" id="valor-transacao" step="0.01" required></div>
+                    
+                    <div class="fin-input-box" style="flex: 1; min-width: 130px;"><label>Data</label><input type="date" id="data-transacao"></div>
+                    <div class="fin-input-box" style="flex: 1; min-width: 100px;"><label>Hora</label><input type="time" id="hora-transacao"></div>
+                    
+                    <div class="fin-input-box" style="flex: 1; min-width: 80px;"><label>Parcelas</label><input type="number" id="parcelas-transacao" placeholder="Ex: 1" min="1"></div>
+                    <div class="fin-input-box" style="flex: 1; min-width: 100px;"><label>Val. Parcela</label><input type="number" id="valor-parcela-transacao" step="0.01"></div>
+
+                    <div style="display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; padding-bottom: 5px; min-width: 150px;">
+                        <div><input type="checkbox" id="transacao-fixa"> <label for="transacao-fixa" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer;">Recorrência Mensal</label></div>
                         <div><input type="checkbox" id="transacao-nota"> <label for="transacao-nota" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer; color:var(--warning);">Emite Nota</label></div>
                     </div>
-                    <button type="submit" class="btn-action" style="padding: 10px 20px;" id="btn-submit-transacao">Lançar</button>
+
+                    <div style="width: 100%; text-align: right;"><button type="submit" class="btn-action" style="padding: 10px 30px;" id="btn-submit-transacao">Lançar Transação</button></div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="edit-transacao-modal" style="z-index: 2500;">
+        <div class="modal-content" style="max-width: 350px; text-align: center;">
+            <button class="modal-close" onclick="closeEditTransacaoModal()">×</button>
+            <h3 class="modal-title">Editar Valor</h3>
+            <p class="modal-subtitle">Atualizará a carteira do cliente automaticamente.</p>
+            <form id="editTransacaoForm">
+                <input type="hidden" id="edit-tr-id">
+                <input type="hidden" id="edit-tr-uidcliente">
+                <input type="hidden" id="edit-tr-tipo">
+                <input type="hidden" id="edit-tr-oldval">
+                <div class="form-group"><input type="number" id="edit-tr-newval" step="0.01" required style="font-size: 1.5rem; text-align: center;"></div>
+                <button type="submit" class="btn-action" style="width: 100%;">Salvar Alteração</button>
+            </form>
         </div>
     </div>
 
@@ -432,39 +432,18 @@
         
         function openClientBillingModal() { document.getElementById('client-billing-modal').style.display = 'flex'; }
         function closeClientBillingModal() { document.getElementById('client-billing-modal').style.display = 'none'; }
-        
         function openMyAccountModal() { document.getElementById('my-account-modal').style.display = 'flex'; }
         function closeMyAccountModal() { document.getElementById('my-account-modal').style.display = 'none'; }
-
         function openClientesListModal() { document.getElementById('clientes-list-modal').style.display = 'flex'; }
         function closeClientesListModal() { document.getElementById('clientes-list-modal').style.display = 'none'; }
-        
         function openSuppliersModal() { document.getElementById('suppliers-modal').style.display = 'flex'; }
         function closeSuppliersModal() { document.getElementById('suppliers-modal').style.display = 'none'; }
-
+        
         function openClientEditModal(mode, uid = null) {
-            const m = document.getElementById('client-edit-modal');
-            const form = document.getElementById('clientEditForm');
-            form.reset();
-            document.getElementById('ce-uid').value = uid || '';
-            
-            if(mode === 'new') {
-                document.getElementById('ce-title').innerText = "Novo Cliente";
-                document.getElementById('ce-email-group').style.display = 'block'; document.getElementById('ce-email').required = true;
-                document.getElementById('ce-pass-group').style.display = 'block'; document.getElementById('ce-pass').required = true;
-            } else {
-                document.getElementById('ce-title').innerText = "Editar Cliente";
-                document.getElementById('ce-email-group').style.display = 'none'; document.getElementById('ce-email').required = false;
-                document.getElementById('ce-pass-group').style.display = 'none'; document.getElementById('ce-pass').required = false;
-                
-                const cData = window.globalClientes.find(c => c.id === uid);
-                if(cData) {
-                    document.getElementById('ce-nome').value = cData.nome || ''; document.getElementById('ce-sobrenome').value = cData.sobrenome || '';
-                    document.getElementById('ce-empresa').value = cData.empresa || ''; document.getElementById('ce-telefone').value = cData.telefone || '';
-                    document.getElementById('ce-endereco').value = cData.endereco || ''; document.getElementById('ce-tipoFaturamento').value = cData.tipoFaturamento || 'avulso';
-                }
-            }
-            m.style.display = 'flex';
+            document.getElementById('clientEditForm').reset(); document.getElementById('ce-uid').value = uid || '';
+            if(mode === 'new') { document.getElementById('ce-title').innerText = "Novo Cliente"; document.getElementById('ce-email-group').style.display = 'block'; document.getElementById('ce-pass-group').style.display = 'block'; } 
+            else { document.getElementById('ce-title').innerText = "Editar Cliente"; document.getElementById('ce-email-group').style.display = 'none'; document.getElementById('ce-pass-group').style.display = 'none'; const cData = window.globalClientes.find(c => c.id === uid); if(cData) { document.getElementById('ce-nome').value = cData.nome || ''; document.getElementById('ce-sobrenome').value = cData.sobrenome || ''; document.getElementById('ce-empresa').value = cData.empresa || ''; document.getElementById('ce-telefone').value = cData.telefone || ''; document.getElementById('ce-endereco').value = cData.endereco || ''; document.getElementById('ce-tipoFaturamento').value = cData.tipoFaturamento || 'avulso'; } }
+            document.getElementById('client-edit-modal').style.display = 'flex';
         }
         function closeClientEditModal() { document.getElementById('client-edit-modal').style.display = 'none'; }
 
@@ -476,47 +455,38 @@
             document.getElementById('tab-receber').classList.remove('active'); document.getElementById('tab-pagar').classList.remove('active'); document.getElementById('tab-historico').classList.remove('active');
             document.getElementById(`tab-${tab}`).classList.add('active');
             
-            const formArea = document.getElementById('form-finance-area');
-            const title = document.getElementById('finance-form-title');
-            const btn = document.getElementById('btn-submit-transacao');
-            const selVinculo = document.getElementById('transacao-vinculo');
-
-            // Popular Dropdown
-            selVinculo.innerHTML = '<option value="avulso">-- Lançamento Avulso (Sem Vínculo) --</option>';
+            const formArea = document.getElementById('form-finance-area'); const title = document.getElementById('finance-form-title'); const btn = document.getElementById('btn-submit-transacao'); const selVinculo = document.getElementById('transacao-vinculo');
+            selVinculo.innerHTML = '<option value="avulso">-- Avulso (Sem Vínculo) --</option>';
             
             if(tab === 'receber') {
-                formArea.style.display = 'block'; formArea.style.borderColor = 'var(--accent)';
-                title.innerText = "Lançar Receita"; title.style.color = "var(--accent)"; btn.style.background = "var(--accent)";
+                formArea.style.display = 'block'; formArea.style.borderColor = 'var(--accent)'; title.innerText = "Lançar Receita"; title.style.color = "var(--accent)"; btn.style.background = "var(--accent)";
                 window.globalClientes.forEach(c => selVinculo.innerHTML += `<option value="${c.id}">${c.empresa} (${c.nome})</option>`);
             } else if(tab === 'pagar') {
-                formArea.style.display = 'block'; formArea.style.borderColor = 'var(--danger)';
-                title.innerText = "Lançar Despesa"; title.style.color = "var(--danger)"; btn.style.background = "var(--danger)";
+                formArea.style.display = 'block'; formArea.style.borderColor = 'var(--danger)'; title.innerText = "Lançar Despesa"; title.style.color = "var(--danger)"; btn.style.background = "var(--danger)";
                 window.globalFornecedores.forEach(f => selVinculo.innerHTML += `<option value="${f.id}">${f.nome} (PIX: ${f.chavePix})</option>`);
             } else { formArea.style.display = 'none'; }
-
             if(window.renderFinanceTable) window.renderFinanceTable();
         }
 
-        selVinculo = document.getElementById('transacao-vinculo');
-        selVinculo.addEventListener('change', (e) => {
-            const descInput = document.getElementById('desc-transacao');
-            if(e.target.value === 'avulso') { descInput.value = ''; descInput.placeholder = "Descrição ou nome avulso"; }
-            else { descInput.value = e.target.options[e.target.selectedIndex].text; }
-        });
+        document.getElementById('transacao-vinculo').addEventListener('change', (e) => { const desc = document.getElementById('desc-transacao'); if(e.target.value === 'avulso') { desc.value = ''; desc.placeholder = "Descrição ou nome avulso"; } else { desc.value = e.target.options[e.target.selectedIndex].text; } });
 
         function openSidebar(f) { window.currentViewFilter = f; document.getElementById('sidebar-overlay').style.display = 'block'; setTimeout(() => { document.getElementById('sidebar-overlay').style.opacity = '1'; document.getElementById('ticket-sidebar').classList.add('active'); }, 10); if(window.refreshTicketList) window.refreshTicketList(); }
         function closeSidebar() { document.getElementById('ticket-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').style.opacity = '0'; setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300); }
-        function showGreenSuccess() {
-            const ov = document.getElementById('payment-success-overlay');
-            ov.style.display = 'flex'; setTimeout(() => ov.style.opacity = '1', 10);
-            setTimeout(() => { ov.style.opacity = '0'; setTimeout(() => ov.style.display = 'none', 500); }, 20000);
-        }
+        function showGreenSuccess() { const ov = document.getElementById('payment-success-overlay'); ov.style.display = 'flex'; setTimeout(() => ov.style.opacity = '1', 10); setTimeout(() => { ov.style.opacity = '0'; setTimeout(() => ov.style.display = 'none', 500); }, 20000); }
+        
+        // MÁSCARAS
+        const mPhone = (e) => { let v = e.target.value.replace(/\D/g, ''); if (v.length > 11) v = v.slice(0, 11); if (v.length > 2 && v.length <= 6) v = `(${v.slice(0,2)}) ${v.slice(2)}`; else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`; e.target.value = v; };
+        document.getElementById('ce-telefone').addEventListener('input', mPhone);
+        document.getElementById('forn-wpp').addEventListener('input', mPhone);
+
+        // Edit Modal
+        function closeEditTransacaoModal() { document.getElementById('edit-transacao-modal').style.display = 'none'; }
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, setDoc, addDoc, serverTimestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, setDoc, addDoc, serverTimestamp, Timestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo", authDomain: "jmdc-crm.firebaseapp.com", projectId: "jmdc-crm", storageBucket: "jmdc-crm.firebasestorage.app", messagingSenderId: "495316438549", appId: "1:495316438549:web:61d6c18462b66afcb3881c" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -529,7 +499,6 @@
         const formatMoney = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
         const sanitizePhone = (p) => p ? p.replace(/\D/g, '') : '';
 
-        // AUTENTICAÇÃO E ROTEAMENTO
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 onSnapshot(doc(db, "clientes", user.uid), (docSnap) => {
@@ -537,7 +506,6 @@
                         currentUserData = docSnap.data();
                         document.getElementById('user-name').innerText = currentUserData.nome;
                         
-                        // Gatilho do Pop-up Verde para Cliente
                         if(!isFirstLoadClient && currentUserData.faturaPendente < lastFaturaPendente) showGreenSuccess();
                         lastFaturaPendente = currentUserData.faturaPendente || 0;
                         isFirstLoadClient = false;
@@ -548,44 +516,23 @@
                         
                         let isAdminOrSupport = currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte";
                         if(isAdminOrSupport) {
-                            document.getElementById('client-panel').style.display = 'none';
-                            document.getElementById('admin-panel').style.display = 'block';
-                            document.getElementById('btn-admin-suppliers').style.display = 'inline-flex';
-                            
+                            document.getElementById('client-panel').style.display = 'none'; document.getElementById('admin-panel').style.display = 'block'; document.getElementById('btn-admin-suppliers').style.display = 'inline-flex';
                             if(currentUserData.nivelAcesso === "admin") {
                                 document.getElementById('admin-badge').style.display = 'inline-block';
                                 
-                                // Escuta Clientes
                                 onSnapshot(collection(db, "clientes"), (snap) => {
                                     window.globalClientes = []; const tbody = document.querySelector('#clientes-table tbody'); tbody.innerHTML = '';
                                     snap.forEach(c => { 
                                         let data = c.data(); data.id = c.id; window.globalClientes.push(data);
-                                        let numWpp = sanitizePhone(data.telefone);
-                                        let enderecoStr = data.endereco || 'Não informado'; let respStr = `${data.nome} ${data.sobrenome}`;
-                                        
-                                        tbody.innerHTML += `<tr>
-                                            <td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td>
-                                            <td>${respStr}<br><span style="font-size:0.75rem; color:#64748b;">${enderecoStr}</span></td>
-                                            <td><a href="https://wa.me/55${numWpp}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}<br><span style="font-size:0.75rem; color:#64748b;">${data.email}</span></td>
-                                            <td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td>
-                                            <td><button class="btn-action btn-outline" style="padding:5px 10px; font-size:0.8rem;" onclick="openClientEditModal('edit', '${data.id}')">Editar</button></td>
-                                        </tr>`;
-                                    });
-                                    document.getElementById('admin-clientes-count').innerText = window.globalClientes.length;
+                                        tbody.innerHTML += `<tr><td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td><td>${data.nome} ${data.sobrenome}<br><span style="font-size:0.75rem; color:#64748b;">${data.endereco || 'Não informado'}</span></td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}<br><span style="font-size:0.75rem; color:#64748b;">${data.email}</span></td><td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td><td><button class="btn-action btn-outline" style="padding:5px 10px; font-size:0.8rem;" onclick="openClientEditModal('edit', '${data.id}')">Editar</button></td></tr>`;
+                                    }); document.getElementById('admin-clientes-count').innerText = window.globalClientes.length;
                                 });
 
-                                // Escuta Fornecedores
                                 onSnapshot(collection(db, "fornecedores"), (snap) => {
                                     window.globalFornecedores = []; const tbody = document.querySelector('#fornecedores-table tbody'); tbody.innerHTML = '';
-                                    snap.forEach(f => {
-                                        let data = f.data(); data.id = f.id; window.globalFornecedores.push(data);
-                                        tbody.innerHTML += `<tr><td><strong>${data.nome}</strong></td><td>${data.chavePix} <button onclick="navigator.clipboard.writeText('${data.chavePix}'); alert('Copiado!')" style="background:transparent; border:none; cursor:pointer;">📋</button></td>
-                                        <td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">Enviar Comprovante</a> ${data.telefone}</td>
-                                        <td>-</td></tr>`;
-                                    });
+                                    snap.forEach(f => { let data = f.data(); data.id = f.id; window.globalFornecedores.push(data); tbody.innerHTML += `<tr><td><strong>${data.nome}</strong></td><td>${data.chavePix}</td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">Enviar Comprovante</a> ${data.telefone}</td></tr>`; });
                                 });
 
-                                // Escuta Faturas
                                 onSnapshot(collection(db, "faturas"), (snap) => {
                                     window.globalFaturas = []; let tRec = 0; let tPag = 0; let balanco = 0;
                                     snap.forEach(f => {
@@ -598,7 +545,6 @@
                                 });
                             } else { document.getElementById('suporte-badge').style.display = 'inline-block'; }
                         }
-                        
                         document.getElementById('loader').style.opacity = '0'; setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 500);
 
                         let q = isAdminOrSupport ? query(collection(db, "chamados")) : query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
@@ -613,133 +559,120 @@
             } else { window.location.href = "crm.html"; }
         });
 
-        // CLIENTE EDIT (Cadastro e Atualização)
+        // EDIT/NEW CLIENT
         document.getElementById('clientEditForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); const btn = document.getElementById('btn-submit-ce'); btn.disabled = true;
-            const uid = document.getElementById('ce-uid').value;
+            e.preventDefault(); const btn = document.getElementById('btn-submit-ce'); btn.disabled = true; const uid = document.getElementById('ce-uid').value;
             const dados = { nome: document.getElementById('ce-nome').value.trim(), sobrenome: document.getElementById('ce-sobrenome').value.trim(), empresa: document.getElementById('ce-empresa').value.trim(), endereco: document.getElementById('ce-endereco').value.trim(), telefone: document.getElementById('ce-telefone').value.trim(), tipoFaturamento: document.getElementById('ce-tipoFaturamento').value };
             try {
-                if(!uid) { // Novo
-                    const email = document.getElementById('ce-email').value.trim(); const pass = document.getElementById('ce-pass').value;
-                    const uCred = await createUserWithEmailAndPassword(adminAuth, email, pass);
-                    dados.email = email; dados.dataCadastro = serverTimestamp(); dados.status = "ativo"; dados.nivelAcesso = "cliente"; dados.faturaPendente = 0;
-                    await setDoc(doc(db, "clientes", uCred.user.uid), dados); adminAuth.signOut(); alert("Cliente Provisionado!");
-                } else { // Edição
-                    await updateDoc(doc(db, "clientes", uid), dados); alert("Cadastro atualizado!");
-                }
+                if(!uid) { const email = document.getElementById('ce-email').value.trim(); const pass = document.getElementById('ce-pass').value; const uCred = await createUserWithEmailAndPassword(adminAuth, email, pass); dados.email = email; dados.dataCadastro = serverTimestamp(); dados.status = "ativo"; dados.nivelAcesso = "cliente"; dados.faturaPendente = 0; await setDoc(doc(db, "clientes", uCred.user.uid), dados); adminAuth.signOut(); alert("Cliente Provisionado!"); } 
+                else { await updateDoc(doc(db, "clientes", uid), dados); alert("Cadastro atualizado!"); }
                 closeClientEditModal();
             } catch(err) { console.error(err); alert("Erro ao salvar dados."); } finally { btn.disabled = false; }
         });
 
         // FORNECEDORES
         document.getElementById('form-novo-fornecedor').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                await addDoc(collection(db, "fornecedores"), { nome: document.getElementById('forn-nome').value.trim(), chavePix: document.getElementById('forn-pix').value.trim(), telefone: document.getElementById('forn-wpp').value.trim(), dataCadastro: serverTimestamp() });
-                document.getElementById('form-novo-fornecedor').reset(); document.getElementById('form-novo-fornecedor').style.display='none'; alert("Fornecedor cadastrado!");
-            } catch(e) { console.error(e); }
+            e.preventDefault(); try { await addDoc(collection(db, "fornecedores"), { nome: document.getElementById('forn-nome').value.trim(), chavePix: document.getElementById('forn-pix').value.trim(), telefone: document.getElementById('forn-wpp').value.trim(), dataCadastro: serverTimestamp() }); document.getElementById('form-novo-fornecedor').reset(); document.getElementById('form-novo-fornecedor').style.display='none'; alert("Fornecedor cadastrado!"); } catch(e) { console.error(e); }
         });
 
-        // MINHA CONTA (CLIENTE)
-        document.getElementById('btn-reset-password').addEventListener('click', async () => {
-            if(confirm(`Enviar e-mail de redefinição de senha para ${currentUserData.email}?`)) {
-                try { await sendPasswordResetEmail(auth, currentUserData.email); alert("E-mail enviado! Verifique sua caixa de entrada."); } catch(e) { alert("Erro ao enviar e-mail."); }
-            }
-        });
+        document.getElementById('btn-reset-password').addEventListener('click', async () => { if(confirm(`Enviar e-mail para ${currentUserData.email}?`)) { try { await sendPasswordResetEmail(auth, currentUserData.email); alert("E-mail enviado!"); } catch(e) { alert("Erro ao enviar e-mail."); } } });
 
-        // FINANCEIRO TABLE & BAIXA
+        // FINANCEIRO TABLE
         window.renderFinanceTable = function() {
             const container = document.getElementById('finance-list-container');
             let filtradas = window.globalFaturas.filter(f => window.currentFinanceTab === 'historico' ? f.status === 'Pago' : (f.tipo === (window.currentFinanceTab === 'receber' ? 'receita' : 'despesa') && f.status === 'Pendente'));
             filtradas.sort((a,b) => (b.dataCriacao?.toMillis() || 0) - (a.dataCriacao?.toMillis() || 0));
-
             if(filtradas.length === 0) { container.innerHTML = `<p style="text-align:center; color:#94a3b8;">Nenhum registro nesta categoria.</p>`; return; }
 
-            let html = `<table class="admin-table"><thead><tr><th>Data</th><th>Descritivo</th><th>Valor</th><th>Status</th><th>Ação</th></tr></thead><tbody>`;
+            let html = `<table class="admin-table"><thead><tr><th>Data / Parcela</th><th>Descritivo</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead><tbody>`;
             filtradas.forEach(f => {
                 let d = f.dataCriacao ? new Date(f.dataCriacao.toDate()).toLocaleDateString('pt-BR') : '-';
+                if(f.dataRealizada) { d = new Date(f.dataRealizada.toDate()).toLocaleDateString('pt-BR'); }
+                let par = f.parcelas && f.parcelas > 1 ? `<br><span style="font-size:0.75rem; color:#94a3b8;">Parcelado em ${f.parcelas}x (${formatMoney(f.valorParcela)})</span>` : '';
                 let stC = f.status === 'Pendente' ? 'var(--warning)' : 'var(--accent)';
-                let btn = f.status === 'Pendente' ? `<button class="btn-baixa" onclick="window.darBaixaFatura('${f.id}', '${f.uidCliente}', ${f.valor}, '${f.tipo}')">Dar Baixa</button>` : `<span style="color:#94a3b8;font-size:0.8rem;">Liquidado</span>`;
+                let btnBx = f.status === 'Pendente' ? `<button class="btn-baixa" onclick="window.darBaixaFatura('${f.id}', '${f.uidCliente}', ${f.valor}, '${f.tipo}')">Dar Baixa</button>` : `<span style="color:#94a3b8;font-size:0.8rem;">Liquidado</span>`;
+                let btnEd = f.status === 'Pendente' ? `<button class="btn-edit-icon" onclick="window.openEditTransacao('${f.id}', ${f.valor}, '${f.uidCliente}', '${f.tipo}')">✏️</button>` : '';
                 let tags = (f.recorrente ? `<span style="font-size:0.7rem; background:rgba(239,68,68,0.2); color:var(--danger); padding:2px 5px; border-radius:4px; margin-left:5px;">FIXA</span>` : '') + (f.emiteNota ? `<span style="font-size:0.7rem; background:rgba(245,158,11,0.2); color:var(--warning); padding:2px 5px; border-radius:4px; margin-left:5px;">NOTA</span>` : '');
-                html += `<tr><td>${d}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btn}</td></tr>`;
+                
+                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btnBx} ${btnEd}</td></tr>`;
             });
             container.innerHTML = html + `</tbody></table>`;
         };
 
+        // EDITAR VALOR TRANSAÇÃO (E ABATER CLIENTE)
+        window.openEditTransacao = function(id, valAtual, uidCliente, tipo) {
+            document.getElementById('edit-tr-id').value = id; document.getElementById('edit-tr-uidcliente').value = uidCliente; document.getElementById('edit-tr-tipo').value = tipo; document.getElementById('edit-tr-oldval').value = valAtual;
+            document.getElementById('edit-tr-newval').value = valAtual; document.getElementById('edit-transacao-modal').style.display = 'flex';
+        };
+
+        document.getElementById('editTransacaoForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const id = document.getElementById('edit-tr-id').value; const uidCliente = document.getElementById('edit-tr-uidcliente').value; const tipo = document.getElementById('edit-tr-tipo').value;
+            const oldVal = parseFloat(document.getElementById('edit-tr-oldval').value); const newVal = parseFloat(document.getElementById('edit-tr-newval').value);
+            if(isNaN(newVal) || newVal < 0) return;
+
+            try {
+                await updateDoc(doc(db, "faturas", id), { valor: newVal });
+                if(tipo === 'receita' && uidCliente && uidCliente !== 'undefined' && uidCliente !== 'null' && uidCliente !== 'avulso') {
+                    const diferenca = newVal - oldVal;
+                    const cRef = doc(db, "clientes", uidCliente); const cSnap = await getDoc(cRef);
+                    if(cSnap.exists()) {
+                        let novoSaldo = Math.max(0, (cSnap.data().faturaPendente || 0) + diferenca);
+                        await updateDoc(cRef, { faturaPendente: novoSaldo });
+                    }
+                }
+                document.getElementById('edit-transacao-modal').style.display = 'none'; alert("Valor alterado com sucesso!");
+            } catch(e) { console.error(e); alert("Erro ao editar."); }
+        });
+
+        // DAR BAIXA
         window.darBaixaFatura = async function(faturaId, clientId, valor, tipo) {
-            if(!confirm("Confirma a liquidação deste valor? O saldo do cliente será abatido.")) return;
+            if(!confirm("Confirma a liquidação deste valor?")) return;
             try {
                 await updateDoc(doc(db, "faturas", faturaId), { status: "Pago", dataPagamento: serverTimestamp() });
-                if(tipo === 'receita' && clientId && clientId !== 'undefined' && clientId !== 'avulso') {
+                if(tipo === 'receita' && clientId && clientId !== 'undefined' && clientId !== 'null' && clientId !== 'avulso') {
                     const cRef = doc(db, "clientes", clientId); const cSnap = await getDoc(cRef);
                     if(cSnap.exists()) await updateDoc(cRef, { faturaPendente: Math.max(0, (cSnap.data().faturaPendente || 0) - valor) });
                 }
             } catch(e) { console.error(e); alert("Erro ao processar baixa."); }
         };
 
-        // LANÇAMENTO MANUAL (Financeiro)
+        // LANÇAR TRANSAÇÃO (COM DATA E PARCELAS)
         document.getElementById('novaTransacaoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const vinculoId = document.getElementById('transacao-vinculo').value;
-            const desc = document.getElementById('desc-transacao').value;
-            const val = parseFloat(document.getElementById('valor-transacao').value);
+            const vinculoId = document.getElementById('transacao-vinculo').value; const desc = document.getElementById('desc-transacao').value; const val = parseFloat(document.getElementById('valor-transacao').value);
+            const dataInp = document.getElementById('data-transacao').value; const horaInp = document.getElementById('hora-transacao').value;
+            const par = parseInt(document.getElementById('parcelas-transacao').value) || 1; const valPar = parseFloat(document.getElementById('valor-parcela-transacao').value) || val;
             if(isNaN(val) || val <= 0) return;
+
+            let customTimestamp = serverTimestamp();
+            if(dataInp) {
+                let dtStr = dataInp; if(horaInp) dtStr += `T${horaInp}:00`; else dtStr += `T00:00:00`;
+                customTimestamp = Timestamp.fromDate(new Date(dtStr));
+            }
 
             try {
                 await addDoc(collection(db, "faturas"), {
                     tipo: window.currentFinanceTab === 'receber' ? 'receita' : 'despesa', uidCliente: vinculoId !== 'avulso' ? vinculoId : null,
-                    descricao: desc, nomeCliente: desc, valor: val, status: "Pendente", origem: "Lançamento Manual",
-                    recorrente: document.getElementById('transacao-fixa').checked, emiteNota: document.getElementById('transacao-nota').checked, dataCriacao: serverTimestamp()
+                    descricao: desc, nomeCliente: desc, valor: val, parcelas: par, valorParcela: valPar, status: "Pendente", origem: "Lançamento Manual",
+                    recorrente: document.getElementById('transacao-fixa').checked, emiteNota: document.getElementById('transacao-nota').checked, 
+                    dataCriacao: serverTimestamp(), dataRealizada: customTimestamp
                 });
                 
-                if(window.currentFinanceTab === 'receber' && vinculoId !== 'avulso') {
-                    await updateDoc(doc(db, "clientes", vinculoId), { faturaPendente: increment(val) });
-                }
+                if(window.currentFinanceTab === 'receber' && vinculoId !== 'avulso') { await updateDoc(doc(db, "clientes", vinculoId), { faturaPendente: increment(val) }); }
                 document.getElementById('novaTransacaoForm').reset(); alert("Transação registrada!");
             } catch(e) { console.error(e); }
         });
 
-        // VIEW CHAMADO
-        window.loadTicketDetails = function(docId, uidDonoChamado) {
-            window.activeTicketId = docId; window.activeTicketClientId = uidDonoChamado;
-            document.getElementById('view-ticket-modal').style.display = 'flex'; closeSidebar();
-            if(window.currentTicketSnapshot) window.currentTicketSnapshot();
-
-            window.currentTicketSnapshot = onSnapshot(doc(db, "chamados", docId), (dataSnap) => {
-                if(!dataSnap.exists()) return; const data = dataSnap.data();
-                document.getElementById('vt-id').innerText = "#" + data.idInterno; document.getElementById('vt-subject').innerText = data.assunto;
-                document.getElementById('vt-date').innerText = data.dataAbertura ? new Date(data.dataAbertura.toDate()).toLocaleString('pt-BR') : "...";
-
-                if(data.dataServico) {
-                    document.getElementById('vt-agendamento-display').style.display = 'inline';
-                    let dtSrv = new Date(data.dataServico); document.getElementById('vt-scheduled-date').innerText = dtSrv.toLocaleDateString('pt-BR') + ' às ' + dtSrv.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-                } else { document.getElementById('vt-agendamento-display').style.display = 'none'; }
-
-                const chat = document.getElementById('vt-chat'); chat.innerHTML = '';
-                (data.historico || []).forEach(msg => { chat.innerHTML += `<div class="chat-msg ${(msg.tipo==="suporte"||msg.tipo==="admin")?"staff":""}"><div class="chat-author">${msg.autor}</div>${msg.texto}</div>`; });
-                chat.scrollTop = chat.scrollHeight; document.getElementById('replyForm').style.display = data.status === "Resolvido" ? "none" : "block";
-            });
+        // VIEW CHAMADO E REPLY
+        window.refreshTicketList = function() {
+            const listContainer = document.getElementById('ticket-list-container'); let filtered = globalTickets;
+            if(window.currentViewFilter === 'admin_mine') filtered = globalTickets.filter(t => t.atribuidoPara === currentUserData.nome);
+            if(filtered.length === 0) { listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Nenhum chamado encontrado.</p>'; return; }
+            filtered.sort((a, b) => { let tA = a.dataAbertura ? a.dataAbertura.toMillis() : 0; let tB = b.dataAbertura ? b.dataAbertura.toMillis() : 0; return tB - tA; });
+            let html = ''; filtered.forEach(ticket => { let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--accent)" : "var(--primary)"); html += `<div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')"><div class="ticket-item-header"><span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span><span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span></div><div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria}</div></div>`; }); listContainer.innerHTML = html;
         };
 
-        // FATURAR NO CHAMADO
-        document.getElementById('btn-launch-bill').addEventListener('click', async () => {
-            const val = parseFloat(document.getElementById('bill-amount').value); const dataSrv = document.getElementById('bill-date').value;
-            let msg = "";
-            if(!isNaN(val) && val > 0) {
-                if(!confirm(`Faturar ${formatMoney(val)}?`)) return;
-                const tSnap = await getDoc(doc(db, "chamados", window.activeTicketId));
-                await addDoc(collection(db, "faturas"), { tipo: "receita", uidCliente: window.activeTicketClientId, nomeCliente: tSnap.exists() ? tSnap.data().empresa : "Avulso", valor: val, origem: `OS #${tSnap.data().idInterno}`, status: "Pendente", dataCriacao: serverTimestamp() });
-                await updateDoc(doc(db, "clientes", window.activeTicketClientId), { faturaPendente: increment(val) });
-                msg += `Serviço avaliado e precificado. `;
-            }
-            if(dataSrv) { await updateDoc(doc(db, "chamados", window.activeTicketId), { dataServico: dataSrv }); let dt = new Date(dataSrv); msg += `Agendado para ${dt.toLocaleDateString('pt-BR')} às ${dt.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}.`; }
-            if(msg !== "") { await updateDoc(doc(db, "chamados", window.activeTicketId), { historico: arrayUnion({ autor: currentUserData.nome, tipo: "admin", texto: msg, data: new Date().toISOString() }) }); document.getElementById('bill-amount').value = ''; document.getElementById('bill-date').value = ''; }
-        });
-
-        // REPLY E AÇÕES
         document.getElementById('replyForm').addEventListener('submit', async (e) => { e.preventDefault(); if(!window.activeTicketId) return; const input = document.getElementById('vt-reply-text'); await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Em Andamento", historico: arrayUnion({ autor: currentUserData.nome, tipo: currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() }) }); input.value = ''; });
-        document.getElementById('btn-assume-ticket').addEventListener('click', async () => { if(window.activeTicketId) await updateDoc(doc(db, "chamados", window.activeTicketId), { atribuidoPara: currentUserData.nome, status: "Em Andamento", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: `Atendimento assumido por ${currentUserData.nome}.`, data: new Date().toISOString() }) }); });
-        document.getElementById('btn-resolve-ticket').addEventListener('click', async () => { if(confirm("Encerrar chamado?")) { await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Resolvido", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado Resolvido.", data: new Date().toISOString() }) }); closeViewTicketModal(); } });
         document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
     </script>
 </body>
