@@ -103,7 +103,7 @@
                         <div class="input-group"><label>Sobrenome</label><input type="text" id="reg-sobrenome" required></div>
                     </div>
                     <div class="input-group"><label>Nome da Empresa</label><input type="text" id="reg-empresa" required></div>
-                    <div class="input-group"><label>WhatsApp / Telefone</label><input type="tel" id="reg-telefone" required></div>
+                    <div class="input-group"><label>WhatsApp / Telefone</label><input type="tel" id="reg-telefone" required placeholder="(11) 90000-0000" maxlength="15"></div>
                     <div class="input-group"><label>E-mail Corporativo</label><input type="email" id="reg-email" required></div>
                     <div class="input-group"><label>Defina uma Senha</label><input type="password" id="reg-pass" required placeholder="Mínimo 6 caracteres"></div>
                     <button type="submit" class="btn-submit" id="btn-do-register">Provisionar Conta</button>
@@ -119,8 +119,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('network-canvas');
             if (canvas) {
-                const ctx = canvas.getContext('2d');
-                let w, h, particles = [];
+                const ctx = canvas.getContext('2d'); let w, h, particles = [];
                 const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
                 window.addEventListener('resize', resize); resize();
                 function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
@@ -143,18 +142,23 @@
         const formRegister = document.getElementById('form-register');
         const alertBox = document.getElementById('alert-msg');
 
-        document.getElementById('btn-show-register').addEventListener('click', () => { 
-            formLogin.classList.add('hidden'); formRegister.classList.remove('hidden'); alertBox.style.display = 'none'; 
-        });
-        document.getElementById('btn-show-login').addEventListener('click', () => { 
-            formRegister.classList.add('hidden'); formLogin.classList.remove('hidden'); alertBox.style.display = 'none'; 
-        });
+        document.getElementById('btn-show-register').addEventListener('click', () => { formLogin.classList.add('hidden'); formRegister.classList.remove('hidden'); alertBox.style.display = 'none'; });
+        document.getElementById('btn-show-login').addEventListener('click', () => { formRegister.classList.add('hidden'); formLogin.classList.remove('hidden'); alertBox.style.display = 'none'; });
 
         window.showAlert = function(msg, isSuccess = false) {
             alertBox.innerText = msg; alertBox.style.display = 'block';
             if(isSuccess) { alertBox.classList.remove('alert-error'); alertBox.classList.add('alert-success'); } 
             else { alertBox.classList.remove('alert-success'); alertBox.classList.add('alert-error'); }
         };
+
+        // MÁSCARA DE TELEFONE
+        document.getElementById('reg-telefone').addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            if (v.length > 2 && v.length <= 6) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+            else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+            e.target.value = v;
+        });
     </script>
 
     <script type="module">
@@ -162,68 +166,46 @@
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // CREDENCIAIS ATUALIZADAS JMDC
         const firebaseConfig = {
             apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
             authDomain: "jmdc-crm.firebaseapp.com",
             projectId: "jmdc-crm",
             storageBucket: "jmdc-crm.firebasestorage.app",
             messagingSenderId: "495316438549",
-            appId: "1:495316438549:web:61d6c18462b66afcb3881c",
-            measurementId: "G-MC8VF92S0J"
+            appId: "1:495316438549:web:61d6c18462b66afcb3881c"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const exibirAlerta = window.showAlert;
+        let isSubmitting = false;
 
-        let isSubmitting = false; // Trava para evitar redirecionamento cruzado
+        onAuthStateChanged(auth, (user) => { if (user && !isSubmitting) window.location.replace("dashboard.html"); });
 
-        // Roteamento Automático (Se já estiver logado, joga pro Dashboard)
-        onAuthStateChanged(auth, (user) => {
-            if (user && !isSubmitting) {
-                window.location.replace("dashboard.html");
-            }
-        });
-
-        // Recuperação de Senha
         document.getElementById('btn-forgot-pass').addEventListener('click', async () => {
             const email = document.getElementById('log-email').value.trim();
             if(!email) { exibirAlerta("Digite seu e-mail no campo acima antes de solicitar a redefinição."); return; }
-            try {
-                await sendPasswordResetEmail(auth, email);
-                exibirAlerta("Link de redefinição enviado para o seu e-mail!", true);
-            } catch (error) {
-                console.error(error);
-                exibirAlerta("Erro ao enviar e-mail. Verifique se o endereço está correto.");
-            }
+            try { await sendPasswordResetEmail(auth, email); exibirAlerta("Link de redefinição enviado para o seu e-mail!", true); } 
+            catch (error) { console.error(error); exibirAlerta("Erro ao enviar e-mail. Verifique se o endereço está correto."); }
         });
 
-        // Cadastro
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            isSubmitting = true;
-            const btn = document.getElementById('btn-do-register');
-            btn.innerText = "Processando..."; btn.disabled = true;
+            e.preventDefault(); isSubmitting = true;
+            const btn = document.getElementById('btn-do-register'); btn.innerText = "Processando..."; btn.disabled = true;
 
             try {
                 const userCred = await createUserWithEmailAndPassword(auth, document.getElementById('reg-email').value.trim(), document.getElementById('reg-pass').value);
-                
                 await setDoc(doc(db, "clientes", userCred.user.uid), {
                     nome: document.getElementById('reg-nome').value.trim(),
                     sobrenome: document.getElementById('reg-sobrenome').value.trim(),
                     empresa: document.getElementById('reg-empresa').value.trim(),
                     telefone: document.getElementById('reg-telefone').value.trim(),
                     email: document.getElementById('reg-email').value.trim(),
-                    dataCadastro: serverTimestamp(),
-                    status: "ativo",
-                    nivelAcesso: "cliente"
+                    dataCadastro: serverTimestamp(), status: "ativo", nivelAcesso: "cliente"
                 });
-
                 exibirAlerta("Conta provisionada! Redirecionando...", true);
                 setTimeout(() => { window.location.replace("dashboard.html"); }, 1500);
-
             } catch (error) {
                 isSubmitting = false;
                 if (error.code === 'auth/email-already-in-use') exibirAlerta("Este e-mail já possui cadastro.");
@@ -233,20 +215,15 @@
             }
         });
 
-        // Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            isSubmitting = true;
-            const btn = document.getElementById('btn-do-login');
-            btn.innerText = "Autenticando..."; btn.disabled = true;
-
+            e.preventDefault(); isSubmitting = true;
+            const btn = document.getElementById('btn-do-login'); btn.innerText = "Autenticando..."; btn.disabled = true;
             try {
                 await signInWithEmailAndPassword(auth, document.getElementById('log-email').value.trim(), document.getElementById('log-pass').value);
                 exibirAlerta("Acesso liberado! Redirecionando...", true);
                 setTimeout(() => { window.location.replace("dashboard.html"); }, 1000);
             } catch (error) {
-                isSubmitting = false;
-                exibirAlerta("Credenciais inválidas ou conta inexistente.");
+                isSubmitting = false; exibirAlerta("Credenciais inválidas ou conta inexistente.");
                 btn.innerText = "Acessar Painel"; btn.disabled = false;
             }
         });
