@@ -34,7 +34,7 @@
         .btn-logout { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 6px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-logout:hover { background: rgba(239, 68, 68, 0.1); }
 
-        .dashboard-container { max-width: 1300px; margin: 0 auto; padding: 40px 5%; width: 100%; }
+        .dashboard-container { max-width: 1400px; margin: 0 auto; padding: 40px 5%; width: 100%; }
         .welcome-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; flex-wrap: wrap; gap: 20px; }
         .welcome-header h1 { font-size: 2.5rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 15px; }
         .welcome-header span { color: var(--primary); }
@@ -47,12 +47,13 @@
         .btn-outline { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary); color: var(--primary); }
 
         .section-title { font-size: 1.5rem; font-weight: bold; color: white; margin: 40px 0 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 20px; }
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px; }
         .dash-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 16px; padding: 25px; transition: 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .dash-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .dash-card.clickable { cursor: pointer; }
         .admin-card { border-color: rgba(59, 130, 246, 0.5); }
         .finance-card { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); }
+        .faturamento-card { border-color: rgba(245, 158, 11, 0.5); background: rgba(245, 158, 11, 0.05); }
 
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: white; }
@@ -74,6 +75,7 @@
         .form-group.full-width { grid-column: span 2; }
         .form-group label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
         /* Sidebar e Chat */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
@@ -83,11 +85,14 @@
         .sidebar-body { padding: 25px; flex: 1; overflow-y: auto; }
         .ticket-item { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 10px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
         .ticket-item:hover { border-color: var(--primary); transform: translateX(-5px); }
+        
         .chat-container { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 15px; height: 250px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
         .chat-msg { background: rgba(59, 130, 246, 0.1); padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: #e2e8f0; align-self: flex-start; max-width: 85%; word-break: break-word;}
         .chat-msg.staff { background: rgba(16, 185, 129, 0.1); align-self: flex-end; border: 1px solid rgba(16, 185, 129, 0.2); }
         .chat-author { font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px; font-weight: bold; }
-        
+        .chat-input-group { display: flex; gap: 10px; flex-direction: column; }
+        .chat-input-group input[type="text"] { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
+
         /* Tabelas Administrativas */
         .finance-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap; }
         .tab-btn { background: transparent; color: #94a3b8; border: none; font-size: 1rem; font-weight: bold; cursor: pointer; padding: 5px 10px; transition: 0.3s; }
@@ -99,9 +104,12 @@
         
         .btn-baixa { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         .btn-baixa:hover { background: #059669; }
-        .btn-edit-icon { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; opacity: 0.7; transition: 0.3s; margin-left: 5px; }
-        .btn-edit-icon:hover { opacity: 1; transform: scale(1.1); }
+        .btn-icon { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; opacity: 0.7; transition: 0.3s; margin-left: 5px; }
+        .btn-icon:hover { opacity: 1; transform: scale(1.1); }
         .btn-wpp { background: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-right: 5px; }
+
+        /* Correção Visual Calendário HTML5 Dark Mode */
+        input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
         /* Campos Formulário Financeiro Compactos */
         .fin-input-box { display: flex; flex-direction: column; gap: 5px; }
@@ -191,12 +199,17 @@
                     <div class="dash-card admin-card clickable" onclick="openClientesListModal()">
                         <div class="card-header"><div class="card-title">Carteira de Clientes</div></div>
                         <div class="card-value" id="admin-clientes-count">0</div>
-                        <p class="card-desc">Gerencie portfólio, acesse faturas e contatos.</p>
+                        <p class="card-desc">Gerencie o portfólio, acesse faturas e contatos.</p>
                     </div>
                 </div>
 
                 <div class="section-title" style="margin-top: 50px;"><svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Módulo Financeiro (ERP)</div>
                 <div class="dash-grid">
+                    <div class="dash-card faturamento-card">
+                        <div class="card-header"><div class="card-title">Faturamento Mensal</div></div>
+                        <div class="card-value" style="color: var(--warning);" id="admin-faturamento-bruto">R$ 0,00</div>
+                        <p class="card-desc" id="admin-faturamento-liquido" style="font-weight:bold; color:white;">Líquido: R$ 0,00</p>
+                    </div>
                     <div class="dash-card finance-card clickable" onclick="openAdminFinanceModal('receber')">
                         <div class="card-header"><div class="card-title">Contas a Receber</div></div>
                         <div class="card-value" style="color: var(--accent);" id="admin-receber">R$ 0,00</div>
@@ -208,9 +221,9 @@
                         <p class="card-desc">Lançar custos e despesas a fornecedores.</p>
                     </div>
                     <div class="dash-card finance-card">
-                        <div class="card-header"><div class="card-title">Balanço Previsto</div></div>
+                        <div class="card-header"><div class="card-title">Balanço Pendente</div></div>
                         <div class="card-value" style="color: white;" id="admin-balanco">R$ 0,00</div>
-                        <p class="card-desc">Diferença entre pendências (Receber - Pagar).</p>
+                        <p class="card-desc">Diferença de Caixa Previsto (Receber - Pagar).</p>
                     </div>
                 </div>
             </div>
@@ -230,7 +243,7 @@
             <h3 class="modal-title">Minha Conta</h3>
             <p class="modal-subtitle">Gestão de credenciais de acesso.</p>
             <button class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-reset-password">Solicitar Redefinição de Senha</button>
-            <p style="font-size: 0.8rem; color: #94a3b8; text-align: center; margin-top: 15px;">Para alterar dados da empresa, entre em contato via chamado ou WhatsApp.</p>
+            <p style="font-size: 0.8rem; color: #94a3b8; text-align: center; margin-top: 15px;">Para alterar dados da empresa, entre em contato via chamado.</p>
         </div>
     </div>
 
@@ -272,6 +285,10 @@
     <div class="modal-overlay" id="view-ticket-modal">
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeViewTicketModal()">×</button>
+            <div class="assign-bar" id="assign-bar" style="display: none;">
+                <div><strong style="color: var(--primary);">Responsável:</strong> <span id="vt-assigned">Não atribuído</span></div>
+                <button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem;" id="btn-assume-ticket">Atribuir a Mim</button>
+            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <h3 class="modal-title" id="vt-id">#ID</h3><span class="status-badge" id="vt-status">Aberto</span>
             </div>
@@ -292,7 +309,7 @@
             <button class="modal-close" onclick="closeClientesListModal()">×</button>
             <h3 class="modal-title">Carteira de Clientes</h3>
             <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                <p class="modal-subtitle">Controle de acesso, saldos e comunicação.</p>
+                <p class="modal-subtitle">Controle de acesso, saldos e comunicação direta.</p>
                 <button class="btn-action btn-outline" style="padding: 5px 15px; font-size: 0.85rem;" onclick="openClientEditModal('new')">+ Novo Cliente</button>
             </div>
             <div id="clientes-list-container" style="max-height: 60vh; overflow-y: auto;">
@@ -304,14 +321,14 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="client-edit-modal">
+    <div class="modal-overlay" id="client-edit-modal" style="z-index: 2100;">
         <div class="modal-content">
             <button class="modal-close" onclick="closeClientEditModal()">×</button>
             <h3 class="modal-title" id="ce-title">Editar Cliente</h3>
             <form id="clientEditForm">
                 <input type="hidden" id="ce-uid">
                 <div class="form-grid">
-                    <div class="form-group"><label>Nome do Responsável</label><input type="text" id="ce-nome" required></div>
+                    <div class="form-group"><label>Nome</label><input type="text" id="ce-nome" required></div>
                     <div class="form-group"><label>Sobrenome</label><input type="text" id="ce-sobrenome" required></div>
                     <div class="form-group full-width"><label>Empresa (Razão Social)</label><input type="text" id="ce-empresa" required></div>
                     <div class="form-group full-width"><label>Endereço Completo</label><input type="text" id="ce-endereco" placeholder="Rua, Número, Bairro, CEP"></div>
@@ -331,22 +348,27 @@
             <h3 class="modal-title">Gestão de Fornecedores</h3>
             <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
                 <p class="modal-subtitle">Base de dados para vínculos em Contas a Pagar.</p>
-                <button class="btn-action btn-outline" style="padding: 5px 15px; font-size: 0.85rem;" onclick="document.getElementById('form-novo-fornecedor').style.display='block';">+ Novo Fornecedor</button>
+                <button class="btn-action btn-outline" style="padding: 5px 15px; font-size: 0.85rem;" onclick="openEditFornecedor('new')">+ Novo Fornecedor</button>
             </div>
             
-            <form id="form-novo-fornecedor" style="display: none; background: rgba(59, 130, 246, 0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--primary); margin-bottom: 20px;">
-                <div class="form-grid">
-                    <div class="form-group full-width"><label>Razão Social / Nome</label><input type="text" id="forn-nome" required></div>
-                    <div class="form-group"><label>Chave PIX</label><input type="text" id="forn-pix" required></div>
-                    <div class="form-group"><label>WhatsApp</label><input type="tel" id="forn-wpp" required placeholder="(XX) 9XXXX-XXXX"></div>
-                </div>
-                <button type="submit" class="btn-action" style="padding: 10px;">Salvar Fornecedor</button>
-            </form>
-
             <table class="admin-table" id="fornecedores-table">
-                <thead><tr><th>Fornecedor</th><th>Chave PIX</th><th>WhatsApp</th></tr></thead>
+                <thead><tr><th>Fornecedor</th><th>Chave PIX</th><th>WhatsApp</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="edit-fornecedor-modal" style="z-index: 2200;">
+        <div class="modal-content" style="max-width: 400px;">
+            <button class="modal-close" onclick="closeEditFornecedor()">×</button>
+            <h3 class="modal-title" id="ef-title">Fornecedor</h3>
+            <form id="fornecedorEditForm">
+                <input type="hidden" id="ef-id">
+                <div class="form-group"><label>Razão Social / Nome</label><input type="text" id="ef-nome" required></div>
+                <div class="form-group"><label>Chave PIX</label><input type="text" id="ef-pix" required></div>
+                <div class="form-group"><label>WhatsApp</label><input type="tel" id="ef-wpp" required placeholder="(XX) 9XXXX-XXXX"></div>
+                <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;">Salvar Fornecedor</button>
+            </form>
         </div>
     </div>
 
@@ -381,18 +403,14 @@
             <div id="form-finance-area" style="display: none; background: rgba(30, 41, 59, 0.5); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
                 <h4 style="color: white; margin-bottom: 15px;" id="finance-form-title">Lançar Nova Transação</h4>
                 <form id="novaTransacaoForm" style="display: flex; gap: 15px; align-items: flex-start; flex-wrap: wrap;">
-                    
                     <div class="fin-input-box" style="flex: 2; min-width: 250px;">
                         <label id="label-desc-transacao">Vincular Entidade</label>
                         <select id="transacao-vinculo" style="margin-bottom:5px;"><option value="avulso">-- Avulso (Sem Vínculo) --</option></select>
                         <input type="text" id="desc-transacao" placeholder="Descrição ou nome avulso" required>
                     </div>
-
                     <div class="fin-input-box" style="flex: 1; min-width: 100px;"><label>Valor (R$)</label><input type="number" id="valor-transacao" step="0.01" required></div>
-                    
                     <div class="fin-input-box" style="flex: 1; min-width: 130px;"><label>Data</label><input type="date" id="data-transacao"></div>
                     <div class="fin-input-box" style="flex: 1; min-width: 100px;"><label>Hora</label><input type="time" id="hora-transacao"></div>
-                    
                     <div class="fin-input-box" style="flex: 1; min-width: 80px;"><label>Parcelas</label><input type="number" id="parcelas-transacao" placeholder="Ex: 1" min="1"></div>
                     <div class="fin-input-box" style="flex: 1; min-width: 100px;"><label>Val. Parcela</label><input type="number" id="valor-parcela-transacao" step="0.01"></div>
 
@@ -400,7 +418,6 @@
                         <div><input type="checkbox" id="transacao-fixa"> <label for="transacao-fixa" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer;">Recorrência Mensal</label></div>
                         <div><input type="checkbox" id="transacao-nota"> <label for="transacao-nota" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer; color:var(--warning);">Emite Nota</label></div>
                     </div>
-
                     <div style="width: 100%; text-align: right;"><button type="submit" class="btn-action" style="padding: 10px 30px;" id="btn-submit-transacao">Lançar Transação</button></div>
                 </form>
             </div>
@@ -438,7 +455,9 @@
         function closeClientesListModal() { document.getElementById('clientes-list-modal').style.display = 'none'; }
         function openSuppliersModal() { document.getElementById('suppliers-modal').style.display = 'flex'; }
         function closeSuppliersModal() { document.getElementById('suppliers-modal').style.display = 'none'; }
-        
+        function closeEditFornecedor() { document.getElementById('edit-fornecedor-modal').style.display = 'none'; }
+        function closeEditTransacaoModal() { document.getElementById('edit-transacao-modal').style.display = 'none'; }
+
         function openClientEditModal(mode, uid = null) {
             document.getElementById('clientEditForm').reset(); document.getElementById('ce-uid').value = uid || '';
             if(mode === 'new') { document.getElementById('ce-title').innerText = "Novo Cliente"; document.getElementById('ce-email-group').style.display = 'block'; document.getElementById('ce-pass-group').style.display = 'block'; } 
@@ -477,16 +496,23 @@
         // MÁSCARAS
         const mPhone = (e) => { let v = e.target.value.replace(/\D/g, ''); if (v.length > 11) v = v.slice(0, 11); if (v.length > 2 && v.length <= 6) v = `(${v.slice(0,2)}) ${v.slice(2)}`; else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`; e.target.value = v; };
         document.getElementById('ce-telefone').addEventListener('input', mPhone);
-        document.getElementById('forn-wpp').addEventListener('input', mPhone);
+        document.getElementById('ef-wpp').addEventListener('input', mPhone);
 
-        // Edit Modal
-        function closeEditTransacaoModal() { document.getElementById('edit-transacao-modal').style.display = 'none'; }
+        // Fundo Animado
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('network-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d'); let w, h, particles = []; const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }; window.addEventListener('resize', resize); resize();
+                function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
+                function animateParticles() { ctx.clearRect(0,0,w,h); particles.forEach((p,i)=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1; ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle='#3b82f6'; ctx.fill(); for(let j=i;j<particles.length;j++){ let dx=p.x-particles[j].x, dy=p.y-particles[j].y, d=Math.hypot(dx,dy); if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(59,130,246,${1-d/100})`;ctx.lineWidth=0.5;ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();} } }); requestAnimationFrame(animateParticles); } initParticles(); animateParticles();
+            }
+        });
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, setDoc, addDoc, serverTimestamp, Timestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, setDoc, addDoc, deleteDoc, serverTimestamp, Timestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo", authDomain: "jmdc-crm.firebaseapp.com", projectId: "jmdc-crm", storageBucket: "jmdc-crm.firebasestorage.app", messagingSenderId: "495316438549", appId: "1:495316438549:web:61d6c18462b66afcb3881c" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -524,23 +550,38 @@
                                     window.globalClientes = []; const tbody = document.querySelector('#clientes-table tbody'); tbody.innerHTML = '';
                                     snap.forEach(c => { 
                                         let data = c.data(); data.id = c.id; window.globalClientes.push(data);
-                                        tbody.innerHTML += `<tr><td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td><td>${data.nome} ${data.sobrenome}<br><span style="font-size:0.75rem; color:#64748b;">${data.endereco || 'Não informado'}</span></td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}<br><span style="font-size:0.75rem; color:#64748b;">${data.email}</span></td><td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td><td><button class="btn-action btn-outline" style="padding:5px 10px; font-size:0.8rem;" onclick="openClientEditModal('edit', '${data.id}')">Editar</button></td></tr>`;
+                                        let numWpp = sanitizePhone(data.telefone);
+                                        tbody.innerHTML += `<tr><td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td><td>${data.nome} ${data.sobrenome}<br><span style="font-size:0.75rem; color:#64748b;">${data.endereco || 'Não informado'}</span></td><td><a href="https://wa.me/55${numWpp}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}<br><span style="font-size:0.75rem; color:#64748b;">${data.email}</span></td><td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td><td><button class="btn-icon" onclick="openClientEditModal('edit', '${data.id}')">✏️</button></td></tr>`;
                                     }); document.getElementById('admin-clientes-count').innerText = window.globalClientes.length;
                                 });
 
                                 onSnapshot(collection(db, "fornecedores"), (snap) => {
                                     window.globalFornecedores = []; const tbody = document.querySelector('#fornecedores-table tbody'); tbody.innerHTML = '';
-                                    snap.forEach(f => { let data = f.data(); data.id = f.id; window.globalFornecedores.push(data); tbody.innerHTML += `<tr><td><strong>${data.nome}</strong></td><td>${data.chavePix}</td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">Enviar Comprovante</a> ${data.telefone}</td></tr>`; });
+                                    snap.forEach(f => {
+                                        let data = f.data(); data.id = f.id; window.globalFornecedores.push(data);
+                                        tbody.innerHTML += `<tr><td><strong>${data.nome}</strong></td><td>${data.chavePix} <button onclick="navigator.clipboard.writeText('${data.chavePix}'); alert('Copiado!')" style="background:transparent; border:none; cursor:pointer; filter:invert(1);">📋</button></td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">Comprovante</a> ${data.telefone}</td><td><button class="btn-icon" onclick="window.openEditFornecedor('${data.id}')">✏️</button><button class="btn-icon" style="color:var(--danger);" onclick="window.deleteFornecedor('${data.id}')">🗑️</button></td></tr>`;
+                                    });
                                 });
 
                                 onSnapshot(collection(db, "faturas"), (snap) => {
                                     window.globalFaturas = []; let tRec = 0; let tPag = 0; let balanco = 0;
+                                    let fatBrutoMes = 0; let fatLiquidoMes = 0;
+                                    let mesAtual = new Date().getMonth(); let anoAtual = new Date().getFullYear();
+
                                     snap.forEach(f => {
                                         let data = f.data(); data.id = f.id; window.globalFaturas.push(data);
                                         if(data.status === "Pendente") { if(data.tipo === "receita") tRec += data.valor; if(data.tipo === "despesa") tPag += data.valor; }
-                                        else if (data.status === "Pago") { if(data.tipo === "receita") balanco += data.valor; if(data.tipo === "despesa") balanco -= data.valor; }
+                                        else if (data.status === "Pago") {
+                                            if(data.tipo === "receita") balanco += data.valor; if(data.tipo === "despesa") balanco -= data.valor;
+                                            let dPgto = data.dataPagamento ? data.dataPagamento.toDate() : (data.dataCriacao ? data.dataCriacao.toDate() : new Date());
+                                            if(dPgto.getMonth() === mesAtual && dPgto.getFullYear() === anoAtual) {
+                                                if(data.tipo === "receita") { fatBrutoMes += data.valor; fatLiquidoMes += data.valor; }
+                                                if(data.tipo === "despesa") { fatLiquidoMes -= data.valor; }
+                                            }
+                                        }
                                     });
                                     document.getElementById('admin-receber').innerText = formatMoney(tRec); document.getElementById('admin-pagar').innerText = formatMoney(tPag); document.getElementById('admin-balanco').innerText = formatMoney(tRec - tPag);
+                                    document.getElementById('admin-faturamento-bruto').innerText = formatMoney(fatBrutoMes); document.getElementById('admin-faturamento-liquido').innerText = `Líquido: ${formatMoney(fatLiquidoMes)}`;
                                     if(document.getElementById('admin-finance-modal').style.display === 'flex') window.renderFinanceTable();
                                 });
                             } else { document.getElementById('suporte-badge').style.display = 'inline-block'; }
@@ -559,7 +600,7 @@
             } else { window.location.href = "crm.html"; }
         });
 
-        // EDIT/NEW CLIENT
+        // CLIENTES CRUD
         document.getElementById('clientEditForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const btn = document.getElementById('btn-submit-ce'); btn.disabled = true; const uid = document.getElementById('ce-uid').value;
             const dados = { nome: document.getElementById('ce-nome').value.trim(), sobrenome: document.getElementById('ce-sobrenome').value.trim(), empresa: document.getElementById('ce-empresa').value.trim(), endereco: document.getElementById('ce-endereco').value.trim(), telefone: document.getElementById('ce-telefone').value.trim(), tipoFaturamento: document.getElementById('ce-tipoFaturamento').value };
@@ -570,14 +611,27 @@
             } catch(err) { console.error(err); alert("Erro ao salvar dados."); } finally { btn.disabled = false; }
         });
 
-        // FORNECEDORES
-        document.getElementById('form-novo-fornecedor').addEventListener('submit', async (e) => {
-            e.preventDefault(); try { await addDoc(collection(db, "fornecedores"), { nome: document.getElementById('forn-nome').value.trim(), chavePix: document.getElementById('forn-pix').value.trim(), telefone: document.getElementById('forn-wpp').value.trim(), dataCadastro: serverTimestamp() }); document.getElementById('form-novo-fornecedor').reset(); document.getElementById('form-novo-fornecedor').style.display='none'; alert("Fornecedor cadastrado!"); } catch(e) { console.error(e); }
+        // FORNECEDORES CRUD
+        window.openEditFornecedor = function(id) {
+            document.getElementById('fornecedorEditForm').reset(); document.getElementById('ef-id').value = id === 'new' ? '' : id;
+            document.getElementById('ef-title').innerText = id === 'new' ? 'Novo Fornecedor' : 'Editar Fornecedor';
+            if(id !== 'new') { const f = window.globalFornecedores.find(x => x.id === id); if(f) { document.getElementById('ef-nome').value = f.nome; document.getElementById('ef-pix').value = f.chavePix; document.getElementById('ef-wpp').value = f.telefone; } }
+            document.getElementById('edit-fornecedor-modal').style.display = 'flex';
+        };
+        window.deleteFornecedor = async function(id) { if(confirm("Excluir fornecedor permanentemente?")) await deleteDoc(doc(db, "fornecedores", id)); };
+        
+        document.getElementById('fornecedorEditForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const id = document.getElementById('ef-id').value;
+            const dados = { nome: document.getElementById('ef-nome').value.trim(), chavePix: document.getElementById('ef-pix').value.trim(), telefone: document.getElementById('ef-wpp').value.trim() };
+            try {
+                if(!id) { dados.dataCadastro = serverTimestamp(); await addDoc(collection(db, "fornecedores"), dados); } else { await updateDoc(doc(db, "fornecedores", id), dados); }
+                closeEditFornecedor(); alert("Salvo!");
+            } catch(e) { console.error(e); }
         });
 
         document.getElementById('btn-reset-password').addEventListener('click', async () => { if(confirm(`Enviar e-mail para ${currentUserData.email}?`)) { try { await sendPasswordResetEmail(auth, currentUserData.email); alert("E-mail enviado!"); } catch(e) { alert("Erro ao enviar e-mail."); } } });
 
-        // FINANCEIRO TABLE
+        // FINANCEIRO TABLE & TRANSAÇÕES
         window.renderFinanceTable = function() {
             const container = document.getElementById('finance-list-container');
             let filtradas = window.globalFaturas.filter(f => window.currentFinanceTab === 'historico' ? f.status === 'Pago' : (f.tipo === (window.currentFinanceTab === 'receber' ? 'receita' : 'despesa') && f.status === 'Pendente'));
@@ -590,16 +644,23 @@
                 if(f.dataRealizada) { d = new Date(f.dataRealizada.toDate()).toLocaleDateString('pt-BR'); }
                 let par = f.parcelas && f.parcelas > 1 ? `<br><span style="font-size:0.75rem; color:#94a3b8;">Parcelado em ${f.parcelas}x (${formatMoney(f.valorParcela)})</span>` : '';
                 let stC = f.status === 'Pendente' ? 'var(--warning)' : 'var(--accent)';
-                let btnBx = f.status === 'Pendente' ? `<button class="btn-baixa" onclick="window.darBaixaFatura('${f.id}', '${f.uidCliente}', ${f.valor}, '${f.tipo}')">Dar Baixa</button>` : `<span style="color:#94a3b8;font-size:0.8rem;">Liquidado</span>`;
-                let btnEd = f.status === 'Pendente' ? `<button class="btn-edit-icon" onclick="window.openEditTransacao('${f.id}', ${f.valor}, '${f.uidCliente}', '${f.tipo}')">✏️</button>` : '';
                 let tags = (f.recorrente ? `<span style="font-size:0.7rem; background:rgba(239,68,68,0.2); color:var(--danger); padding:2px 5px; border-radius:4px; margin-left:5px;">FIXA</span>` : '') + (f.emiteNota ? `<span style="font-size:0.7rem; background:rgba(245,158,11,0.2); color:var(--warning); padding:2px 5px; border-radius:4px; margin-left:5px;">NOTA</span>` : '');
                 
-                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btnBx} ${btnEd}</td></tr>`;
+                let btns = "";
+                if(f.status === 'Pendente') {
+                    btns += `<button class="btn-baixa" onclick="window.darBaixaFatura('${f.id}', '${f.uidCliente}', ${f.valor}, '${f.tipo}')">Dar Baixa</button>`;
+                    btns += `<button class="btn-icon" onclick="window.openEditTransacao('${f.id}', ${f.valor}, '${f.uidCliente}', '${f.tipo}')">✏️</button>`;
+                    btns += `<button class="btn-icon" style="color:var(--danger);" onclick="window.deleteTransacao('${f.id}', ${f.valor}, '${f.tipo}', '${f.uidCliente}', '${f.status}')">🗑️</button>`;
+                } else {
+                    btns += `<span style="color:#94a3b8;font-size:0.8rem;">Liquidado</span>`;
+                    btns += `<button class="btn-icon" style="color:var(--danger);" onclick="window.deleteTransacao('${f.id}', ${f.valor}, '${f.tipo}', '${f.uidCliente}', '${f.status}')">🗑️</button>`;
+                }
+                
+                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btns}</td></tr>`;
             });
             container.innerHTML = html + `</tbody></table>`;
         };
 
-        // EDITAR VALOR TRANSAÇÃO (E ABATER CLIENTE)
         window.openEditTransacao = function(id, valAtual, uidCliente, tipo) {
             document.getElementById('edit-tr-id').value = id; document.getElementById('edit-tr-uidcliente').value = uidCliente; document.getElementById('edit-tr-tipo').value = tipo; document.getElementById('edit-tr-oldval').value = valAtual;
             document.getElementById('edit-tr-newval').value = valAtual; document.getElementById('edit-transacao-modal').style.display = 'flex';
@@ -613,20 +674,26 @@
             try {
                 await updateDoc(doc(db, "faturas", id), { valor: newVal });
                 if(tipo === 'receita' && uidCliente && uidCliente !== 'undefined' && uidCliente !== 'null' && uidCliente !== 'avulso') {
-                    const diferenca = newVal - oldVal;
-                    const cRef = doc(db, "clientes", uidCliente); const cSnap = await getDoc(cRef);
-                    if(cSnap.exists()) {
-                        let novoSaldo = Math.max(0, (cSnap.data().faturaPendente || 0) + diferenca);
-                        await updateDoc(cRef, { faturaPendente: novoSaldo });
-                    }
+                    const diferenca = newVal - oldVal; const cRef = doc(db, "clientes", uidCliente); const cSnap = await getDoc(cRef);
+                    if(cSnap.exists()) { let novoSaldo = Math.max(0, (cSnap.data().faturaPendente || 0) + diferenca); await updateDoc(cRef, { faturaPendente: novoSaldo }); }
                 }
-                document.getElementById('edit-transacao-modal').style.display = 'none'; alert("Valor alterado com sucesso!");
+                document.getElementById('edit-transacao-modal').style.display = 'none'; alert("Valor alterado!");
             } catch(e) { console.error(e); alert("Erro ao editar."); }
         });
 
-        // DAR BAIXA
+        window.deleteTransacao = async function(id, valor, tipo, uidCliente, status) {
+            if(!confirm("Excluir esta transação permanentemente?")) return;
+            try {
+                if(status === 'Pendente' && tipo === 'receita' && uidCliente && uidCliente !== 'undefined' && uidCliente !== 'null' && uidCliente !== 'avulso') {
+                    const cRef = doc(db, "clientes", uidCliente); const cSnap = await getDoc(cRef);
+                    if(cSnap.exists()) await updateDoc(cRef, { faturaPendente: Math.max(0, (cSnap.data().faturaPendente || 0) - valor) });
+                }
+                await deleteDoc(doc(db, "faturas", id)); alert("Transação removida.");
+            } catch(e) { console.error(e); }
+        };
+
         window.darBaixaFatura = async function(faturaId, clientId, valor, tipo) {
-            if(!confirm("Confirma a liquidação deste valor?")) return;
+            if(!confirm("Confirma a liquidação deste valor? O saldo do cliente será abatido.")) return;
             try {
                 await updateDoc(doc(db, "faturas", faturaId), { status: "Pago", dataPagamento: serverTimestamp() });
                 if(tipo === 'receita' && clientId && clientId !== 'undefined' && clientId !== 'null' && clientId !== 'avulso') {
@@ -636,7 +703,6 @@
             } catch(e) { console.error(e); alert("Erro ao processar baixa."); }
         };
 
-        // LANÇAR TRANSAÇÃO (COM DATA E PARCELAS)
         document.getElementById('novaTransacaoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const vinculoId = document.getElementById('transacao-vinculo').value; const desc = document.getElementById('desc-transacao').value; const val = parseFloat(document.getElementById('valor-transacao').value);
@@ -645,33 +711,17 @@
             if(isNaN(val) || val <= 0) return;
 
             let customTimestamp = serverTimestamp();
-            if(dataInp) {
-                let dtStr = dataInp; if(horaInp) dtStr += `T${horaInp}:00`; else dtStr += `T00:00:00`;
-                customTimestamp = Timestamp.fromDate(new Date(dtStr));
-            }
+            if(dataInp) { let dtStr = dataInp; if(horaInp) dtStr += `T${horaInp}:00`; else dtStr += `T00:00:00`; customTimestamp = Timestamp.fromDate(new Date(dtStr)); }
 
             try {
-                await addDoc(collection(db, "faturas"), {
-                    tipo: window.currentFinanceTab === 'receber' ? 'receita' : 'despesa', uidCliente: vinculoId !== 'avulso' ? vinculoId : null,
-                    descricao: desc, nomeCliente: desc, valor: val, parcelas: par, valorParcela: valPar, status: "Pendente", origem: "Lançamento Manual",
-                    recorrente: document.getElementById('transacao-fixa').checked, emiteNota: document.getElementById('transacao-nota').checked, 
-                    dataCriacao: serverTimestamp(), dataRealizada: customTimestamp
-                });
-                
+                await addDoc(collection(db, "faturas"), { tipo: window.currentFinanceTab === 'receber' ? 'receita' : 'despesa', uidCliente: vinculoId !== 'avulso' ? vinculoId : null, descricao: desc, nomeCliente: desc, valor: val, parcelas: par, valorParcela: valPar, status: "Pendente", origem: "Lançamento Manual", recorrente: document.getElementById('transacao-fixa').checked, emiteNota: document.getElementById('transacao-nota').checked, dataCriacao: serverTimestamp(), dataRealizada: customTimestamp });
                 if(window.currentFinanceTab === 'receber' && vinculoId !== 'avulso') { await updateDoc(doc(db, "clientes", vinculoId), { faturaPendente: increment(val) }); }
                 document.getElementById('novaTransacaoForm').reset(); alert("Transação registrada!");
             } catch(e) { console.error(e); }
         });
 
-        // VIEW CHAMADO E REPLY
-        window.refreshTicketList = function() {
-            const listContainer = document.getElementById('ticket-list-container'); let filtered = globalTickets;
-            if(window.currentViewFilter === 'admin_mine') filtered = globalTickets.filter(t => t.atribuidoPara === currentUserData.nome);
-            if(filtered.length === 0) { listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Nenhum chamado encontrado.</p>'; return; }
-            filtered.sort((a, b) => { let tA = a.dataAbertura ? a.dataAbertura.toMillis() : 0; let tB = b.dataAbertura ? b.dataAbertura.toMillis() : 0; return tB - tA; });
-            let html = ''; filtered.forEach(ticket => { let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--accent)" : "var(--primary)"); html += `<div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')"><div class="ticket-item-header"><span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span><span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span></div><div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria}</div></div>`; }); listContainer.innerHTML = html;
-        };
-
+        // VIEW CHAMADO E REPLY (Simplificado)
+        window.refreshTicketList = function() { const listContainer = document.getElementById('ticket-list-container'); let filtered = globalTickets; if(window.currentViewFilter === 'admin_mine') filtered = globalTickets.filter(t => t.atribuidoPara === currentUserData.nome); if(filtered.length === 0) { listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Nenhum chamado encontrado.</p>'; return; } filtered.sort((a, b) => { let tA = a.dataAbertura ? a.dataAbertura.toMillis() : 0; let tB = b.dataAbertura ? b.dataAbertura.toMillis() : 0; return tB - tA; }); let html = ''; filtered.forEach(ticket => { let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--accent)" : "var(--primary)"); html += `<div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')"><div class="ticket-item-header"><span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span><span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span></div><div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria}</div></div>`; }); listContainer.innerHTML = html; };
         document.getElementById('replyForm').addEventListener('submit', async (e) => { e.preventDefault(); if(!window.activeTicketId) return; const input = document.getElementById('vt-reply-text'); await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Em Andamento", historico: arrayUnion({ autor: currentUserData.nome, tipo: currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() }) }); input.value = ''; });
         document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
     </script>
