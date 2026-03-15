@@ -66,4 +66,612 @@
 
         /* Modais Gerais */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
-        .modal-content { background: #0
+        .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; width: 90%; max-width: 700px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; z-index: 10;}
+        .modal-close:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .modal-title { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .modal-subtitle { color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
+        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+
+        /* Sidebar Chamados */
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .ticket-sidebar { position: fixed; top: 0; right: -500px; width: 100%; max-width: 450px; height: 100vh; background: #0f172a; z-index: 1600; border-left: 1px solid var(--card-border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; }
+        .ticket-sidebar.active { right: 0; }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-header h2 { font-size: 1.4rem; color: white; }
+        .sidebar-body { padding: 25px; flex: 1; overflow-y: auto; }
+        
+        .ticket-item { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 10px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
+        .ticket-item:hover { border-color: var(--primary); transform: translateX(-5px); }
+        .ticket-item-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center;}
+        .ticket-id { color: var(--primary); font-weight: bold; font-size: 0.95rem; }
+        .ticket-status { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .ticket-subject { color: white; font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
+        .ticket-date { color: #64748b; font-size: 0.85rem; }
+
+        /* Interação / Chat Modal */
+        .chat-container { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 15px; height: 250px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { background: rgba(59, 130, 246, 0.1); padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: #e2e8f0; align-self: flex-start; max-width: 85%; word-break: break-word;}
+        .chat-msg.staff { background: rgba(16, 185, 129, 0.1); align-self: flex-end; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .chat-author { font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px; font-weight: bold; }
+        .chat-input-group { display: flex; gap: 10px; flex-direction: column; }
+        .chat-input-group input[type="text"] { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
+
+        /* Módulo Financeiro Admin */
+        .admin-billing-module { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none; }
+        .admin-billing-module h4 { color: var(--danger); font-size: 1rem; margin-bottom: 10px; }
+        .billing-input-group { display: flex; gap: 10px; }
+        .billing-input-group input { flex: 1; padding: 10px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 6px; outline: none; }
+        .btn-bill { background: var(--danger); color: white; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-bill:hover { background: #b91c1c; }
+
+        /* Admin Panel */
+        #admin-panel { display: none; margin-top: 40px; }
+        .admin-card { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .admin-card .card-icon { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+        .admin-card:hover { border-color: var(--danger); }
+
+        footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
+
+        @media (max-width: 768px) { header { padding: 12px 15px !important; } .nav-links { display: none; } .dashboard-container { padding: 20px 5%; } .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+    <canvas id="network-canvas"></canvas>
+
+    <div id="loader">
+        <div class="spinner" id="loader-spinner"></div>
+        <p style="color: #94a3b8; font-weight: bold; letter-spacing: 1px;" id="loader-text">Autenticando Infraestrutura...</p>
+    </div>
+
+    <main id="main-content">
+        <header>
+            <a href="index.html" class="logo-link">
+                <img src="images/logo-blue.png" alt="JMDC Tecnologia" class="logo-img">
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="network.html">Ferramentas</a></li>
+                </ul>
+                <button class="btn-logout" id="btn-logout">Sair da Sessão</button>
+            </nav>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="welcome-header">
+                <div>
+                    <h1>Bem-vindo(a), <span id="user-name">...</span> 
+                        <div class="role-badge badge-admin" id="admin-badge">ADMIN/N3</div>
+                        <div class="role-badge badge-suporte" id="suporte-badge">SUPORTE N1/N2</div>
+                    </h1>
+                    <p>Governança e Status da Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
+                </div>
+                <button class="btn-action" onclick="openNewTicketModal()"><svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round"/></svg> Abrir Chamado</button>
+            </div>
+
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <div class="card-header">
+                        <div class="card-title">Status do Ambiente</div>
+                        <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                    </div>
+                    <div><span class="status-badge" id="user-status">ATIVO</span></div>
+                    <p class="card-desc">Serviços operando dentro da normalidade.</p>
+                </div>
+
+                <div class="dash-card clickable" onclick="openSidebar()">
+                    <div class="card-header">
+                        <div class="card-title">Meus Chamados</div>
+                        <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+                    </div>
+                    <div class="card-value" id="ticket-count">0</div>
+                    <p class="card-desc">Clique para gerenciar seu histórico de requisições.</p>
+                </div>
+
+                <div class="dash-card clickable" onclick="openBillingModal()">
+                    <div class="card-header">
+                        <div class="card-title">Faturas Pendentes</div>
+                        <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                    </div>
+                    <div class="card-value" style="color: var(--accent);" id="fatura-pendente">R$ 0,00</div>
+                    <p class="card-desc">Clique para visualizar dados de pagamento e regularizar.</p>
+                </div>
+            </div>
+
+            <div id="admin-panel">
+                <h2 style="color: var(--danger); margin-bottom: 20px; font-size: 1.5rem; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 10px;">Visão Global da Operação</h2>
+                <div class="dash-grid">
+                    <div class="dash-card admin-card clickable" onclick="openSidebar()">
+                        <div class="card-header">
+                            <div class="card-title">Fila Geral (Todos os Clientes)</div>
+                            <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                        </div>
+                        <div class="card-value" id="admin-ticket-count">0</div>
+                        <p class="card-desc">Clique para triar e precificar chamados em aberto.</p>
+                    </div>
+                    
+                    <div class="dash-card admin-card">
+                        <div class="card-header">
+                            <div class="card-title">Contas a Receber</div>
+                            <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                        </div>
+                        <div class="card-value" id="admin-receivables" style="color: var(--danger);">R$ 0,00</div>
+                        <p class="card-desc">Soma de faturamentos pendentes em toda a carteira de clientes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 JMDC Tecnologia. Salvador, Bahia.</p>
+        </footer>
+    </main>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <div class="ticket-sidebar" id="ticket-sidebar">
+        <div class="sidebar-header">
+            <h2 id="sidebar-title">Meus Chamados</h2>
+            <button class="modal-close" style="position: relative; top: 0; right: 0;" onclick="closeSidebar()">×</button>
+        </div>
+        <div class="sidebar-body" id="ticket-list-container">
+            <div class="spinner" style="margin: 50px auto;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="new-ticket-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewTicketModal()">×</button>
+            <h3 class="modal-title">Novo Chamado Técnico</h3>
+            <p class="modal-subtitle">Descreva o incidente para receber suporte especializado.</p>
+            
+            <form id="newTicketForm">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Catálogo de Serviços</label>
+                        <select id="ticket-category" required>
+                            <option value="" disabled selected>Selecione a especialidade...</option>
+                            <option value="Formatação Presencial">Formatação presencial</option>
+                            <option value="Formatação Remota">Formatação remota</option>
+                            <option value="Visita Técnica">Visita Técnica</option>
+                            <option value="Acesso Remoto">Acesso remoto para ajustes</option>
+                            <option value="Infraestrutura Cabeada">Infraestrutura de rede cabeada</option>
+                            <option value="Infraestrutura Wi-Fi">Infraestrutura de rede Wi-Fi</option>
+                            <option value="Suporte a Servidores">Suporte à Servidores</option>
+                            <option value="Projetos e Implantações">Projetos e Implantações</option>
+                            <option value="Automação Residencial">Automação Residencial</option>
+                            <option value="Automação Comercial">Automação Comercial</option>
+                            <option value="Configuração de Roteador">Configuração de Roteador de Borda</option>
+                            <option value="Diagnóstico de Redes">Diagnóstico e correção de redes</option>
+                            <option value="Firewall e Segurança">Firewall e Segurança</option>
+                            <option value="Outros">Outros / Dúvidas Gerais</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>SLA (Urgência Percebida)</label>
+                        <select id="ticket-priority" required>
+                            <option value="Baixa">Baixa (Dúvidas e Planejamentos)</option>
+                            <option value="Média" selected>Média (Impacto parcial na operação)</option>
+                            <option value="Alta">Alta (Sistema/Rede parados)</option>
+                            <option value="Crítica">Crítica (Operação 100% inativa)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Assunto Breve</label>
+                        <input type="text" id="ticket-subject" required placeholder="Ex: Queda na rede matriz">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Descrição Detalhada</label>
+                        <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas, equipamentos afetados e contexto..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-submit-ticket">Gerar Requisição Técnica</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="view-ticket-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeViewTicketModal()">×</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <h3 class="modal-title" id="vt-id">#ID</h3>
+                <span class="status-badge" id="vt-status">Aberto</span>
+            </div>
+            <p class="modal-subtitle" style="margin-bottom: 10px;"><strong id="vt-subject">Assunto</strong></p>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span> | Urgência: <span id="vt-priority" style="color:var(--warning)">...</span></p>
+            
+            <div class="chat-container" id="vt-chat">
+                </div>
+
+            <form id="replyForm" style="margin-top: 15px;">
+                <div class="chat-input-group">
+                    <input type="text" id="vt-reply-text" placeholder="Digite sua resposta técnica ou atualização..." required>
+                    <button type="submit" class="btn-action" style="padding: 12px; width: 100%;" id="btn-reply">Enviar Interação</button>
+                </div>
+                
+                <div class="admin-billing-module" id="admin-billing-section">
+                    <h4>Painel de Precificação (Uso Interno)</h4>
+                    <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Lançar valor avulso na carteira deste cliente.</p>
+                    <div class="billing-input-group">
+                        <input type="number" id="bill-amount" placeholder="Valor (Ex: 150.00)" step="0.01" min="0">
+                        <button type="button" class="btn-bill" id="btn-launch-bill">Lançar Débito</button>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 15px;">
+                    <button type="button" class="btn-logout" id="btn-resolve-ticket">Encerrar Chamado (Resolvido)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="billing-modal">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <button class="modal-close" onclick="closeBillingModal()">×</button>
+            <h3 class="modal-title">Faturas Pendentes</h3>
+            <p class="modal-subtitle">Regularize seu ambiente para manter a operação saudável.</p>
+            
+            <div class="card-value" style="color: var(--accent); margin: 20px 0; font-size: 3rem;" id="modal-fatura-valor">R$ 0,00</div>
+            
+            <div style="background: rgba(10, 15, 29, 0.8); padding: 20px; border-radius: 8px; border: 1px dashed #334155; margin-bottom: 20px;">
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 5px;">Chave PIX (CNPJ/Telefone/Email):</p>
+                <p style="color: white; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px;" id="pix-key">01779551550</p>
+                <button class="btn-action" style="width: 100%; margin-top: 15px; background: rgba(59, 130, 246, 0.1); color: var(--primary); border: 1px solid var(--primary);" onclick="copyPix()">Copiar Chave PIX</button>
+            </div>
+
+            <a href="https://wa.me/5571991905429?text=Ol%C3%A1%2C%20segue%20o%20comprovante%20de%20pagamento%20da%20minha%20fatura%20pendente." target="_blank" class="btn-action" style="width: 100%; background: #25D366; color: white;">
+                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24" style="margin-right: 5px;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+                Enviar Comprovante via WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function openNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'flex'; }
+        function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; document.getElementById('newTicketForm').reset(); }
+        
+        function closeViewTicketModal() { 
+            document.getElementById('view-ticket-modal').style.display = 'none'; 
+            window.activeTicketId = null; 
+            window.activeTicketClientId = null;
+            document.getElementById('replyForm').reset();
+        }
+
+        function openBillingModal() { document.getElementById('billing-modal').style.display = 'flex'; }
+        function closeBillingModal() { document.getElementById('billing-modal').style.display = 'none'; }
+
+        function copyPix() {
+            const pix = document.getElementById('pix-key').innerText;
+            navigator.clipboard.writeText(pix);
+            alert("Chave PIX copiada com sucesso! Cole no aplicativo do seu banco.");
+        }
+
+        function openSidebar() { 
+            document.getElementById('sidebar-overlay').style.display = 'block';
+            setTimeout(() => { document.getElementById('sidebar-overlay').style.opacity = '1'; document.getElementById('ticket-sidebar').classList.add('active'); }, 10);
+        }
+        function closeSidebar() {
+            document.getElementById('ticket-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
+        }
+
+        // Fundo Animado
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('network-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let w, h, particles = [];
+                const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+                window.addEventListener('resize', resize); resize();
+                function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
+                function animateParticles() { 
+                    ctx.clearRect(0,0,w,h); 
+                    particles.forEach((p,i)=>{
+                        p.x+=p.vx; p.y+=p.vy; 
+                        if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
+                        ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle='#3b82f6'; ctx.fill();
+                        for(let j=i;j<particles.length;j++){
+                            let dx=p.x-particles[j].x, dy=p.y-particles[j].y, d=Math.hypot(dx,dy);
+                            if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(59,130,246,${1-d/100})`;ctx.lineWidth=0.5;ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
+                        }
+                    }); requestAnimationFrame(animateParticles);
+                } initParticles(); animateParticles();
+            }
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
+            authDomain: "jmdc-crm.firebaseapp.com",
+            projectId: "jmdc-crm",
+            storageBucket: "jmdc-crm.firebasestorage.app",
+            messagingSenderId: "495316438549",
+            appId: "1:495316438549:web:61d6c18462b66afcb3881c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUserData = null; 
+        window.activeTicketId = null;
+        window.activeTicketClientId = null;
+
+        const formatMoney = (value) => { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0); };
+
+        // 1. GUARDA DE ROTA E PERFIS
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    // Escuta o documento do usuário
+                    onSnapshot(doc(db, "clientes", user.uid), (docSnap) => {
+                        if (docSnap.exists()) {
+                            currentUserData = docSnap.data();
+                            document.getElementById('user-name').innerText = currentUserData.nome;
+                            document.getElementById('user-company').innerText = currentUserData.empresa;
+                            
+                            const faturaFormatada = formatMoney(currentUserData.faturaPendente);
+                            document.getElementById('fatura-pendente').innerText = faturaFormatada;
+                            document.getElementById('modal-fatura-valor').innerText = faturaFormatada;
+                            
+                            let isAdminOrSupport = false;
+
+                            if(currentUserData.nivelAcesso === "admin") {
+                                document.getElementById('admin-badge').style.display = 'inline-block';
+                                document.getElementById('admin-panel').style.display = 'block';
+                                document.getElementById('sidebar-title').innerText = "Fila Global de Chamados";
+                                isAdminOrSupport = true;
+                                
+                                // Escuta global de recebíveis apenas para Admins
+                                const qClientes = query(collection(db, "clientes"));
+                                onSnapshot(qClientes, (snap) => {
+                                    let totalReceber = 0;
+                                    snap.forEach(clienteDoc => {
+                                        totalReceber += (clienteDoc.data().faturaPendente || 0);
+                                    });
+                                    document.getElementById('admin-receivables').innerText = formatMoney(totalReceber);
+                                });
+
+                            } else if(currentUserData.nivelAcesso === "suporte") {
+                                document.getElementById('suporte-badge').style.display = 'inline-block';
+                                document.getElementById('admin-panel').style.display = 'block';
+                                document.getElementById('sidebar-title').innerText = "Fila Global de Chamados";
+                                isAdminOrSupport = true;
+                            }
+                            
+                            document.getElementById('loader').style.opacity = '0';
+                            setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 500);
+
+                            // 2. LISTAGEM REATIVA DE CHAMADOS
+                            let q = isAdminOrSupport ? query(collection(db, "chamados")) : query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
+
+                            onSnapshot(q, (snapshot) => {
+                                const listContainer = document.getElementById('ticket-list-container');
+                                const countEl = document.getElementById('ticket-count');
+                                const adminCountEl = document.getElementById('admin-ticket-count');
+
+                                if(snapshot.empty) {
+                                    listContainer.innerHTML = '<p style="color: #64748b; text-align: center; margin-top: 50px;">Nenhum chamado aberto.</p>';
+                                    countEl.innerText = "0"; if(adminCountEl) adminCountEl.innerText = "0"; return;
+                                }
+
+                                let html = ''; let activeCount = 0; let tickets = [];
+                                snapshot.forEach((doc) => {
+                                    let data = doc.data(); data.docId = doc.id; tickets.push(data);
+                                    if(data.status !== "Resolvido") activeCount++;
+                                });
+
+                                tickets.sort((a, b) => {
+                                    let tA = a.dataAbertura ? a.dataAbertura.toMillis() : Date.now();
+                                    let tB = b.dataAbertura ? b.dataAbertura.toMillis() : Date.now();
+                                    return tB - tA;
+                                });
+
+                                tickets.forEach(ticket => {
+                                    let dateStr = ticket.dataAbertura ? new Date(ticket.dataAbertura.toDate()).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'}) : 'Hoje';
+                                    let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--success)" : "var(--primary)");
+                                    let bgStatus = ticket.status === "Aberto" ? "rgba(245, 158, 11, 0.1)" : (ticket.status === "Resolvido" ? "rgba(16, 185, 129, 0.1)" : "rgba(59, 130, 246, 0.1)");
+                                    let cName = isAdminOrSupport ? `• ${ticket.empresa}` : '';
+
+                                    html += `
+                                    <div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')">
+                                        <div class="ticket-item-header">
+                                            <span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span>
+                                            <span class="ticket-status" style="color: ${statusColor}; background: ${bgStatus}; border-color: ${statusColor};">${ticket.status}</span>
+                                        </div>
+                                        <div class="ticket-subject">${ticket.assunto}</div>
+                                        <div class="ticket-date">${dateStr} • ${ticket.categoria} ${cName}</div>
+                                    </div>`;
+                                });
+
+                                listContainer.innerHTML = html; countEl.innerText = activeCount;
+                                if(adminCountEl) adminCountEl.innerText = activeCount;
+                            });
+
+                        } else {
+                            setTimeout(() => signOut(auth), 2000);
+                        }
+                    });
+                } catch (error) { 
+                    console.error("Erro:", error); document.getElementById('loader-text').innerText = "Erro de Comunicação.";
+                }
+            } else { window.location.href = "crm.html"; }
+        });
+
+        // 3. ABERTURA DE NOVO CHAMADO
+        document.getElementById('newTicketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-ticket');
+            btn.innerText = "Processando..."; btn.disabled = true;
+
+            const user = auth.currentUser;
+            const category = document.getElementById('ticket-category').value;
+            const priority = document.getElementById('ticket-priority').value;
+            const subject = document.getElementById('ticket-subject').value.trim();
+            const desc = document.getElementById('ticket-desc').value.trim();
+
+            try {
+                const counterRef = doc(db, "metadata", "chamadosCounter");
+                const generatedId = await runTransaction(db, async (transaction) => {
+                    const counterDoc = await transaction.get(counterRef);
+                    let seq = 1;
+                    if (counterDoc.exists()) seq = (counterDoc.data().seq || 0) + 1;
+                    transaction.set(counterRef, { seq: seq }, { merge: true });
+                    
+                    const d = new Date();
+                    const ano = d.getFullYear(); const mes = String(d.getMonth()+1).padStart(2,'0'); const dia = String(d.getDate()).padStart(2,'0');
+                    return `${ano}-${mes}-${dia}-${String(seq).padStart(4, '0')}`;
+                });
+
+                await setDoc(doc(collection(db, "chamados")), {
+                    idInterno: generatedId,
+                    uidCliente: user.uid,
+                    empresa: currentUserData.empresa,
+                    solicitante: currentUserData.nome,
+                    categoria: category,
+                    severidade: priority,
+                    assunto: subject,
+                    status: "Aberto",
+                    dataAbertura: serverTimestamp(),
+                    historico: [{ autor: currentUserData.nome, tipo: "cliente", texto: desc, data: new Date().toISOString() }]
+                });
+                
+                alert(`Chamado ${generatedId} protocolado com sucesso! Um email foi disparado para a JMDC.`);
+                closeNewTicketModal();
+            } catch (error) {
+                console.error(error); alert("Falha ao registrar dados no banco.");
+            } finally { btn.innerText = "Gerar Requisição Técnica"; btn.disabled = false; }
+        });
+
+        // 4. VISUALIZAÇÃO E INTERAÇÃO
+        let currentTicketSnapshot = null;
+        window.loadTicketDetails = function(docId, uidDonoChamado) {
+            window.activeTicketId = docId;
+            window.activeTicketClientId = uidDonoChamado;
+            document.getElementById('view-ticket-modal').style.display = 'flex';
+            closeSidebar();
+            
+            if(currentTicketSnapshot) currentTicketSnapshot();
+
+            currentTicketSnapshot = onSnapshot(doc(db, "chamados", docId), (docSnap) => {
+                if(!docSnap.exists()) return;
+                const data = docSnap.data();
+                
+                document.getElementById('vt-id').innerText = "#" + (data.idInterno || docId.substring(0,8));
+                const stBadge = document.getElementById('vt-status');
+                stBadge.innerText = data.status;
+                stBadge.style.color = data.status === "Aberto" ? "var(--warning)" : (data.status === "Resolvido" ? "var(--success)" : "var(--primary)");
+                stBadge.style.borderColor = stBadge.style.color;
+
+                document.getElementById('vt-subject').innerText = data.assunto;
+                document.getElementById('vt-priority').innerText = data.severidade || "Padrão";
+                document.getElementById('vt-date').innerText = data.dataAbertura ? new Date(data.dataAbertura.toDate()).toLocaleString('pt-BR') : "...";
+
+                const chatContainer = document.getElementById('vt-chat');
+                chatContainer.innerHTML = '';
+                const hist = data.historico || [];
+                
+                hist.forEach(msg => {
+                    const isStaff = msg.tipo === "suporte" || msg.tipo === "admin";
+                    const alignClass = isStaff ? "staff" : "";
+                    chatContainer.innerHTML += `<div class="chat-msg ${alignClass}"><div class="chat-author">${msg.autor}</div>${msg.texto}</div>`;
+                });
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Exibe módulo de faturamento apenas se for Admin/Suporte
+                if(currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte") {
+                    document.getElementById('admin-billing-section').style.display = "block";
+                } else {
+                    document.getElementById('admin-billing-section').style.display = "none";
+                }
+
+                const repForm = document.getElementById('replyForm');
+                if(data.status === "Resolvido") repForm.style.display = "none"; else repForm.style.display = "block";
+            });
+        };
+
+        // 5. MÓDULO FINANCEIRO: LANÇAMENTO AVULSO
+        document.getElementById('btn-launch-bill').addEventListener('click', async () => {
+            const valInput = document.getElementById('bill-amount');
+            const valor = parseFloat(valInput.value);
+            
+            if(isNaN(valor) || valor <= 0) { alert("Insira um valor válido para lançar na carteira do cliente."); return; }
+            if(!window.activeTicketClientId || !window.activeTicketId) return;
+
+            if(confirm(`Confirma o lançamento de ${formatMoney(valor)} na carteira deste cliente referente a este chamado?`)) {
+                try {
+                    // Atualiza o saldo do cliente na collection 'clientes'
+                    await updateDoc(doc(db, "clientes", window.activeTicketClientId), {
+                        faturaPendente: increment(valor)
+                    });
+                    
+                    // Adiciona registro no chat do chamado
+                    await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                        historico: arrayUnion({
+                            autor: "Sistema Financeiro", tipo: "admin",
+                            texto: `💸 Custo do serviço fixado em ${formatMoney(valor)}. O valor foi adicionado à carteira do cliente.`,
+                            data: new Date().toISOString()
+                        })
+                    });
+                    
+                    valInput.value = '';
+                    alert("Lançamento efetuado com sucesso!");
+                } catch (e) {
+                    console.error(e); alert("Erro ao processar faturamento.");
+                }
+            }
+        });
+
+        // Enviar Resposta de Chat
+        document.getElementById('replyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!window.activeTicketId) return;
+            const input = document.getElementById('vt-reply-text');
+            const texto = input.value.trim();
+            const btn = document.getElementById('btn-reply');
+            btn.innerText = "Enviando..."; btn.disabled = true;
+
+            try {
+                await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                    status: "Em Andamento",
+                    historico: arrayUnion({
+                        autor: currentUserData.nome,
+                        tipo: currentUserData.nivelAcesso || "cliente",
+                        texto: texto,
+                        data: new Date().toISOString()
+                    })
+                });
+                input.value = '';
+            } catch (err) { console.error(err); alert("Erro ao enviar."); }
+            finally { btn.innerText = "Enviar Interação"; btn.disabled = false; }
+        });
+
+        // Encerrar Chamado
+        document.getElementById('btn-resolve-ticket').addEventListener('click', async () => {
+            if(!window.activeTicketId) return;
+            if(!confirm("Tem certeza que deseja encerrar este chamado?")) return;
+            try {
+                await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                    status: "Resolvido",
+                    historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado marcado como Resolvido.", data: new Date().toISOString() })
+                });
+                alert("Chamado encerrado."); closeViewTicketModal();
+            } catch(e) { console.error(e); }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
+    </script>
+</body>
+</html>
