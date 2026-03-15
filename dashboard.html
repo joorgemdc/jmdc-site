@@ -39,9 +39,12 @@
         .badge-admin { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); color: var(--danger); }
         .badge-suporte { background: rgba(16, 185, 129, 0.1); border-color: var(--accent); color: var(--accent); }
 
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-action { background: var(--primary); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
         .btn-action:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
         .btn-action:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-outline { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: rgba(59, 130, 246, 0.2); }
 
         .section-title { font-size: 1.5rem; font-weight: bold; color: white; margin: 40px 0 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
 
@@ -58,7 +61,6 @@
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: white; }
         .card-icon { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 10px; border-radius: 8px; display: flex; }
-        .card-icon svg { width: 24px; height: 24px; }
         .card-value { font-size: 2.5rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 10px; }
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
@@ -70,6 +72,7 @@
         .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; z-index: 10;}
         .modal-close:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         .modal-title { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .modal-subtitle { color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px; }
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { margin-bottom: 15px; }
@@ -78,20 +81,19 @@
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
         .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         
-        /* Sidebar */
+        .file-upload-area { border: 2px dashed #334155; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; position: relative; }
+        
+        /* Sidebar Chamados */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .ticket-sidebar { position: fixed; top: 0; right: -500px; width: 100%; max-width: 450px; height: 100vh; background: #0f172a; z-index: 1600; border-left: 1px solid var(--card-border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; }
         .ticket-sidebar.active { right: 0; }
         .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .sidebar-header h2 { font-size: 1.4rem; color: white; }
         .sidebar-body { padding: 25px; flex: 1; overflow-y: auto; }
-        
         .ticket-item { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 10px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
         .ticket-item:hover { border-color: var(--primary); transform: translateX(-5px); }
         .ticket-item-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center;}
         .ticket-id { color: var(--primary); font-weight: bold; font-size: 0.95rem; }
         .ticket-status { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-        .ticket-subject { color: white; font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
 
         /* Interação Modal */
         .chat-container { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 15px; height: 250px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
@@ -105,6 +107,8 @@
         .billing-input-group { display: flex; gap: 10px; flex-wrap: wrap; }
         .billing-input-group input, .billing-input-group select { flex: 1; padding: 10px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 6px; outline: none; min-width: 150px;}
         
+        .assign-bar { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary); padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+
         /* Tabelas Administrativas */
         .finance-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap; }
         .tab-btn { background: transparent; color: #94a3b8; border: none; font-size: 1rem; font-weight: bold; cursor: pointer; padding: 5px 10px; transition: 0.3s; }
@@ -115,7 +119,7 @@
         .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
         .btn-baixa { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         .btn-baixa:hover { background: #059669; }
-        .btn-wpp { background: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-decoration: none; display: inline-block; margin-left: 5px; }
+        .btn-wpp { background: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-right: 5px; }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
@@ -133,9 +137,7 @@
 
     <main id="main-content">
         <header>
-            <a href="index.html" class="logo-link">
-                <img src="images/logo-blue.png" alt="JMDC Tecnologia" class="logo-img">
-            </a>
+            <a href="index.html" class="logo-link"><img src="images/logo-blue.png" alt="JMDC Tecnologia" class="logo-img"></a>
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.html">Início</a></li>
@@ -154,7 +156,10 @@
                     </h1>
                     <p>Visão de Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
                 </div>
-                <button class="btn-action" onclick="openNewTicketModal()"><svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round"/></svg> Abrir Chamado</button>
+                <div class="header-actions">
+                    <button class="btn-action btn-outline" id="btn-admin-new-client" style="display: none;" onclick="openAdminClientModal()">+ Cadastrar Cliente</button>
+                    <button class="btn-action" onclick="openNewTicketModal()"><svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round"/></svg> Abrir Chamado</button>
+                </div>
             </div>
 
             <div id="client-panel">
@@ -181,9 +186,7 @@
 
             <div id="admin-panel" style="display: none;">
                 
-                <div class="section-title">
-                    <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Módulo Operacional (NOC)
-                </div>
+                <div class="section-title"><svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Módulo Operacional (NOC)</div>
                 <div class="dash-grid">
                     <div class="dash-card admin-card clickable" onclick="openSidebar('admin_all')">
                         <div class="card-header"><div class="card-title">Fila Global (Todos)</div></div>
@@ -197,16 +200,14 @@
                         <p class="card-desc">Chamados atribuídos à sua responsabilidade.</p>
                     </div>
 
-                    <div class="dash-card admin-card clickable" onclick="openClientesModal()">
+                    <div class="dash-card admin-card clickable" onclick="openClientesListModal()">
                         <div class="card-header"><div class="card-title">Carteira de Clientes</div></div>
                         <div class="card-value" id="admin-clientes-count">0</div>
-                        <p class="card-desc">Gerencie o portfólio e dados sensíveis de contato.</p>
+                        <p class="card-desc">Gerencie o portfólio e dados de contato.</p>
                     </div>
                 </div>
 
-                <div class="section-title" style="margin-top: 50px;">
-                    <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Módulo Financeiro (ERP)
-                </div>
+                <div class="section-title" style="margin-top: 50px;"><svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Módulo Financeiro (ERP)</div>
                 <div class="dash-grid">
                     <div class="dash-card finance-card clickable" onclick="openAdminFinanceModal('receber')">
                         <div class="card-header"><div class="card-title">Contas a Receber</div></div>
@@ -237,13 +238,8 @@
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
     <div class="ticket-sidebar" id="ticket-sidebar">
-        <div class="sidebar-header">
-            <h2 id="sidebar-title">Fila de Chamados</h2>
-            <button class="modal-close" style="position: relative; top: 0; right: 0;" onclick="closeSidebar()">×</button>
-        </div>
-        <div class="sidebar-body" id="ticket-list-container">
-            <div class="spinner" style="margin: 50px auto;"></div>
-        </div>
+        <div class="sidebar-header"><h2 id="sidebar-title">Fila de Chamados</h2><button class="modal-close" style="position: relative; top: 0; right: 0;" onclick="closeSidebar()">×</button></div>
+        <div class="sidebar-body" id="ticket-list-container"><div class="spinner" style="margin: 50px auto;"></div></div>
     </div>
 
     <div class="modal-overlay" id="new-ticket-modal">
@@ -264,10 +260,6 @@
                             <option value="Infraestrutura Wi-Fi">Infraestrutura de rede Wi-Fi</option>
                             <option value="Suporte a Servidores">Suporte à Servidores</option>
                             <option value="Projetos e Implantações">Projetos e Implantações</option>
-                            <option value="Automação Residencial">Automação Residencial</option>
-                            <option value="Automação Comercial">Automação Comercial</option>
-                            <option value="Configuração de Roteador">Configuração de Roteador de Borda</option>
-                            <option value="Diagnóstico de Redes">Diagnóstico e correção de redes</option>
                             <option value="Firewall e Segurança">Firewall e Segurança</option>
                             <option value="Outros">Outros / Dúvidas Gerais</option>
                         </select>
@@ -288,10 +280,34 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="admin-client-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAdminClientModal()">×</button>
+            <h3 class="modal-title">Cadastrar Novo Cliente</h3>
+            <p class="modal-subtitle">Provisão de ambiente via Painel de Controle.</p>
+            <form id="adminClientForm">
+                <div class="form-grid">
+                    <div class="form-group"><label>Nome</label><input type="text" id="ac-nome" required></div>
+                    <div class="form-group"><label>Sobrenome</label><input type="text" id="ac-sobrenome" required></div>
+                    <div class="form-group full-width"><label>Empresa (Razão Social)</label><input type="text" id="ac-empresa" required></div>
+                    <div class="form-group"><label>WhatsApp</label><input type="tel" id="ac-telefone" required placeholder="(00) 90000-0000" maxlength="15"></div>
+                    <div class="form-group"><label>E-mail de Acesso</label><input type="email" id="ac-email" required></div>
+                    <div class="form-group full-width"><label>Senha Provisória</label><input type="password" id="ac-pass" required minlength="6"></div>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-submit-ac">Criar e Provisionar Conta</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="view-ticket-modal">
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeViewTicketModal()">×</button>
             
+            <div class="assign-bar" id="assign-bar" style="display: none;">
+                <div><strong style="color: var(--primary);">Responsável:</strong> <span id="vt-assigned">Não atribuído</span></div>
+                <button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem;" id="btn-assume-ticket">Atribuir a Mim</button>
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <h3 class="modal-title" id="vt-id">#ID</h3>
                 <span class="status-badge" id="vt-status">Aberto</span>
@@ -315,7 +331,7 @@
                     <div class="billing-input-group">
                         <input type="number" id="bill-amount" placeholder="Valor (Ex: 150.00)" step="0.01" min="0">
                         <input type="datetime-local" id="bill-date" title="Data/Hora do Serviço">
-                        <button type="button" class="btn-action" style="background: var(--accent); border: none;" id="btn-launch-bill">Faturar / Agendar</button>
+                        <button type="button" class="btn-action" style="background: var(--accent); border: none;" id="btn-launch-bill">Registrar Dados</button>
                     </div>
                 </div>
 
@@ -340,9 +356,9 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="clientes-modal">
+    <div class="modal-overlay" id="clientes-list-modal">
         <div class="modal-content large">
-            <button class="modal-close" onclick="closeClientesModal()">×</button>
+            <button class="modal-close" onclick="closeClientesListModal()">×</button>
             <h3 class="modal-title">Carteira de Clientes</h3>
             <p class="modal-subtitle">Controle de acesso, saldos e comunicação direta.</p>
             <div id="clientes-list-container" style="max-height: 60vh; overflow-y: auto;">
@@ -382,7 +398,7 @@
                         <input type="number" id="valor-transacao" step="0.01" required style="width: 100%; padding: 10px; border-radius: 6px; background: rgba(10,15,29,0.8); border: 1px solid #334155; color: white;">
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 5px; padding-bottom: 10px;">
-                        <div><input type="checkbox" id="transacao-fixa"> <label for="transacao-fixa" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer;">Fixa (Mensal)</label></div>
+                        <div><input type="checkbox" id="transacao-fixa"> <label for="transacao-fixa" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer;">Receita/Despesa Fixa (Mensal)</label></div>
                         <div><input type="checkbox" id="transacao-nota"> <label for="transacao-nota" style="font-size: 0.85rem; color:#cbd5e1; cursor: pointer; color:var(--warning);">Emite Nota</label></div>
                     </div>
                     <button type="submit" class="btn-action" style="padding: 10px 20px;" id="btn-submit-transacao">Lançar</button>
@@ -392,8 +408,7 @@
     </div>
 
     <script>
-        window.currentViewFilter = 'client';
-        window.currentFinanceTab = 'receber';
+        window.currentViewFilter = 'client'; window.currentFinanceTab = 'receber';
 
         function openNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'flex'; }
         function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; document.getElementById('newTicketForm').reset(); }
@@ -401,8 +416,10 @@
         
         function openClientBillingModal() { document.getElementById('client-billing-modal').style.display = 'flex'; }
         function closeClientBillingModal() { document.getElementById('client-billing-modal').style.display = 'none'; }
-        function openClientesModal() { document.getElementById('clientes-modal').style.display = 'flex'; }
-        function closeClientesModal() { document.getElementById('clientes-modal').style.display = 'none'; }
+        function openClientesListModal() { document.getElementById('clientes-list-modal').style.display = 'flex'; }
+        function closeClientesListModal() { document.getElementById('clientes-list-modal').style.display = 'none'; }
+        function openAdminClientModal() { document.getElementById('admin-client-modal').style.display = 'flex'; }
+        function closeAdminClientModal() { document.getElementById('admin-client-modal').style.display = 'none'; document.getElementById('adminClientForm').reset(); }
         
         function copyPix() { navigator.clipboard.writeText("01779551550"); alert("Chave copiada!"); }
 
@@ -423,15 +440,13 @@
 
             if(tab === 'receber') {
                 formArea.style.display = 'block'; formArea.style.borderColor = 'var(--accent)';
-                formTitle.innerText = "Lançar Nova Receita Fixa/Avulsa"; formTitle.style.color = "var(--accent)";
+                formTitle.innerText = "Lançar Receita Avulsa ou Fixa"; formTitle.style.color = "var(--accent)";
                 formLabel.innerText = "Nome do Cliente / Serviço"; btnSub.style.background = "var(--accent)";
             } else if(tab === 'pagar') {
                 formArea.style.display = 'block'; formArea.style.borderColor = 'var(--danger)';
                 formTitle.innerText = "Lançar Nova Despesa Operacional"; formTitle.style.color = "var(--danger)";
                 formLabel.innerText = "Fornecedor / Descrição"; btnSub.style.background = "var(--danger)";
-            } else {
-                formArea.style.display = 'none';
-            }
+            } else { formArea.style.display = 'none'; }
 
             if(window.renderFinanceTable) window.renderFinanceTable();
         }
@@ -441,7 +456,6 @@
             if(filterType === 'admin_mine') document.getElementById('sidebar-title').innerText = "Meus Atendimentos";
             else if(filterType === 'admin_all') document.getElementById('sidebar-title').innerText = "Fila Global";
             else document.getElementById('sidebar-title').innerText = "Meus Chamados";
-            
             document.getElementById('sidebar-overlay').style.display = 'block';
             setTimeout(() => { document.getElementById('sidebar-overlay').style.opacity = '1'; document.getElementById('ticket-sidebar').classList.add('active'); }, 10);
             if(window.refreshTicketList) window.refreshTicketList();
@@ -450,11 +464,43 @@
             document.getElementById('ticket-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').style.opacity = '0';
             setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
         }
+
+        // MÁSCARA TELEFONE NO ADMIN
+        document.getElementById('ac-telefone').addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            if (v.length > 2 && v.length <= 6) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+            else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+            e.target.value = v;
+        });
+
+        // Fundo Animado
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('network-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d'); let w, h, particles = [];
+                const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+                window.addEventListener('resize', resize); resize();
+                function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
+                function animateParticles() { 
+                    ctx.clearRect(0,0,w,h); 
+                    particles.forEach((p,i)=>{
+                        p.x+=p.vx; p.y+=p.vy; 
+                        if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
+                        ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle='#3b82f6'; ctx.fill();
+                        for(let j=i;j<particles.length;j++){
+                            let dx=p.x-particles[j].x, dy=p.y-particles[j].y, d=Math.hypot(dx,dy);
+                            if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(59,130,246,${1-d/100})`;ctx.lineWidth=0.5;ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
+                        }
+                    }); requestAnimationFrame(animateParticles);
+                } initParticles(); animateParticles();
+            }
+        });
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, setDoc, addDoc, serverTimestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -469,6 +515,10 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // SEC APP PARA CADASTRO DE CLIENTES SEM DESLOGAR O ADMIN
+        const adminApp = initializeApp(firebaseConfig, "AdminAppRegistration");
+        const adminAuth = getAuth(adminApp);
         
         let currentUserData = null; window.activeTicketId = null; window.activeTicketClientId = null;
         let globalTickets = []; let globalFaturas = []; let globalClientes = [];
@@ -494,49 +544,50 @@
                                 isAdminOrSupport = true;
                                 document.getElementById('client-panel').style.display = 'none';
                                 document.getElementById('admin-panel').style.display = 'block';
+                                document.getElementById('btn-admin-new-client').style.display = 'inline-flex';
                                 
                                 if(currentUserData.nivelAcesso === "admin") {
                                     document.getElementById('admin-badge').style.display = 'inline-block';
                                     
-                                    // LEITURA CARTEIRA DE CLIENTES E RECEBÍVEIS
+                                    // CARTEIRA CLIENTES (Com Tabela Nova)
                                     onSnapshot(collection(db, "clientes"), (snap) => {
-                                        globalClientes = []; let totalReceber = 0; let totalAtivos = 0;
+                                        globalClientes = []; let totalAtivos = 0;
                                         const tbody = document.querySelector('#clientes-table tbody'); tbody.innerHTML = '';
                                         
                                         snap.forEach(c => { 
                                             let data = c.data(); data.id = c.id; globalClientes.push(data);
-                                            totalReceber += (data.faturaPendente || 0);
                                             if(data.status === "ativo") totalAtivos++;
                                             
-                                            let dCadastro = data.dataCadastro ? new Date(data.dataCadastro.toDate()).toLocaleDateString('pt-BR') : '-';
                                             let numWpp = sanitizePhone(data.telefone);
                                             
                                             tbody.innerHTML += `<tr>
-                                                <td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">Membro desde: ${dCadastro}</span></td>
+                                                <td><strong>${data.empresa}</strong></td>
                                                 <td>${data.nome} ${data.sobrenome}</td>
-                                                <td><a href="https://wa.me/55${numWpp}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}</td>
+                                                <td><a href="https://wa.me/55${numWpp}" target="_blank" class="btn-wpp"><svg fill="currentColor" width="14" height="14" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg></a> ${data.telefone}</td>
                                                 <td>${data.email}</td>
                                                 <td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td>
-                                                <td><span class="status-badge" style="margin:0;">${data.nivelAcesso.toUpperCase()}</span></td>
+                                                <td><span class="status-badge" style="margin:0; font-size:0.7rem;">${data.nivelAcesso.toUpperCase()}</span></td>
                                             </tr>`;
                                         });
-                                        document.getElementById('admin-receber').innerText = formatMoney(totalReceber);
                                         document.getElementById('admin-clientes-count').innerText = totalAtivos;
                                     });
 
-                                    // MOTOR FINANCEIRO GLOBAL
+                                    // MOTOR FINANCEIRO 
                                     onSnapshot(collection(db, "faturas"), (snap) => {
-                                        globalFaturas = []; let tPagar = 0; let tRecebido = 0; let tPagoHistorico = 0;
+                                        globalFaturas = []; let tReceber = 0; let tPagar = 0; let tRecebidoHist = 0; let tPagoHist = 0;
                                         snap.forEach(f => {
                                             let data = f.data(); data.id = f.id; globalFaturas.push(data);
-                                            if(data.status === "Pendente" && data.tipo === "despesa") tPagar += data.valor;
-                                            if(data.status === "Pago") {
-                                                if(data.tipo === "receita") tRecebido += data.valor;
-                                                if(data.tipo === "despesa") tPagoHistorico += data.valor;
+                                            if(data.status === "Pendente") {
+                                                if(data.tipo === "receita") tReceber += data.valor;
+                                                if(data.tipo === "despesa") tPagar += data.valor;
+                                            } else if (data.status === "Pago") {
+                                                if(data.tipo === "receita") tRecebidoHist += data.valor;
+                                                if(data.tipo === "despesa") tPagoHist += data.valor;
                                             }
                                         });
+                                        document.getElementById('admin-receber').innerText = formatMoney(tReceber);
                                         document.getElementById('admin-pagar').innerText = formatMoney(tPagar);
-                                        document.getElementById('admin-balanco').innerText = formatMoney(tRecebido - tPagoHistorico);
+                                        document.getElementById('admin-balanco').innerText = formatMoney(tReceber - tPagar);
                                         if(document.getElementById('admin-finance-modal').style.display === 'flex') window.renderFinanceTable();
                                     });
                                 } else { document.getElementById('suporte-badge').style.display = 'inline-block'; }
@@ -545,7 +596,7 @@
                             document.getElementById('loader').style.opacity = '0';
                             setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 500);
 
-                            // LISTAGEM REATIVA DE CHAMADOS
+                            // LISTAGEM CHAMADOS
                             let q = isAdminOrSupport ? query(collection(db, "chamados")) : query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
                             onSnapshot(q, (snapshot) => {
                                 globalTickets = []; let allActive = 0; let myActive = 0;
@@ -561,6 +612,34 @@
                     });
                 } catch (error) { console.error(error); }
             } else { window.location.href = "crm.html"; }
+        });
+
+        // CADASTRO DE NOVO CLIENTE PELO ADMIN
+        document.getElementById('adminClientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-ac'); btn.innerText = "Provisionando..."; btn.disabled = true;
+
+            try {
+                // Usa a SecApp para não deslogar o Admin
+                const userCred = await createUserWithEmailAndPassword(adminAuth, document.getElementById('ac-email').value.trim(), document.getElementById('ac-pass').value);
+                
+                await setDoc(doc(db, "clientes", userCred.user.uid), {
+                    nome: document.getElementById('ac-nome').value.trim(),
+                    sobrenome: document.getElementById('ac-sobrenome').value.trim(),
+                    empresa: document.getElementById('ac-empresa').value.trim(),
+                    telefone: document.getElementById('ac-telefone').value.trim(),
+                    email: document.getElementById('ac-email').value.trim(),
+                    dataCadastro: serverTimestamp(), status: "ativo", nivelAcesso: "cliente", faturaPendente: 0
+                });
+                
+                adminAuth.signOut(); // Limpa SecApp
+                alert("Cliente cadastrado com sucesso! A conta já está operante.");
+                closeAdminClientModal();
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/email-already-in-use') alert("Este e-mail já possui cadastro.");
+                else alert("Erro ao criar conta. Verifique os dados.");
+            } finally { btn.innerText = "Criar e Provisionar Conta"; btn.disabled = false; }
         });
 
         // RENDERIZAÇÃO FINANCEIRA
@@ -587,7 +666,7 @@
                 
                 html += `<tr>
                     <td>${dateStr}</td>
-                    <td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem || 'Avulso'}</span></td>
+                    <td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem || 'Manual'}</span></td>
                     <td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td>
                     <td style="color:${stColor}; font-weight:bold;">${f.status}</td>
                     <td>${btnAction}</td>
@@ -610,16 +689,17 @@
             a.click(); window.URL.revokeObjectURL(url);
         };
 
-        // DAR BAIXA
+        // DAR BAIXA EM FATURA E ABATER SALDO
         window.darBaixaFatura = async function(faturaId, clientId, valor, tipo) {
-            if(!confirm("Confirma a liquidação (Baixa) deste valor? O saldo do cliente será atualizado.")) return;
+            if(!confirm("Confirma a liquidação desta fatura? O saldo do cliente será atualizado.")) return;
             try {
                 await updateDoc(doc(db, "faturas", faturaId), { status: "Pago", dataPagamento: serverTimestamp() });
-                if(tipo === 'receita' && clientId && clientId !== 'undefined') {
+                
+                if(tipo === 'receita' && clientId && clientId !== 'undefined' && clientId !== 'null') {
                     const clientRef = doc(db, "clientes", clientId);
                     const cSnap = await getDoc(clientRef);
                     if(cSnap.exists()) {
-                        let novoSaldo = Math.max(0, (cSnap.data().faturaPendente || 0) - valor);
+                        let novoSaldo = Math.max(0, (cSnap.data().faturaPendente || 0) - valor); 
                         await updateDoc(clientRef, { faturaPendente: novoSaldo });
                     }
                 }
@@ -647,7 +727,7 @@
             } catch(e) { console.error(e); }
         });
 
-        // VIEW CHAMADO
+        // VIEW E ATUALIZAÇÃO DO CHAMADO (Resolução Limpa)
         let currentTicketSnapshot = null;
         window.loadTicketDetails = function(docId, uidDonoChamado) {
             window.activeTicketId = docId; window.activeTicketClientId = uidDonoChamado;
@@ -667,6 +747,24 @@
                     document.getElementById('vt-scheduled-date').innerText = dtSrv.toLocaleDateString('pt-BR') + ' às ' + dtSrv.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
                 } else { document.getElementById('vt-agendamento-display').style.display = 'none'; }
 
+                const isStaff = currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte";
+                if(isStaff) {
+                    document.getElementById('assign-bar').style.display = 'flex';
+                    document.getElementById('admin-billing-section').style.display = 'block';
+                    const btnAssume = document.getElementById('btn-assume-ticket');
+                    if(data.atribuidoPara) {
+                        document.getElementById('vt-assigned').innerText = data.atribuidoPara;
+                        btnAssume.style.display = data.atribuidoPara === currentUserData.nome ? 'none' : 'block';
+                        btnAssume.innerText = "Reatribuir a Mim";
+                    } else {
+                        document.getElementById('vt-assigned').innerText = "Não atribuído";
+                        btnAssume.style.display = 'block'; btnAssume.innerText = "Assumir Chamado";
+                    }
+                } else {
+                    document.getElementById('assign-bar').style.display = 'none';
+                    document.getElementById('admin-billing-section').style.display = 'none';
+                }
+
                 const chatContainer = document.getElementById('vt-chat'); chatContainer.innerHTML = '';
                 (data.historico || []).forEach(msg => {
                     const alignClass = (msg.tipo === "suporte" || msg.tipo === "admin") ? "staff" : "";
@@ -677,7 +775,7 @@
             });
         };
 
-        // FATURAR E AGENDAR DENTRO DO CHAMADO
+        // FATURAR NO CHAMADO (Com Supressão de Jargões)
         document.getElementById('btn-launch-bill').addEventListener('click', async () => {
             const valor = parseFloat(document.getElementById('bill-amount').value);
             const agendamento = document.getElementById('bill-date').value;
@@ -685,7 +783,7 @@
             let msgChat = "";
 
             if(temFatura) {
-                if(!confirm(`Deseja faturar ${formatMoney(valor)} para a carteira deste cliente?`)) return;
+                if(!confirm(`Deseja faturar ${formatMoney(valor)} para este cliente?`)) return;
                 const tSnap = await getDoc(doc(db, "chamados", window.activeTicketId));
                 const cNome = tSnap.exists() ? tSnap.data().empresa : "Avulso";
                 
@@ -694,13 +792,15 @@
                     origem: `OS #${tSnap.data().idInterno}`, status: "Pendente", dataCriacao: serverTimestamp()
                 });
                 await updateDoc(doc(db, "clientes", window.activeTicketClientId), { faturaPendente: increment(valor) });
-                msgChat += `A requisição técnica foi orçada no valor de ${formatMoney(valor)}. `;
+                
+                // Mensagem neutra para o chat (O cliente não precisa ver a operação de bastidores)
+                msgChat += `O serviço foi precificado no valor de ${formatMoney(valor)}. `;
             }
 
             if(agendamento) {
                 await updateDoc(doc(db, "chamados", window.activeTicketId), { dataServico: agendamento });
                 let dtSrv = new Date(agendamento);
-                msgChat += `Atendimento agendado para ${dtSrv.toLocaleDateString('pt-BR')} às ${dtSrv.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}.`;
+                msgChat += `A execução foi agendada para ${dtSrv.toLocaleDateString('pt-BR')} às ${dtSrv.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}.`;
             }
 
             if(msgChat !== "") {
@@ -708,11 +808,11 @@
                     historico: arrayUnion({ autor: currentUserData.nome, tipo: "admin", texto: msgChat, data: new Date().toISOString() })
                 });
                 document.getElementById('bill-amount').value = ''; document.getElementById('bill-date').value = '';
-                alert("Dados registrados no chamado com sucesso!");
+                alert("Dados registrados no chamado e no fluxo de caixa!");
             } else { alert("Preencha um valor ou uma data para prosseguir."); }
         });
 
-        // REFRESH, REPLY E RESOLVE (Mecânica Padrão)
+        // REFRESH, REPLY E RESOLVE
         window.refreshTicketList = function() {
             const listContainer = document.getElementById('ticket-list-container');
             let filtered = globalTickets;
@@ -734,9 +834,14 @@
             await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Em Andamento", historico: arrayUnion({ autor: currentUserData.nome, tipo: currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() }) }); input.value = '';
         });
 
+        document.getElementById('btn-assume-ticket').addEventListener('click', async () => {
+            if(!window.activeTicketId) return;
+            await updateDoc(doc(db, "chamados", window.activeTicketId), { atribuidoPara: currentUserData.nome, status: "Em Andamento", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: `Atendimento assumido por ${currentUserData.nome}.`, data: new Date().toISOString() }) });
+        });
+
         document.getElementById('btn-resolve-ticket').addEventListener('click', async () => {
             if(!confirm("Encerrar chamado?")) return;
-            await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Resolvido", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado marcado como Resolvido.", data: new Date().toISOString() }) }); closeViewTicketModal();
+            await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Resolvido", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado Resolvido.", data: new Date().toISOString() }) }); closeViewTicketModal();
         });
 
         document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
