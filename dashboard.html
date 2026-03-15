@@ -54,6 +54,7 @@
         .admin-card { border-color: rgba(59, 130, 246, 0.5); }
         .finance-card { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); }
         .faturamento-card { border-color: rgba(245, 158, 11, 0.5); background: rgba(245, 158, 11, 0.05); }
+        .tributos-card { border-color: rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.05); }
 
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: white; }
@@ -76,6 +77,9 @@
         .form-group label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
         .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        
+        /* Corrigindo Inputs de Tempo para Modo Escuro */
+        input[type="date"], input[type="time"], input[type="datetime-local"] { color-scheme: dark; }
         
         /* Sidebar e Chat */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
@@ -108,10 +112,6 @@
         .btn-icon:hover { opacity: 1; transform: scale(1.1); }
         .btn-wpp { background: #25D366; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-right: 5px; }
 
-        /* Correção Visual Calendário HTML5 Dark Mode */
-        input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
-
-        /* Campos Formulário Financeiro Compactos */
         .fin-input-box { display: flex; flex-direction: column; gap: 5px; }
         .fin-input-box label { font-size: 0.8rem; color: #94a3b8; }
         .fin-input-box input, .fin-input-box select { padding: 10px; background: rgba(10,15,29,0.8); border: 1px solid #334155; color: white; border-radius: 6px; outline: none; }
@@ -199,7 +199,7 @@
                     <div class="dash-card admin-card clickable" onclick="openClientesListModal()">
                         <div class="card-header"><div class="card-title">Carteira de Clientes</div></div>
                         <div class="card-value" id="admin-clientes-count">0</div>
-                        <p class="card-desc">Gerencie o portfólio, acesse faturas e contatos.</p>
+                        <p class="card-desc">Gerencie portfólio, acesse faturas e contatos.</p>
                     </div>
                 </div>
 
@@ -210,6 +210,11 @@
                         <div class="card-value" style="color: var(--warning);" id="admin-faturamento-bruto">R$ 0,00</div>
                         <p class="card-desc" id="admin-faturamento-liquido" style="font-weight:bold; color:white;">Líquido: R$ 0,00</p>
                     </div>
+                    <div class="dash-card tributos-card">
+                        <div class="card-header"><div class="card-title">Impostos e Notas (6%)</div></div>
+                        <div class="card-value" style="color: var(--danger);" id="admin-imposto">R$ 0,00</div>
+                        <p class="card-desc" id="admin-base-tributavel">Base: R$ 0,00 (0 clientes)</p>
+                    </div>
                     <div class="dash-card finance-card clickable" onclick="openAdminFinanceModal('receber')">
                         <div class="card-header"><div class="card-title">Contas a Receber</div></div>
                         <div class="card-value" style="color: var(--accent);" id="admin-receber">R$ 0,00</div>
@@ -219,11 +224,6 @@
                         <div class="card-header"><div class="card-title">Contas a Pagar</div></div>
                         <div class="card-value" style="color: var(--danger);" id="admin-pagar">R$ 0,00</div>
                         <p class="card-desc">Lançar custos e despesas a fornecedores.</p>
-                    </div>
-                    <div class="dash-card finance-card">
-                        <div class="card-header"><div class="card-title">Balanço Pendente</div></div>
-                        <div class="card-value" style="color: white;" id="admin-balanco">R$ 0,00</div>
-                        <p class="card-desc">Diferença de Caixa Previsto (Receber - Pagar).</p>
                     </div>
                 </div>
             </div>
@@ -250,9 +250,15 @@
     <div class="modal-overlay" id="new-ticket-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewTicketModal()">×</button>
-            <h3 class="modal-title">Novo Chamado Técnico</h3>
+            <h3 class="modal-title" id="nt-modal-title">Novo Chamado Técnico</h3>
             <form id="newTicketForm">
+                <input type="hidden" id="nt-edit-id">
                 <div class="form-grid">
+                    <div class="form-group full-width" id="nt-admin-client-box" style="display:none; background:rgba(59,130,246,0.1); padding:10px; border-radius:8px; border:1px solid var(--primary);">
+                        <label style="color:var(--primary);">Vincular ao Cliente (Admin Mode)</label>
+                        <select id="nt-cliente-vinculo"><option value="self">-- Meu Próprio Usuário --</option></select>
+                    </div>
+
                     <div class="form-group full-width">
                         <label>Catálogo de Serviços</label>
                         <select id="ticket-category" required>
@@ -275,9 +281,12 @@
                     </div>
                     <div class="form-group full-width"><label>SLA (Urgência)</label><select id="ticket-priority" required><option value="Média" selected>Média</option><option value="Alta">Alta</option><option value="Crítica">Crítica</option></select></div>
                     <div class="form-group full-width"><label>Assunto Breve</label><input type="text" id="ticket-subject" required></div>
-                    <div class="form-group full-width"><label>Descrição Detalhada</label><textarea id="ticket-desc" rows="4" required></textarea></div>
+                    <div class="form-group full-width" id="nt-desc-box"><label>Descrição Detalhada</label><textarea id="ticket-desc" rows="4"></textarea></div>
+                    <div class="form-group full-width" style="padding-top: 10px;">
+                        <input type="checkbox" id="ticket-emite-nota"> <label for="ticket-emite-nota" style="display:inline; color:var(--warning); cursor:pointer;">Serviço Exige Nota Fiscal</label>
+                    </div>
                 </div>
-                <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-submit-ticket">Gerar Requisição</button>
+                <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-submit-ticket">Salvar Requisição</button>
             </form>
         </div>
     </div>
@@ -285,15 +294,11 @@
     <div class="modal-overlay" id="view-ticket-modal">
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeViewTicketModal()">×</button>
-            <div class="assign-bar" id="assign-bar" style="display: none;">
-                <div><strong style="color: var(--primary);">Responsável:</strong> <span id="vt-assigned">Não atribuído</span></div>
-                <button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem;" id="btn-assume-ticket">Atribuir a Mim</button>
-            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <h3 class="modal-title" id="vt-id">#ID</h3><span class="status-badge" id="vt-status">Aberto</span>
             </div>
             <p class="modal-subtitle" style="margin-bottom: 5px;"><strong id="vt-subject">Assunto</strong></p>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span></p>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span> <span id="vt-nf-tag" style="display:none; color:var(--warning); margin-left:10px; font-weight:bold;">[EMITE NF]</span></p>
             
             <div class="chat-container" id="vt-chat"></div>
 
@@ -350,7 +355,6 @@
                 <p class="modal-subtitle">Base de dados para vínculos em Contas a Pagar.</p>
                 <button class="btn-action btn-outline" style="padding: 5px 15px; font-size: 0.85rem;" onclick="openEditFornecedor('new')">+ Novo Fornecedor</button>
             </div>
-            
             <table class="admin-table" id="fornecedores-table">
                 <thead><tr><th>Fornecedor</th><th>Chave PIX</th><th>WhatsApp</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
@@ -443,7 +447,31 @@
     <script>
         window.currentViewFilter = 'client'; window.currentFinanceTab = 'receber';
         
-        function openNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'flex'; }
+        function openNewTicketModal(isEdit = false, ticketId = null) { 
+            const f = document.getElementById('newTicketForm'); f.reset();
+            document.getElementById('nt-edit-id').value = isEdit ? ticketId : '';
+            document.getElementById('nt-modal-title').innerText = isEdit ? "Editar Chamado" : "Novo Chamado Técnico";
+            document.getElementById('nt-desc-box').style.display = isEdit ? 'none' : 'block';
+            if(!isEdit) { document.getElementById('ticket-desc').required = true; } else { document.getElementById('ticket-desc').required = false; }
+            
+            if(window.currentUserData && (window.currentUserData.nivelAcesso === 'admin' || window.currentUserData.nivelAcesso === 'suporte')) {
+                document.getElementById('nt-admin-client-box').style.display = 'block';
+                const sel = document.getElementById('nt-cliente-vinculo'); sel.innerHTML = '<option value="self">-- Meu Próprio Usuário --</option>';
+                window.globalClientes.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.empresa} (${c.nome})</option>`; });
+            }
+            
+            if(isEdit && ticketId) {
+                const t = window.globalTickets.find(x => x.docId === ticketId);
+                if(t) {
+                    document.getElementById('ticket-category').value = t.categoria;
+                    document.getElementById('ticket-priority').value = t.severidade;
+                    document.getElementById('ticket-subject').value = t.assunto;
+                    document.getElementById('ticket-emite-nota').checked = t.emiteNota || false;
+                    if(t.uidCliente !== window.auth.currentUser.uid) document.getElementById('nt-cliente-vinculo').value = t.uidCliente;
+                }
+            }
+            document.getElementById('new-ticket-modal').style.display = 'flex'; 
+        }
         function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; }
         function closeViewTicketModal() { document.getElementById('view-ticket-modal').style.display = 'none'; window.activeTicketId = null; window.activeTicketClientId = null; }
         
@@ -493,12 +521,10 @@
         function closeSidebar() { document.getElementById('ticket-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').style.opacity = '0'; setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300); }
         function showGreenSuccess() { const ov = document.getElementById('payment-success-overlay'); ov.style.display = 'flex'; setTimeout(() => ov.style.opacity = '1', 10); setTimeout(() => { ov.style.opacity = '0'; setTimeout(() => ov.style.display = 'none', 500); }, 20000); }
         
-        // MÁSCARAS
         const mPhone = (e) => { let v = e.target.value.replace(/\D/g, ''); if (v.length > 11) v = v.slice(0, 11); if (v.length > 2 && v.length <= 6) v = `(${v.slice(0,2)}) ${v.slice(2)}`; else if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`; e.target.value = v; };
         document.getElementById('ce-telefone').addEventListener('input', mPhone);
         document.getElementById('ef-wpp').addEventListener('input', mPhone);
 
-        // Fundo Animado
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('network-canvas');
             if (canvas) {
@@ -515,43 +541,42 @@
         import { getFirestore, doc, getDoc, collection, setDoc, addDoc, deleteDoc, serverTimestamp, Timestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo", authDomain: "jmdc-crm.firebaseapp.com", projectId: "jmdc-crm", storageBucket: "jmdc-crm.firebasestorage.app", messagingSenderId: "495316438549", appId: "1:495316438549:web:61d6c18462b66afcb3881c" };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); window.auth = getAuth(app); const db = getFirestore(app);
         const adminApp = initializeApp(firebaseConfig, "AdminAppRegistration"); const adminAuth = getAuth(adminApp);
         
-        let currentUserData = null; window.activeTicketId = null; window.activeTicketClientId = null;
+        window.currentUserData = null; window.activeTicketId = null; window.activeTicketClientId = null;
         window.globalTickets = []; window.globalFaturas = []; window.globalClientes = []; window.globalFornecedores = [];
         let isFirstLoadClient = true; let lastFaturaPendente = 0;
 
         const formatMoney = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
         const sanitizePhone = (p) => p ? p.replace(/\D/g, '') : '';
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(window.auth, async (user) => {
             if (user) {
                 onSnapshot(doc(db, "clientes", user.uid), (docSnap) => {
                     if (docSnap.exists()) {
-                        currentUserData = docSnap.data();
-                        document.getElementById('user-name').innerText = currentUserData.nome;
+                        window.currentUserData = docSnap.data();
+                        document.getElementById('user-name').innerText = window.currentUserData.nome;
                         
-                        if(!isFirstLoadClient && currentUserData.faturaPendente < lastFaturaPendente) showGreenSuccess();
-                        lastFaturaPendente = currentUserData.faturaPendente || 0;
+                        if(!isFirstLoadClient && window.currentUserData.faturaPendente < lastFaturaPendente) showGreenSuccess();
+                        lastFaturaPendente = window.currentUserData.faturaPendente || 0;
                         isFirstLoadClient = false;
 
-                        const faturaFormatada = formatMoney(currentUserData.faturaPendente);
+                        const faturaFormatada = formatMoney(window.currentUserData.faturaPendente);
                         document.getElementById('fatura-pendente').innerText = faturaFormatada;
                         document.getElementById('modal-fatura-valor').innerText = faturaFormatada;
                         
-                        let isAdminOrSupport = currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte";
+                        let isAdminOrSupport = window.currentUserData.nivelAcesso === "admin" || window.currentUserData.nivelAcesso === "suporte";
                         if(isAdminOrSupport) {
                             document.getElementById('client-panel').style.display = 'none'; document.getElementById('admin-panel').style.display = 'block'; document.getElementById('btn-admin-suppliers').style.display = 'inline-flex';
-                            if(currentUserData.nivelAcesso === "admin") {
+                            if(window.currentUserData.nivelAcesso === "admin") {
                                 document.getElementById('admin-badge').style.display = 'inline-block';
                                 
                                 onSnapshot(collection(db, "clientes"), (snap) => {
                                     window.globalClientes = []; const tbody = document.querySelector('#clientes-table tbody'); tbody.innerHTML = '';
                                     snap.forEach(c => { 
                                         let data = c.data(); data.id = c.id; window.globalClientes.push(data);
-                                        let numWpp = sanitizePhone(data.telefone);
-                                        tbody.innerHTML += `<tr><td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td><td>${data.nome} ${data.sobrenome}<br><span style="font-size:0.75rem; color:#64748b;">${data.endereco || 'Não informado'}</span></td><td><a href="https://wa.me/55${numWpp}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}<br><span style="font-size:0.75rem; color:#64748b;">${data.email}</span></td><td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td><td><button class="btn-icon" onclick="openClientEditModal('edit', '${data.id}')">✏️</button></td></tr>`;
+                                        tbody.innerHTML += `<tr><td><strong>${data.empresa}</strong><br><span style="font-size:0.75rem; color:#64748b;">${data.tipoFaturamento === 'mensal' ? 'Mensalista' : 'Avulso'}</span></td><td>${data.nome} ${data.sobrenome}<br><span style="font-size:0.75rem; color:#64748b;">${data.endereco || 'Não informado'}</span></td><td><a href="https://wa.me/55${sanitizePhone(data.telefone)}" target="_blank" class="btn-wpp">WhatsApp</a> ${data.telefone}<br><span style="font-size:0.75rem; color:#64748b;">${data.email}</span></td><td style="color:var(--accent); font-weight:bold;">${formatMoney(data.faturaPendente)}</td><td><button class="btn-icon" onclick="openClientEditModal('edit', '${data.id}')">✏️</button> <button class="btn-icon" style="color:var(--danger);" onclick="window.deleteCliente('${data.id}')">🗑️</button></td></tr>`;
                                     }); document.getElementById('admin-clientes-count').innerText = window.globalClientes.length;
                                 });
 
@@ -565,7 +590,8 @@
 
                                 onSnapshot(collection(db, "faturas"), (snap) => {
                                     window.globalFaturas = []; let tRec = 0; let tPag = 0; let balanco = 0;
-                                    let fatBrutoMes = 0; let fatLiquidoMes = 0;
+                                    let fatBrutoMes = 0; let fatLiquidoMes = 0; let baseTributavel = 0;
+                                    let clientesNotaSet = new Set();
                                     let mesAtual = new Date().getMonth(); let anoAtual = new Date().getFullYear();
 
                                     snap.forEach(f => {
@@ -575,13 +601,22 @@
                                             if(data.tipo === "receita") balanco += data.valor; if(data.tipo === "despesa") balanco -= data.valor;
                                             let dPgto = data.dataPagamento ? data.dataPagamento.toDate() : (data.dataCriacao ? data.dataCriacao.toDate() : new Date());
                                             if(dPgto.getMonth() === mesAtual && dPgto.getFullYear() === anoAtual) {
-                                                if(data.tipo === "receita") { fatBrutoMes += data.valor; fatLiquidoMes += data.valor; }
+                                                if(data.tipo === "receita") { 
+                                                    fatBrutoMes += data.valor; fatLiquidoMes += data.valor; 
+                                                    if(data.emiteNota) { baseTributavel += data.valor; if(data.uidCliente) clientesNotaSet.add(data.uidCliente); }
+                                                }
                                                 if(data.tipo === "despesa") { fatLiquidoMes -= data.valor; }
                                             }
                                         }
                                     });
+                                    
+                                    let imposto = baseTributavel * 0.06;
+                                    fatLiquidoMes -= imposto;
+
                                     document.getElementById('admin-receber').innerText = formatMoney(tRec); document.getElementById('admin-pagar').innerText = formatMoney(tPag); document.getElementById('admin-balanco').innerText = formatMoney(tRec - tPag);
                                     document.getElementById('admin-faturamento-bruto').innerText = formatMoney(fatBrutoMes); document.getElementById('admin-faturamento-liquido').innerText = `Líquido: ${formatMoney(fatLiquidoMes)}`;
+                                    document.getElementById('admin-imposto').innerText = formatMoney(imposto); document.getElementById('admin-base-tributavel').innerText = `Base: ${formatMoney(baseTributavel)} (${clientesNotaSet.size} clientes)`;
+                                    
                                     if(document.getElementById('admin-finance-modal').style.display === 'flex') window.renderFinanceTable();
                                 });
                             } else { document.getElementById('suporte-badge').style.display = 'inline-block'; }
@@ -591,7 +626,7 @@
                         let q = isAdminOrSupport ? query(collection(db, "chamados")) : query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
                         onSnapshot(q, (snapshot) => {
                             window.globalTickets = []; let allActive = 0; let myActive = 0;
-                            snapshot.forEach((doc) => { let data = doc.data(); data.docId = doc.id; window.globalTickets.push(data); if(data.status !== "Resolvido") { allActive++; if(data.atribuidoPara === currentUserData.nome) myActive++; } });
+                            snapshot.forEach((doc) => { let data = doc.data(); data.docId = doc.id; window.globalTickets.push(data); if(data.status !== "Resolvido") { allActive++; if(data.atribuidoPara === window.currentUserData.nome) myActive++; } });
                             if(isAdminOrSupport) { document.getElementById('admin-all-tickets').innerText = allActive; document.getElementById('admin-my-tickets').innerText = myActive; } else { document.getElementById('client-ticket-count').innerText = allActive; }
                             if(document.getElementById('ticket-sidebar').classList.contains('active')) window.refreshTicketList();
                         });
@@ -601,6 +636,11 @@
         });
 
         // CLIENTES CRUD
+        window.deleteCliente = async function(id) {
+            if(!confirm("Excluir cliente do CRM? O histórico financeiro será mantido para auditoria.")) return;
+            try { await deleteDoc(doc(db, "clientes", id)); alert("Cliente removido."); } catch(e) { console.error(e); }
+        };
+
         document.getElementById('clientEditForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const btn = document.getElementById('btn-submit-ce'); btn.disabled = true; const uid = document.getElementById('ce-uid').value;
             const dados = { nome: document.getElementById('ce-nome').value.trim(), sobrenome: document.getElementById('ce-sobrenome').value.trim(), empresa: document.getElementById('ce-empresa').value.trim(), endereco: document.getElementById('ce-endereco').value.trim(), telefone: document.getElementById('ce-telefone').value.trim(), tipoFaturamento: document.getElementById('ce-tipoFaturamento').value };
@@ -623,19 +663,17 @@
         document.getElementById('fornecedorEditForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const id = document.getElementById('ef-id').value;
             const dados = { nome: document.getElementById('ef-nome').value.trim(), chavePix: document.getElementById('ef-pix').value.trim(), telefone: document.getElementById('ef-wpp').value.trim() };
-            try {
-                if(!id) { dados.dataCadastro = serverTimestamp(); await addDoc(collection(db, "fornecedores"), dados); } else { await updateDoc(doc(db, "fornecedores", id), dados); }
-                closeEditFornecedor(); alert("Salvo!");
-            } catch(e) { console.error(e); }
+            try { if(!id) { dados.dataCadastro = serverTimestamp(); await addDoc(collection(db, "fornecedores"), dados); } else { await updateDoc(doc(db, "fornecedores", id), dados); } closeEditFornecedor(); alert("Salvo!"); } catch(e) { console.error(e); }
         });
 
-        document.getElementById('btn-reset-password').addEventListener('click', async () => { if(confirm(`Enviar e-mail para ${currentUserData.email}?`)) { try { await sendPasswordResetEmail(auth, currentUserData.email); alert("E-mail enviado!"); } catch(e) { alert("Erro ao enviar e-mail."); } } });
+        document.getElementById('btn-reset-password').addEventListener('click', async () => { if(confirm(`Enviar e-mail para ${window.currentUserData.email}?`)) { try { await sendPasswordResetEmail(auth, window.currentUserData.email); alert("E-mail enviado!"); } catch(e) { alert("Erro ao enviar e-mail."); } } });
 
-        // FINANCEIRO TABLE & TRANSAÇÕES
+        // FINANCEIRO TABLE & TRANSAÇÕES CRUD
         window.renderFinanceTable = function() {
             const container = document.getElementById('finance-list-container');
             let filtradas = window.globalFaturas.filter(f => window.currentFinanceTab === 'historico' ? f.status === 'Pago' : (f.tipo === (window.currentFinanceTab === 'receber' ? 'receita' : 'despesa') && f.status === 'Pendente'));
             filtradas.sort((a,b) => (b.dataCriacao?.toMillis() || 0) - (a.dataCriacao?.toMillis() || 0));
+
             if(filtradas.length === 0) { container.innerHTML = `<p style="text-align:center; color:#94a3b8;">Nenhum registro nesta categoria.</p>`; return; }
 
             let html = `<table class="admin-table"><thead><tr><th>Data / Parcela</th><th>Descritivo</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead><tbody>`;
@@ -644,19 +682,12 @@
                 if(f.dataRealizada) { d = new Date(f.dataRealizada.toDate()).toLocaleDateString('pt-BR'); }
                 let par = f.parcelas && f.parcelas > 1 ? `<br><span style="font-size:0.75rem; color:#94a3b8;">Parcelado em ${f.parcelas}x (${formatMoney(f.valorParcela)})</span>` : '';
                 let stC = f.status === 'Pendente' ? 'var(--warning)' : 'var(--accent)';
+                let btnBx = f.status === 'Pendente' ? `<button class="btn-baixa" onclick="window.darBaixaFatura('${f.id}', '${f.uidCliente}', ${f.valor}, '${f.tipo}')">Dar Baixa</button>` : `<span style="color:#94a3b8;font-size:0.8rem;">Liquidado</span>`;
+                let btnEd = f.status === 'Pendente' ? `<button class="btn-icon" onclick="window.openEditTransacao('${f.id}', ${f.valor}, '${f.uidCliente}', '${f.tipo}')">✏️</button>` : '';
+                let btnDel = `<button class="btn-icon" style="color:var(--danger);" onclick="window.deleteTransacao('${f.id}', ${f.valor}, '${f.tipo}', '${f.uidCliente}', '${f.status}')">🗑️</button>`;
                 let tags = (f.recorrente ? `<span style="font-size:0.7rem; background:rgba(239,68,68,0.2); color:var(--danger); padding:2px 5px; border-radius:4px; margin-left:5px;">FIXA</span>` : '') + (f.emiteNota ? `<span style="font-size:0.7rem; background:rgba(245,158,11,0.2); color:var(--warning); padding:2px 5px; border-radius:4px; margin-left:5px;">NOTA</span>` : '');
                 
-                let btns = "";
-                if(f.status === 'Pendente') {
-                    btns += `<button class="btn-baixa" onclick="window.darBaixaFatura('${f.id}', '${f.uidCliente}', ${f.valor}, '${f.tipo}')">Dar Baixa</button>`;
-                    btns += `<button class="btn-icon" onclick="window.openEditTransacao('${f.id}', ${f.valor}, '${f.uidCliente}', '${f.tipo}')">✏️</button>`;
-                    btns += `<button class="btn-icon" style="color:var(--danger);" onclick="window.deleteTransacao('${f.id}', ${f.valor}, '${f.tipo}', '${f.uidCliente}', '${f.status}')">🗑️</button>`;
-                } else {
-                    btns += `<span style="color:#94a3b8;font-size:0.8rem;">Liquidado</span>`;
-                    btns += `<button class="btn-icon" style="color:var(--danger);" onclick="window.deleteTransacao('${f.id}', ${f.valor}, '${f.tipo}', '${f.uidCliente}', '${f.status}')">🗑️</button>`;
-                }
-                
-                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btns}</td></tr>`;
+                html += `<tr><td>${d} ${par}</td><td><strong>${f.nomeCliente || f.descricao}</strong> ${tags}<br><span style="font-size:0.75rem;color:#64748b;">${f.origem}</span></td><td style="font-weight:bold; color: ${f.tipo === 'receita' ? 'var(--accent)' : 'var(--danger)'};">${formatMoney(f.valor)}</td><td style="color:${stC}; font-weight:bold;">${f.status}</td><td>${btnBx} ${btnEd} ${btnDel}</td></tr>`;
             });
             container.innerHTML = html + `</tbody></table>`;
         };
@@ -677,7 +708,7 @@
                     const diferenca = newVal - oldVal; const cRef = doc(db, "clientes", uidCliente); const cSnap = await getDoc(cRef);
                     if(cSnap.exists()) { let novoSaldo = Math.max(0, (cSnap.data().faturaPendente || 0) + diferenca); await updateDoc(cRef, { faturaPendente: novoSaldo }); }
                 }
-                document.getElementById('edit-transacao-modal').style.display = 'none'; alert("Valor alterado!");
+                document.getElementById('edit-transacao-modal').style.display = 'none'; alert("Valor alterado com sucesso!");
             } catch(e) { console.error(e); alert("Erro ao editar."); }
         });
 
@@ -693,7 +724,7 @@
         };
 
         window.darBaixaFatura = async function(faturaId, clientId, valor, tipo) {
-            if(!confirm("Confirma a liquidação deste valor? O saldo do cliente será abatido.")) return;
+            if(!confirm("Confirma a liquidação deste valor? O saldo será abatido.")) return;
             try {
                 await updateDoc(doc(db, "faturas", faturaId), { status: "Pago", dataPagamento: serverTimestamp() });
                 if(tipo === 'receita' && clientId && clientId !== 'undefined' && clientId !== 'null' && clientId !== 'avulso') {
@@ -714,16 +745,123 @@
             if(dataInp) { let dtStr = dataInp; if(horaInp) dtStr += `T${horaInp}:00`; else dtStr += `T00:00:00`; customTimestamp = Timestamp.fromDate(new Date(dtStr)); }
 
             try {
-                await addDoc(collection(db, "faturas"), { tipo: window.currentFinanceTab === 'receber' ? 'receita' : 'despesa', uidCliente: vinculoId !== 'avulso' ? vinculoId : null, descricao: desc, nomeCliente: desc, valor: val, parcelas: par, valorParcela: valPar, status: "Pendente", origem: "Lançamento Manual", recorrente: document.getElementById('transacao-fixa').checked, emiteNota: document.getElementById('transacao-nota').checked, dataCriacao: serverTimestamp(), dataRealizada: customTimestamp });
+                await addDoc(collection(db, "faturas"), {
+                    tipo: window.currentFinanceTab === 'receber' ? 'receita' : 'despesa', uidCliente: vinculoId !== 'avulso' ? vinculoId : null,
+                    descricao: desc, nomeCliente: desc, valor: val, parcelas: par, valorParcela: valPar, status: "Pendente", origem: "Lançamento Manual",
+                    recorrente: document.getElementById('transacao-fixa').checked, emiteNota: document.getElementById('transacao-nota').checked, 
+                    dataCriacao: serverTimestamp(), dataRealizada: customTimestamp
+                });
+                
                 if(window.currentFinanceTab === 'receber' && vinculoId !== 'avulso') { await updateDoc(doc(db, "clientes", vinculoId), { faturaPendente: increment(val) }); }
                 document.getElementById('novaTransacaoForm').reset(); alert("Transação registrada!");
             } catch(e) { console.error(e); }
         });
 
-        // VIEW CHAMADO E REPLY (Simplificado)
-        window.refreshTicketList = function() { const listContainer = document.getElementById('ticket-list-container'); let filtered = globalTickets; if(window.currentViewFilter === 'admin_mine') filtered = globalTickets.filter(t => t.atribuidoPara === currentUserData.nome); if(filtered.length === 0) { listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Nenhum chamado encontrado.</p>'; return; } filtered.sort((a, b) => { let tA = a.dataAbertura ? a.dataAbertura.toMillis() : 0; let tB = b.dataAbertura ? b.dataAbertura.toMillis() : 0; return tB - tA; }); let html = ''; filtered.forEach(ticket => { let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--accent)" : "var(--primary)"); html += `<div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')"><div class="ticket-item-header"><span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span><span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span></div><div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria}</div></div>`; }); listContainer.innerHTML = html; };
-        document.getElementById('replyForm').addEventListener('submit', async (e) => { e.preventDefault(); if(!window.activeTicketId) return; const input = document.getElementById('vt-reply-text'); await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Em Andamento", historico: arrayUnion({ autor: currentUserData.nome, tipo: currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() }) }); input.value = ''; });
-        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
+        window.exportarRelatorio = function() {
+            let csv = "Data,Descricao,Tipo,Valor,Status,Recorrente,EmiteNota\n";
+            window.globalFaturas.sort((a,b) => (b.dataCriacao?.toMillis() || 0) - (a.dataCriacao?.toMillis() || 0)).forEach(f => { let d = f.dataCriacao ? new Date(f.dataCriacao.toDate()).toLocaleDateString('pt-BR') : ''; let desc = (f.nomeCliente || f.descricao || '').replace(/,/g, ''); let rec = f.recorrente ? 'Sim' : 'Nao'; let nf = f.emiteNota ? 'Sim' : 'Nao'; csv += `${d},${desc},${f.tipo},${f.valor},${f.status},${rec},${nf}\n`; });
+            const blob = new Blob([csv], { type: 'text/csv' }); const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `JMDC_Financeiro_${new Date().toISOString().split('T')[0]}.csv`; a.click(); window.URL.revokeObjectURL(url);
+        };
+
+        // TICKETS CRUD
+        window.deleteTicket = async function(id) {
+            if(!confirm("Excluir este chamado permanentemente?")) return;
+            try { await deleteDoc(doc(db, "chamados", id)); } catch(e) { console.error(e); }
+        };
+
+        window.refreshTicketList = function() {
+            const listContainer = document.getElementById('ticket-list-container'); let filtered = window.globalTickets;
+            if(window.currentViewFilter === 'admin_mine') filtered = window.globalTickets.filter(t => t.atribuidoPara === window.currentUserData.nome);
+            if(filtered.length === 0) { listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Nenhum chamado encontrado.</p>'; return; }
+            filtered.sort((a, b) => { let tA = a.dataAbertura ? a.dataAbertura.toMillis() : 0; let tB = b.dataAbertura ? b.dataAbertura.toMillis() : 0; return tB - tA; });
+            
+            let html = '';
+            let isAdminOrSupport = window.currentUserData && (window.currentUserData.nivelAcesso === 'admin' || window.currentUserData.nivelAcesso === 'suporte');
+
+            filtered.forEach(ticket => {
+                let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--accent)" : "var(--primary)");
+                let adminBtns = isAdminOrSupport ? `<button class="btn-icon" onclick="event.stopPropagation(); window.openNewTicketModal(true, '${ticket.docId}')">✏️</button><button class="btn-icon" style="color:var(--danger);" onclick="event.stopPropagation(); window.deleteTicket('${ticket.docId}')">🗑️</button>` : '';
+                
+                html += `<div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')">
+                    <div class="ticket-item-header"><span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span><span style="display:flex; align-items:center; gap:10px;"><span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span> ${adminBtns}</span></div>
+                    <div class="ticket-subject">${ticket.assunto}</div><div class="ticket-date">${ticket.categoria}</div></div>`;
+            }); listContainer.innerHTML = html;
+        };
+
+        document.getElementById('newTicketForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('btn-submit-ticket'); btn.disabled = true;
+            const isEdit = document.getElementById('nt-edit-id').value;
+            const cat = document.getElementById('ticket-category').value; const prio = document.getElementById('ticket-priority').value;
+            const sub = document.getElementById('ticket-subject').value.trim(); const desc = document.getElementById('ticket-desc').value.trim();
+            const emiteNf = document.getElementById('ticket-emite-nota').checked;
+            
+            try {
+                if(isEdit) {
+                    let updateData = { categoria: cat, severidade: prio, assunto: sub, emiteNota: emiteNf };
+                    const cliVinculo = document.getElementById('nt-cliente-vinculo').value;
+                    if(cliVinculo && cliVinculo !== 'self') {
+                        updateData.uidCliente = cliVinculo;
+                        const c = window.globalClientes.find(x => x.id === cliVinculo); if(c) updateData.empresa = c.empresa;
+                    }
+                    await updateDoc(doc(db, "chamados", isEdit), updateData);
+                    alert("Chamado atualizado!");
+                } else {
+                    const counterRef = doc(db, "metadata", "chamadosCounter");
+                    const generatedId = await runTransaction(db, async (transaction) => {
+                        const counterDoc = await transaction.get(counterRef); let seq = 1; if (counterDoc.exists()) seq = (counterDoc.data().seq || 0) + 1;
+                        transaction.set(counterRef, { seq: seq }, { merge: true });
+                        const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}-${String(seq).padStart(4, '0')}`;
+                    });
+
+                    let fUid = window.auth.currentUser.uid; let fEmpresa = window.currentUserData.empresa;
+                    const cliVinculo = document.getElementById('nt-cliente-vinculo').value;
+                    if(cliVinculo && cliVinculo !== 'self') {
+                        fUid = cliVinculo; const c = window.globalClientes.find(x => x.id === cliVinculo); if(c) fEmpresa = c.empresa;
+                    }
+
+                    await setDoc(doc(collection(db, "chamados")), {
+                        idInterno: generatedId, uidCliente: fUid, empresa: fEmpresa, solicitante: window.currentUserData.nome, 
+                        categoria: cat, severidade: prio, assunto: sub, emiteNota: emiteNf, status: "Aberto", atribuidoPara: null, dataAbertura: serverTimestamp(),
+                        historico: [{ autor: window.currentUserData.nome, tipo: window.currentUserData.nivelAcesso, texto: desc, data: new Date().toISOString() }]
+                    });
+                    alert(`Chamado ${generatedId} salvo!`);
+                }
+                closeNewTicketModal();
+            } catch (error) { console.error(error); } finally { btn.disabled = false; }
+        });
+
+        // VIEW CHAMADO
+        window.loadTicketDetails = function(docId, uidDonoChamado) {
+            window.activeTicketId = docId; window.activeTicketClientId = uidDonoChamado;
+            document.getElementById('view-ticket-modal').style.display = 'flex'; closeSidebar();
+            if(window.currentTicketSnapshot) window.currentTicketSnapshot();
+
+            window.currentTicketSnapshot = onSnapshot(doc(db, "chamados", docId), (docSnap) => {
+                if(!docSnap.exists()) return; const data = docSnap.data();
+                document.getElementById('vt-id').innerText = "#" + data.idInterno; document.getElementById('vt-subject').innerText = data.assunto;
+                document.getElementById('vt-date').innerText = data.dataAbertura ? new Date(data.dataAbertura.toDate()).toLocaleString('pt-BR') : "...";
+                document.getElementById('vt-nf-tag').style.display = data.emiteNota ? 'inline' : 'none';
+
+                const isStaff = window.currentUserData.nivelAcesso === "admin" || window.currentUserData.nivelAcesso === "suporte";
+                if(isStaff) {
+                    document.getElementById('assign-bar').style.display = 'flex';
+                    const btnAssume = document.getElementById('btn-assume-ticket');
+                    if(data.atribuidoPara) { document.getElementById('vt-assigned').innerText = data.atribuidoPara; btnAssume.style.display = data.atribuidoPara === window.currentUserData.nome ? 'none' : 'block'; btnAssume.innerText = "Reatribuir a Mim"; } 
+                    else { document.getElementById('vt-assigned').innerText = "Não atribuído"; btnAssume.style.display = 'block'; btnAssume.innerText = "Assumir Chamado"; }
+                }
+
+                const chatContainer = document.getElementById('vt-chat'); chatContainer.innerHTML = '';
+                (data.historico || []).forEach(msg => { const alignClass = (msg.tipo === "suporte" || msg.tipo === "admin") ? "staff" : ""; chatContainer.innerHTML += `<div class="chat-msg ${alignClass}"><div class="chat-author">${msg.autor}</div>${msg.texto}</div>`; });
+                chatContainer.scrollTop = chatContainer.scrollHeight; document.getElementById('replyForm').style.display = data.status === "Resolvido" ? "none" : "block";
+            });
+        };
+
+        // REPLY E RESOLVE
+        document.getElementById('replyForm').addEventListener('submit', async (e) => { e.preventDefault(); if(!window.activeTicketId) return; const input = document.getElementById('vt-reply-text'); await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Em Andamento", historico: arrayUnion({ autor: window.currentUserData.nome, tipo: window.currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() }) }); input.value = ''; });
+        document.getElementById('btn-assume-ticket').addEventListener('click', async () => { if(window.activeTicketId) await updateDoc(doc(db, "chamados", window.activeTicketId), { atribuidoPara: window.currentUserData.nome, status: "Em Andamento", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: `Atendimento assumido por ${window.currentUserData.nome}.`, data: new Date().toISOString() }) }); });
+        document.getElementById('btn-resolve-ticket').addEventListener('click', async () => { if(confirm("Encerrar chamado?")) { await updateDoc(doc(db, "chamados", window.activeTicketId), { status: "Resolvido", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado Resolvido.", data: new Date().toISOString() }) }); closeViewTicketModal(); } });
+        document.getElementById('btn-logout').addEventListener('click', () => { signOut(window.auth); });
     </script>
 </body>
 </html>
