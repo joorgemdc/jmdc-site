@@ -49,22 +49,26 @@
         .btn-action:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
         .btn-action:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .section-title { font-size: 1.5rem; font-weight: bold; color: white; margin: 40px 0 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 20px; }
         .dash-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 16px; padding: 25px; transition: 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .dash-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .dash-card.clickable { cursor: pointer; }
         .dash-card.clickable::after { content: 'Visualizar ↗'; position: absolute; bottom: 25px; right: 25px; font-size: 0.8rem; color: var(--primary); font-weight: bold; opacity: 0; transition: 0.3s; }
         .dash-card.clickable:hover::after { opacity: 1; right: 20px; }
+        
+        .admin-card { border-color: rgba(59, 130, 246, 0.5); }
+        .finance-card { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); }
 
         .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         .card-title { font-size: 1.2rem; font-weight: bold; color: white; }
         .card-icon { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 10px; border-radius: 8px; display: flex; }
-        .card-icon svg { width: 24px; height: 24px; }
         .card-value { font-size: 2.5rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 10px; }
         .card-desc { font-size: 0.9rem; color: #94a3b8; }
         .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px;}
 
-        /* Modais Gerais */
+        /* Modais */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; width: 90%; max-width: 700px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; z-index: 10;}
@@ -77,7 +81,11 @@
         .form-group.full-width { grid-column: span 2; }
         .form-group label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
         .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; background: rgba(10, 15, 29, 0.6); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; font-size: 0.95rem; transition: 0.3s; }
-        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        
+        .file-upload-area { border: 2px dashed #334155; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.3s; color: #94a3b8; font-size: 0.9rem; position: relative; }
+        .file-upload-area.dragover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); color: white; }
+        .file-upload-area input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .attachment-preview { margin-top: 10px; font-size: 0.85rem; color: var(--accent); font-weight: bold; }
 
         /* Sidebar Chamados */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s ease; }
@@ -95,27 +103,20 @@
         .ticket-subject { color: white; font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
         .ticket-date { color: #64748b; font-size: 0.85rem; }
 
-        /* Interação / Chat Modal */
+        /* Interação Modal */
         .chat-container { background: rgba(10, 15, 29, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 15px; height: 250px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
         .chat-msg { background: rgba(59, 130, 246, 0.1); padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: #e2e8f0; align-self: flex-start; max-width: 85%; word-break: break-word;}
         .chat-msg.staff { background: rgba(16, 185, 129, 0.1); align-self: flex-end; border: 1px solid rgba(16, 185, 129, 0.2); }
         .chat-author { font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px; font-weight: bold; }
         .chat-input-group { display: flex; gap: 10px; flex-direction: column; }
         .chat-input-group input[type="text"] { width: 100%; padding: 12px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 8px; outline: none; }
-
-        /* Módulo Financeiro Admin */
+        
         .admin-billing-module { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none; }
         .admin-billing-module h4 { color: var(--danger); font-size: 1rem; margin-bottom: 10px; }
         .billing-input-group { display: flex; gap: 10px; }
         .billing-input-group input { flex: 1; padding: 10px; background: rgba(10, 15, 29, 0.8); border: 1px solid #334155; color: white; border-radius: 6px; outline: none; }
-        .btn-bill { background: var(--danger); color: white; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-bill:hover { background: #b91c1c; }
-
-        /* Admin Panel */
-        #admin-panel { display: none; margin-top: 40px; }
-        .admin-card { border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-        .admin-card .card-icon { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-        .admin-card:hover { border-color: var(--danger); }
+        
+        .assign-bar { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary); padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.9rem; margin-top: auto; }
 
@@ -152,61 +153,86 @@
                         <div class="role-badge badge-admin" id="admin-badge">ADMIN/N3</div>
                         <div class="role-badge badge-suporte" id="suporte-badge">SUPORTE N1/N2</div>
                     </h1>
-                    <p>Governança e Status da Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
+                    <p>Visão de Infraestrutura: <strong id="user-company" style="color: white;">...</strong></p>
                 </div>
                 <button class="btn-action" onclick="openNewTicketModal()"><svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round"/></svg> Abrir Chamado</button>
             </div>
 
-            <div class="dash-grid">
-                <div class="dash-card">
-                    <div class="card-header">
-                        <div class="card-title">Status do Ambiente</div>
-                        <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+            <div id="client-panel">
+                <div class="dash-grid">
+                    <div class="dash-card">
+                        <div class="card-header"><div class="card-title">Status do Ambiente</div></div>
+                        <div><span class="status-badge" id="user-status">ATIVO</span></div>
+                        <p class="card-desc">Serviços operando dentro da normalidade.</p>
                     </div>
-                    <div><span class="status-badge" id="user-status">ATIVO</span></div>
-                    <p class="card-desc">Serviços operando dentro da normalidade.</p>
-                </div>
 
-                <div class="dash-card clickable" onclick="openSidebar()">
-                    <div class="card-header">
-                        <div class="card-title">Meus Chamados</div>
-                        <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+                    <div class="dash-card clickable" onclick="openSidebar('client')">
+                        <div class="card-header"><div class="card-title">Meus Chamados</div></div>
+                        <div class="card-value" id="client-ticket-count">0</div>
+                        <p class="card-desc">Gerencie seu histórico de requisições.</p>
                     </div>
-                    <div class="card-value" id="ticket-count">0</div>
-                    <p class="card-desc">Clique para gerenciar seu histórico de requisições.</p>
-                </div>
 
-                <div class="dash-card clickable" onclick="openBillingModal()">
-                    <div class="card-header">
-                        <div class="card-title">Faturas Pendentes</div>
-                        <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                    <div class="dash-card clickable" onclick="openBillingModal()">
+                        <div class="card-header"><div class="card-title">Faturas Pendentes</div></div>
+                        <div class="card-value" style="color: var(--accent);" id="fatura-pendente">R$ 0,00</div>
+                        <p class="card-desc">Clique para visualizar e regularizar pendências.</p>
                     </div>
-                    <div class="card-value" style="color: var(--accent);" id="fatura-pendente">R$ 0,00</div>
-                    <p class="card-desc">Clique para visualizar dados de pagamento e regularizar.</p>
                 </div>
             </div>
 
-            <div id="admin-panel">
-                <h2 style="color: var(--danger); margin-bottom: 20px; font-size: 1.5rem; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 10px;">Visão Global da Operação</h2>
+            <div id="admin-panel" style="display: none;">
+                
+                <div class="section-title">
+                    <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Módulo Operacional (NOC)
+                </div>
                 <div class="dash-grid">
-                    <div class="dash-card admin-card clickable" onclick="openSidebar()">
-                        <div class="card-header">
-                            <div class="card-title">Fila Geral (Todos os Clientes)</div>
-                            <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
-                        </div>
-                        <div class="card-value" id="admin-ticket-count">0</div>
-                        <p class="card-desc">Clique para triar e precificar chamados em aberto.</p>
+                    <div class="dash-card admin-card clickable" onclick="openSidebar('admin_all')">
+                        <div class="card-header"><div class="card-title">Fila Global (Todos)</div></div>
+                        <div class="card-value" id="admin-all-tickets">0</div>
+                        <p class="card-desc">Chamados de toda a carteira de clientes.</p>
                     </div>
                     
+                    <div class="dash-card admin-card clickable" onclick="openSidebar('admin_mine')">
+                        <div class="card-header"><div class="card-title">Meus Atendimentos</div></div>
+                        <div class="card-value" style="color: var(--warning);" id="admin-my-tickets">0</div>
+                        <p class="card-desc">Chamados atribuídos à sua responsabilidade.</p>
+                    </div>
+
                     <div class="dash-card admin-card">
-                        <div class="card-header">
-                            <div class="card-title">Contas a Receber</div>
-                            <div class="card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
-                        </div>
-                        <div class="card-value" id="admin-receivables" style="color: var(--danger);">R$ 0,00</div>
-                        <p class="card-desc">Soma de faturamentos pendentes em toda a carteira de clientes.</p>
+                        <div class="card-header"><div class="card-title">Status da Rede</div></div>
+                        <div><span class="status-badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: var(--primary);">ESTÁVEL</span></div>
+                        <p class="card-desc">Monitoramento global ativo.</p>
                     </div>
                 </div>
+
+                <div class="section-title" style="margin-top: 50px;">
+                    <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Módulo Financeiro (ERP)
+                </div>
+                <div class="dash-grid">
+                    <div class="dash-card finance-card">
+                        <div class="card-header"><div class="card-title">Contas a Receber</div></div>
+                        <div class="card-value" style="color: var(--accent);" id="admin-receber">R$ 0,00</div>
+                        <p class="card-desc">Faturas pendentes emitidas para clientes.</p>
+                    </div>
+
+                    <div class="dash-card finance-card">
+                        <div class="card-header"><div class="card-title">Contas a Pagar</div></div>
+                        <div class="card-value" style="color: var(--danger);">R$ 0,00</div>
+                        <p class="card-desc">Custos operacionais (Em breve).</p>
+                    </div>
+
+                    <div class="dash-card finance-card">
+                        <div class="card-header"><div class="card-title">Balanço do Mês</div></div>
+                        <div class="card-value" style="color: white;">R$ 0,00</div>
+                        <p class="card-desc">Diferença entre recebimentos e pagamentos.</p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn-action" style="display: inline-flex; background: transparent; border: 1px solid var(--primary); color: var(--primary);" disabled>
+                        Gerar Relatório (Em Breve)
+                    </button>
+                </div>
+
             </div>
         </div>
 
@@ -218,7 +244,7 @@
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
     <div class="ticket-sidebar" id="ticket-sidebar">
         <div class="sidebar-header">
-            <h2 id="sidebar-title">Meus Chamados</h2>
+            <h2 id="sidebar-title">Fila de Chamados</h2>
             <button class="modal-close" style="position: relative; top: 0; right: 0;" onclick="closeSidebar()">×</button>
         </div>
         <div class="sidebar-body" id="ticket-list-container">
@@ -230,8 +256,6 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewTicketModal()">×</button>
             <h3 class="modal-title">Novo Chamado Técnico</h3>
-            <p class="modal-subtitle">Descreva o incidente para receber suporte especializado.</p>
-            
             <form id="newTicketForm">
                 <div class="form-grid">
                     <div class="form-group full-width">
@@ -246,33 +270,29 @@
                             <option value="Infraestrutura Wi-Fi">Infraestrutura de rede Wi-Fi</option>
                             <option value="Suporte a Servidores">Suporte à Servidores</option>
                             <option value="Projetos e Implantações">Projetos e Implantações</option>
-                            <option value="Automação Residencial">Automação Residencial</option>
-                            <option value="Automação Comercial">Automação Comercial</option>
-                            <option value="Configuração de Roteador">Configuração de Roteador de Borda</option>
-                            <option value="Diagnóstico de Redes">Diagnóstico e correção de redes</option>
                             <option value="Firewall e Segurança">Firewall e Segurança</option>
                             <option value="Outros">Outros / Dúvidas Gerais</option>
                         </select>
                     </div>
                     <div class="form-group full-width">
-                        <label>SLA (Urgência Percebida)</label>
+                        <label>SLA (Urgência)</label>
                         <select id="ticket-priority" required>
-                            <option value="Baixa">Baixa (Dúvidas e Planejamentos)</option>
-                            <option value="Média" selected>Média (Impacto parcial na operação)</option>
-                            <option value="Alta">Alta (Sistema/Rede parados)</option>
+                            <option value="Média" selected>Média (Impacto parcial)</option>
+                            <option value="Alta">Alta (Sistema parado)</option>
                             <option value="Crítica">Crítica (Operação 100% inativa)</option>
                         </select>
                     </div>
+                    <div class="form-group full-width"><label>Assunto Breve</label><input type="text" id="ticket-subject" required></div>
+                    <div class="form-group full-width"><label>Descrição Detalhada</label><textarea id="ticket-desc" rows="4" required></textarea></div>
                     <div class="form-group full-width">
-                        <label>Assunto Breve</label>
-                        <input type="text" id="ticket-subject" required placeholder="Ex: Queda na rede matriz">
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Descrição Detalhada</label>
-                        <textarea id="ticket-desc" rows="4" required placeholder="Descreva os sintomas, equipamentos afetados e contexto..."></textarea>
+                        <div class="file-upload-area" id="drop-zone-new">
+                            <input type="file" id="ticket-file" accept="image/*,.pdf,.txt,.log">
+                            Arraste ou Cole (Ctrl+V) evidências aqui.
+                        </div>
+                        <div class="attachment-preview" id="file-preview-new"></div>
                     </div>
                 </div>
-                <button type="submit" class="btn-action" style="width: 100%; margin-top: 10px;" id="btn-submit-ticket">Gerar Requisição Técnica</button>
+                <button type="submit" class="btn-action" style="width: 100%;" id="btn-submit-ticket">Gerar Requisição Técnica</button>
             </form>
         </div>
     </div>
@@ -280,25 +300,28 @@
     <div class="modal-overlay" id="view-ticket-modal">
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeViewTicketModal()">×</button>
+            
+            <div class="assign-bar" id="assign-bar" style="display: none;">
+                <div><strong style="color: var(--primary);">Responsável:</strong> <span id="vt-assigned">Não atribuído</span></div>
+                <button class="btn-action" style="padding: 5px 15px; font-size: 0.85rem;" id="btn-assume-ticket">Atribuir a Mim</button>
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <h3 class="modal-title" id="vt-id">#ID</h3>
                 <span class="status-badge" id="vt-status">Aberto</span>
             </div>
             <p class="modal-subtitle" style="margin-bottom: 10px;"><strong id="vt-subject">Assunto</strong></p>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px;">Aberto em: <span id="vt-date">...</span> | Urgência: <span id="vt-priority" style="color:var(--warning)">...</span></p>
             
-            <div class="chat-container" id="vt-chat">
-                </div>
+            <div class="chat-container" id="vt-chat"></div>
 
             <form id="replyForm" style="margin-top: 15px;">
                 <div class="chat-input-group">
-                    <input type="text" id="vt-reply-text" placeholder="Digite sua resposta técnica ou atualização..." required>
+                    <input type="text" id="vt-reply-text" placeholder="Digite sua resposta..." required>
                     <button type="submit" class="btn-action" style="padding: 12px; width: 100%;" id="btn-reply">Enviar Interação</button>
                 </div>
                 
                 <div class="admin-billing-module" id="admin-billing-section">
-                    <h4>Painel de Precificação (Uso Interno)</h4>
-                    <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Lançar valor avulso na carteira deste cliente.</p>
+                    <h4>Painel de Precificação</h4>
                     <div class="billing-input-group">
                         <input type="number" id="bill-amount" placeholder="Valor (Ex: 150.00)" step="0.01" min="0">
                         <button type="button" class="btn-bill" id="btn-launch-bill">Lançar Débito</button>
@@ -306,7 +329,7 @@
                 </div>
 
                 <div style="text-align: right; margin-top: 15px;">
-                    <button type="button" class="btn-logout" id="btn-resolve-ticket">Encerrar Chamado (Resolvido)</button>
+                    <button type="button" class="btn-logout" id="btn-resolve-ticket">Encerrar Chamado</button>
                 </div>
             </form>
         </div>
@@ -316,74 +339,49 @@
         <div class="modal-content" style="max-width: 450px; text-align: center;">
             <button class="modal-close" onclick="closeBillingModal()">×</button>
             <h3 class="modal-title">Faturas Pendentes</h3>
-            <p class="modal-subtitle">Regularize seu ambiente para manter a operação saudável.</p>
-            
             <div class="card-value" style="color: var(--accent); margin: 20px 0; font-size: 3rem;" id="modal-fatura-valor">R$ 0,00</div>
-            
             <div style="background: rgba(10, 15, 29, 0.8); padding: 20px; border-radius: 8px; border: 1px dashed #334155; margin-bottom: 20px;">
-                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 5px;">Chave PIX (CNPJ/Telefone/Email):</p>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 5px;">Chave PIX:</p>
                 <p style="color: white; font-weight: bold; font-size: 1.4rem; letter-spacing: 2px;" id="pix-key">01779551550</p>
-                <button class="btn-action" style="width: 100%; margin-top: 15px; background: rgba(59, 130, 246, 0.1); color: var(--primary); border: 1px solid var(--primary);" onclick="copyPix()">Copiar Chave PIX</button>
+                <button class="btn-action" style="width: 100%; margin-top: 15px;" onclick="copyPix()">Copiar Chave</button>
             </div>
-
-            <a href="https://wa.me/5571991905429?text=Ol%C3%A1%2C%20segue%20o%20comprovante%20de%20pagamento%20da%20minha%20fatura%20pendente." target="_blank" class="btn-action" style="width: 100%; background: #25D366; color: white;">
-                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24" style="margin-right: 5px;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
-                Enviar Comprovante via WhatsApp
-            </a>
+            <a href="https://wa.me/5571991905429?text=Ol%C3%A1%2C%20segue%20o%20comprovante." target="_blank" class="btn-action" style="width: 100%; background: #25D366; color: white;">Enviar Comprovante</a>
         </div>
     </div>
 
     <script>
+        window.currentViewFilter = 'client';
+
         function openNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'flex'; }
         function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; document.getElementById('newTicketForm').reset(); }
-        
-        function closeViewTicketModal() { 
-            document.getElementById('view-ticket-modal').style.display = 'none'; 
-            window.activeTicketId = null; 
-            window.activeTicketClientId = null;
-            document.getElementById('replyForm').reset();
-        }
-
+        function closeViewTicketModal() { document.getElementById('view-ticket-modal').style.display = 'none'; window.activeTicketId = null; document.getElementById('replyForm').reset(); }
         function openBillingModal() { document.getElementById('billing-modal').style.display = 'flex'; }
         function closeBillingModal() { document.getElementById('billing-modal').style.display = 'none'; }
+        function copyPix() { navigator.clipboard.writeText("01779551550"); alert("Chave copiada!"); }
 
-        function copyPix() {
-            const pix = document.getElementById('pix-key').innerText;
-            navigator.clipboard.writeText(pix);
-            alert("Chave PIX copiada com sucesso! Cole no aplicativo do seu banco.");
-        }
-
-        function openSidebar() { 
+        function openSidebar(filterType) { 
+            window.currentViewFilter = filterType;
+            if(filterType === 'admin_mine') document.getElementById('sidebar-title').innerText = "Meus Atendimentos";
+            else if(filterType === 'admin_all') document.getElementById('sidebar-title').innerText = "Fila Global";
+            else document.getElementById('sidebar-title').innerText = "Meus Chamados";
+            
             document.getElementById('sidebar-overlay').style.display = 'block';
             setTimeout(() => { document.getElementById('sidebar-overlay').style.opacity = '1'; document.getElementById('ticket-sidebar').classList.add('active'); }, 10);
+            
+            if(window.refreshTicketList) window.refreshTicketList();
         }
         function closeSidebar() {
             document.getElementById('ticket-sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').style.opacity = '0';
             setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
         }
 
-        // Fundo Animado
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('network-canvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                let w, h, particles = [];
-                const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
-                window.addEventListener('resize', resize); resize();
-                function initParticles() { particles=[]; for(let i=0;i<40;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5), vy:(Math.random()-.5)});}
-                function animateParticles() { 
-                    ctx.clearRect(0,0,w,h); 
-                    particles.forEach((p,i)=>{
-                        p.x+=p.vx; p.y+=p.vy; 
-                        if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
-                        ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fillStyle='#3b82f6'; ctx.fill();
-                        for(let j=i;j<particles.length;j++){
-                            let dx=p.x-particles[j].x, dy=p.y-particles[j].y, d=Math.hypot(dx,dy);
-                            if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(59,130,246,${1-d/100})`;ctx.lineWidth=0.5;ctx.moveTo(p.x,p.y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
-                        }
-                    }); requestAnimationFrame(animateParticles);
-                } initParticles(); animateParticles();
-            }
+        // Drop & Ctrl+V Simplificado
+        const dzNew = document.getElementById('drop-zone-new');
+        const fiNew = document.getElementById('ticket-file');
+        fiNew.addEventListener('change', (e) => { window.newTicketFile = e.target.files[0]; document.getElementById('file-preview-new').innerText = `Anexo: ${e.target.files[0].name}`; });
+        window.addEventListener('paste', (e) => {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let i in items) { if (items[i].kind === 'file' && document.getElementById('new-ticket-modal').style.display === 'flex') { window.newTicketFile = items[i].getAsFile(); document.getElementById('file-preview-new').innerText = `Anexo: ${window.newTicketFile.name}`; break; } }
         });
     </script>
 
@@ -391,6 +389,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, where, onSnapshot, runTransaction, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBM7EodWHzwOs7yI2V9UFngLtRvISLVELo",
@@ -404,23 +403,22 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
         
         let currentUserData = null; 
         window.activeTicketId = null;
         window.activeTicketClientId = null;
+        let globalTickets = [];
 
         const formatMoney = (value) => { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0); };
 
-        // 1. GUARDA DE ROTA E PERFIS
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // Escuta o documento do usuário
                     onSnapshot(doc(db, "clientes", user.uid), (docSnap) => {
                         if (docSnap.exists()) {
                             currentUserData = docSnap.data();
                             document.getElementById('user-name').innerText = currentUserData.nome;
-                            document.getElementById('user-company').innerText = currentUserData.empresa;
                             
                             const faturaFormatada = formatMoney(currentUserData.faturaPendente);
                             document.getElementById('fatura-pendente').innerText = faturaFormatada;
@@ -428,247 +426,207 @@
                             
                             let isAdminOrSupport = false;
 
-                            if(currentUserData.nivelAcesso === "admin") {
-                                document.getElementById('admin-badge').style.display = 'inline-block';
-                                document.getElementById('admin-panel').style.display = 'block';
-                                document.getElementById('sidebar-title').innerText = "Fila Global de Chamados";
+                            if(currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte") {
                                 isAdminOrSupport = true;
+                                document.getElementById('client-panel').style.display = 'none';
+                                document.getElementById('admin-panel').style.display = 'block';
                                 
-                                // Escuta global de recebíveis apenas para Admins
-                                const qClientes = query(collection(db, "clientes"));
-                                onSnapshot(qClientes, (snap) => {
-                                    let totalReceber = 0;
-                                    snap.forEach(clienteDoc => {
-                                        totalReceber += (clienteDoc.data().faturaPendente || 0);
+                                if(currentUserData.nivelAcesso === "admin") {
+                                    document.getElementById('admin-badge').style.display = 'inline-block';
+                                    // Financeiro Global (Apenas Admin lê todos os clientes)
+                                    onSnapshot(collection(db, "clientes"), (snap) => {
+                                        let totalReceber = 0;
+                                        snap.forEach(c => { totalReceber += (c.data().faturaPendente || 0); });
+                                        document.getElementById('admin-receber').innerText = formatMoney(totalReceber);
                                     });
-                                    document.getElementById('admin-receivables').innerText = formatMoney(totalReceber);
-                                });
-
-                            } else if(currentUserData.nivelAcesso === "suporte") {
-                                document.getElementById('suporte-badge').style.display = 'inline-block';
-                                document.getElementById('admin-panel').style.display = 'block';
-                                document.getElementById('sidebar-title').innerText = "Fila Global de Chamados";
-                                isAdminOrSupport = true;
+                                } else {
+                                    document.getElementById('suporte-badge').style.display = 'inline-block';
+                                }
                             }
                             
                             document.getElementById('loader').style.opacity = '0';
                             setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 500);
 
-                            // 2. LISTAGEM REATIVA DE CHAMADOS
+                            // Leitura Global de Chamados
                             let q = isAdminOrSupport ? query(collection(db, "chamados")) : query(collection(db, "chamados"), where("uidCliente", "==", user.uid));
 
                             onSnapshot(q, (snapshot) => {
-                                const listContainer = document.getElementById('ticket-list-container');
-                                const countEl = document.getElementById('ticket-count');
-                                const adminCountEl = document.getElementById('admin-ticket-count');
+                                globalTickets = [];
+                                let allActive = 0; let myActive = 0;
+                                snapshot.forEach((doc) => {
+                                    let data = doc.data(); data.docId = doc.id; globalTickets.push(data);
+                                    if(data.status !== "Resolvido") {
+                                        allActive++;
+                                        if(data.atribuidoPara === currentUserData.nome) myActive++;
+                                    }
+                                });
 
-                                if(snapshot.empty) {
-                                    listContainer.innerHTML = '<p style="color: #64748b; text-align: center; margin-top: 50px;">Nenhum chamado aberto.</p>';
-                                    countEl.innerText = "0"; if(adminCountEl) adminCountEl.innerText = "0"; return;
+                                if(isAdminOrSupport) {
+                                    document.getElementById('admin-all-tickets').innerText = allActive;
+                                    document.getElementById('admin-my-tickets').innerText = myActive;
+                                } else {
+                                    document.getElementById('client-ticket-count').innerText = allActive;
                                 }
 
-                                let html = ''; let activeCount = 0; let tickets = [];
-                                snapshot.forEach((doc) => {
-                                    let data = doc.data(); data.docId = doc.id; tickets.push(data);
-                                    if(data.status !== "Resolvido") activeCount++;
-                                });
-
-                                tickets.sort((a, b) => {
-                                    let tA = a.dataAbertura ? a.dataAbertura.toMillis() : Date.now();
-                                    let tB = b.dataAbertura ? b.dataAbertura.toMillis() : Date.now();
-                                    return tB - tA;
-                                });
-
-                                tickets.forEach(ticket => {
-                                    let dateStr = ticket.dataAbertura ? new Date(ticket.dataAbertura.toDate()).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'}) : 'Hoje';
-                                    let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--success)" : "var(--primary)");
-                                    let bgStatus = ticket.status === "Aberto" ? "rgba(245, 158, 11, 0.1)" : (ticket.status === "Resolvido" ? "rgba(16, 185, 129, 0.1)" : "rgba(59, 130, 246, 0.1)");
-                                    let cName = isAdminOrSupport ? `• ${ticket.empresa}` : '';
-
-                                    html += `
-                                    <div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')">
-                                        <div class="ticket-item-header">
-                                            <span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span>
-                                            <span class="ticket-status" style="color: ${statusColor}; background: ${bgStatus}; border-color: ${statusColor};">${ticket.status}</span>
-                                        </div>
-                                        <div class="ticket-subject">${ticket.assunto}</div>
-                                        <div class="ticket-date">${dateStr} • ${ticket.categoria} ${cName}</div>
-                                    </div>`;
-                                });
-
-                                listContainer.innerHTML = html; countEl.innerText = activeCount;
-                                if(adminCountEl) adminCountEl.innerText = activeCount;
+                                if(document.getElementById('ticket-sidebar').classList.contains('active')) {
+                                    window.refreshTicketList();
+                                }
                             });
-
-                        } else {
-                            setTimeout(() => signOut(auth), 2000);
                         }
                     });
-                } catch (error) { 
-                    console.error("Erro:", error); document.getElementById('loader-text').innerText = "Erro de Comunicação.";
-                }
+                } catch (error) { console.error(error); }
             } else { window.location.href = "crm.html"; }
         });
 
-        // 3. ABERTURA DE NOVO CHAMADO
+        window.refreshTicketList = function() {
+            const listContainer = document.getElementById('ticket-list-container');
+            let filtered = globalTickets;
+
+            if(window.currentViewFilter === 'admin_mine') {
+                filtered = globalTickets.filter(t => t.atribuidoPara === currentUserData.nome);
+            }
+
+            if(filtered.length === 0) { listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Nenhum chamado encontrado.</p>'; return; }
+
+            filtered.sort((a, b) => { let tA = a.dataAbertura ? a.dataAbertura.toMillis() : Date.now(); let tB = b.dataAbertura ? b.dataAbertura.toMillis() : Date.now(); return tB - tA; });
+
+            let html = '';
+            filtered.forEach(ticket => {
+                let statusColor = ticket.status === "Aberto" ? "var(--warning)" : (ticket.status === "Resolvido" ? "var(--accent)" : "var(--primary)");
+                let responsavel = ticket.atribuidoPara ? `• Resp: ${ticket.atribuidoPara}` : '';
+                html += `
+                <div class="ticket-item" onclick="window.loadTicketDetails('${ticket.docId}', '${ticket.uidCliente}')">
+                    <div class="ticket-item-header">
+                        <span class="ticket-id">#${ticket.idInterno || ticket.docId.substring(0,8)}</span>
+                        <span class="ticket-status" style="color: ${statusColor}; border: 1px solid ${statusColor};">${ticket.status}</span>
+                    </div>
+                    <div class="ticket-subject">${ticket.assunto}</div>
+                    <div class="ticket-date">${ticket.categoria} ${responsavel}</div>
+                </div>`;
+            });
+            listContainer.innerHTML = html;
+        };
+
+        // Abertura
         document.getElementById('newTicketForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btn-submit-ticket');
-            btn.innerText = "Processando..."; btn.disabled = true;
-
-            const user = auth.currentUser;
-            const category = document.getElementById('ticket-category').value;
-            const priority = document.getElementById('ticket-priority').value;
-            const subject = document.getElementById('ticket-subject').value.trim();
-            const desc = document.getElementById('ticket-desc').value.trim();
-
+            const btn = document.getElementById('btn-submit-ticket'); btn.disabled = true;
             try {
                 const counterRef = doc(db, "metadata", "chamadosCounter");
                 const generatedId = await runTransaction(db, async (transaction) => {
                     const counterDoc = await transaction.get(counterRef);
-                    let seq = 1;
-                    if (counterDoc.exists()) seq = (counterDoc.data().seq || 0) + 1;
+                    let seq = 1; if (counterDoc.exists()) seq = (counterDoc.data().seq || 0) + 1;
                     transaction.set(counterRef, { seq: seq }, { merge: true });
-                    
-                    const d = new Date();
-                    const ano = d.getFullYear(); const mes = String(d.getMonth()+1).padStart(2,'0'); const dia = String(d.getDate()).padStart(2,'0');
-                    return `${ano}-${mes}-${dia}-${String(seq).padStart(4, '0')}`;
+                    const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}-${String(seq).padStart(4, '0')}`;
                 });
+
+                let attachmentUrl = null;
+                if(window.newTicketFile) {
+                    try {
+                        const snap = await uploadBytes(ref(storage, `chamados/${generatedId}/${window.newTicketFile.name}`), window.newTicketFile);
+                        attachmentUrl = await getDownloadURL(snap.ref);
+                    } catch(e) { console.error(e); }
+                }
 
                 await setDoc(doc(collection(db, "chamados")), {
-                    idInterno: generatedId,
-                    uidCliente: user.uid,
-                    empresa: currentUserData.empresa,
-                    solicitante: currentUserData.nome,
-                    categoria: category,
-                    severidade: priority,
-                    assunto: subject,
-                    status: "Aberto",
-                    dataAbertura: serverTimestamp(),
-                    historico: [{ autor: currentUserData.nome, tipo: "cliente", texto: desc, data: new Date().toISOString() }]
+                    idInterno: generatedId, uidCliente: auth.currentUser.uid, empresa: currentUserData.empresa,
+                    solicitante: currentUserData.nome, categoria: document.getElementById('ticket-category').value,
+                    severidade: document.getElementById('ticket-priority').value, assunto: document.getElementById('ticket-subject').value,
+                    status: "Aberto", atribuidoPara: null, dataAbertura: serverTimestamp(),
+                    historico: [{ autor: currentUserData.nome, tipo: "cliente", texto: document.getElementById('ticket-desc').value, anexo: attachmentUrl, data: new Date().toISOString() }]
                 });
-                
-                alert(`Chamado ${generatedId} protocolado com sucesso! Um email foi disparado para a JMDC.`);
-                closeNewTicketModal();
-            } catch (error) {
-                console.error(error); alert("Falha ao registrar dados no banco.");
-            } finally { btn.innerText = "Gerar Requisição Técnica"; btn.disabled = false; }
+                alert(`Chamado ${generatedId} aberto!`); closeNewTicketModal();
+            } catch (error) { console.error(error); } finally { btn.disabled = false; }
         });
 
-        // 4. VISUALIZAÇÃO E INTERAÇÃO
+        // Visualização
         let currentTicketSnapshot = null;
         window.loadTicketDetails = function(docId, uidDonoChamado) {
-            window.activeTicketId = docId;
-            window.activeTicketClientId = uidDonoChamado;
-            document.getElementById('view-ticket-modal').style.display = 'flex';
-            closeSidebar();
-            
+            window.activeTicketId = docId; window.activeTicketClientId = uidDonoChamado;
+            document.getElementById('view-ticket-modal').style.display = 'flex'; closeSidebar();
             if(currentTicketSnapshot) currentTicketSnapshot();
 
             currentTicketSnapshot = onSnapshot(doc(db, "chamados", docId), (docSnap) => {
                 if(!docSnap.exists()) return;
                 const data = docSnap.data();
                 
-                document.getElementById('vt-id').innerText = "#" + (data.idInterno || docId.substring(0,8));
-                const stBadge = document.getElementById('vt-status');
-                stBadge.innerText = data.status;
-                stBadge.style.color = data.status === "Aberto" ? "var(--warning)" : (data.status === "Resolvido" ? "var(--success)" : "var(--primary)");
-                stBadge.style.borderColor = stBadge.style.color;
-
+                document.getElementById('vt-id').innerText = "#" + data.idInterno;
                 document.getElementById('vt-subject').innerText = data.assunto;
-                document.getElementById('vt-priority').innerText = data.severidade || "Padrão";
-                document.getElementById('vt-date').innerText = data.dataAbertura ? new Date(data.dataAbertura.toDate()).toLocaleString('pt-BR') : "...";
+                document.getElementById('vt-status').innerText = data.status;
 
-                const chatContainer = document.getElementById('vt-chat');
-                chatContainer.innerHTML = '';
-                const hist = data.historico || [];
-                
-                hist.forEach(msg => {
-                    const isStaff = msg.tipo === "suporte" || msg.tipo === "admin";
-                    const alignClass = isStaff ? "staff" : "";
-                    chatContainer.innerHTML += `<div class="chat-msg ${alignClass}"><div class="chat-author">${msg.autor}</div>${msg.texto}</div>`;
-                });
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                
-                // Exibe módulo de faturamento apenas se for Admin/Suporte
-                if(currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte") {
-                    document.getElementById('admin-billing-section').style.display = "block";
+                // Logica de Atribuição (Aparece para Staff)
+                const isStaff = currentUserData.nivelAcesso === "admin" || currentUserData.nivelAcesso === "suporte";
+                if(isStaff) {
+                    document.getElementById('assign-bar').style.display = 'flex';
+                    document.getElementById('admin-billing-section').style.display = 'block';
+                    
+                    const btnAssume = document.getElementById('btn-assume-ticket');
+                    if(data.atribuidoPara) {
+                        document.getElementById('vt-assigned').innerText = data.atribuidoPara;
+                        btnAssume.style.display = data.atribuidoPara === currentUserData.nome ? 'none' : 'block';
+                        btnAssume.innerText = "Reatribuir a Mim";
+                    } else {
+                        document.getElementById('vt-assigned').innerText = "Não atribuído";
+                        btnAssume.style.display = 'block';
+                        btnAssume.innerText = "Assumir Chamado";
+                    }
                 } else {
-                    document.getElementById('admin-billing-section').style.display = "none";
+                    document.getElementById('assign-bar').style.display = 'none';
+                    document.getElementById('admin-billing-section').style.display = 'none';
                 }
 
-                const repForm = document.getElementById('replyForm');
-                if(data.status === "Resolvido") repForm.style.display = "none"; else repForm.style.display = "block";
+                const chatContainer = document.getElementById('vt-chat'); chatContainer.innerHTML = '';
+                (data.historico || []).forEach(msg => {
+                    const alignClass = (msg.tipo === "suporte" || msg.tipo === "admin") ? "staff" : "";
+                    const ax = msg.anexo ? `<br><a href="${msg.anexo}" target="_blank" style="color:var(--primary);">📎 Anexo</a>` : '';
+                    chatContainer.innerHTML += `<div class="chat-msg ${alignClass}"><div class="chat-author">${msg.autor}</div>${msg.texto} ${ax}</div>`;
+                });
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                document.getElementById('replyForm').style.display = data.status === "Resolvido" ? "none" : "block";
             });
         };
 
-        // 5. MÓDULO FINANCEIRO: LANÇAMENTO AVULSO
-        document.getElementById('btn-launch-bill').addEventListener('click', async () => {
-            const valInput = document.getElementById('bill-amount');
-            const valor = parseFloat(valInput.value);
-            
-            if(isNaN(valor) || valor <= 0) { alert("Insira um valor válido para lançar na carteira do cliente."); return; }
-            if(!window.activeTicketClientId || !window.activeTicketId) return;
+        // Assumir Chamado
+        document.getElementById('btn-assume-ticket').addEventListener('click', async () => {
+            if(!window.activeTicketId) return;
+            await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                atribuidoPara: currentUserData.nome,
+                status: "Em Andamento",
+                historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: `Chamado atribuído para o especialista ${currentUserData.nome}.`, data: new Date().toISOString() })
+            });
+        });
 
-            if(confirm(`Confirma o lançamento de ${formatMoney(valor)} na carteira deste cliente referente a este chamado?`)) {
-                try {
-                    // Atualiza o saldo do cliente na collection 'clientes'
-                    await updateDoc(doc(db, "clientes", window.activeTicketClientId), {
-                        faturaPendente: increment(valor)
-                    });
-                    
-                    // Adiciona registro no chat do chamado
-                    await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                        historico: arrayUnion({
-                            autor: "Sistema Financeiro", tipo: "admin",
-                            texto: `💸 Custo do serviço fixado em ${formatMoney(valor)}. O valor foi adicionado à carteira do cliente.`,
-                            data: new Date().toISOString()
-                        })
-                    });
-                    
-                    valInput.value = '';
-                    alert("Lançamento efetuado com sucesso!");
-                } catch (e) {
-                    console.error(e); alert("Erro ao processar faturamento.");
-                }
+        // Lançar Débito
+        document.getElementById('btn-launch-bill').addEventListener('click', async () => {
+            const valor = parseFloat(document.getElementById('bill-amount').value);
+            if(isNaN(valor) || valor <= 0) return;
+            if(confirm(`Lançar ${formatMoney(valor)} na carteira do cliente?`)) {
+                await updateDoc(doc(db, "clientes", window.activeTicketClientId), { faturaPendente: increment(valor) });
+                await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                    historico: arrayUnion({ autor: "Financeiro", tipo: "admin", texto: `💸 Serviço faturado: ${formatMoney(valor)}.`, data: new Date().toISOString() })
+                });
+                document.getElementById('bill-amount').value = ''; alert("Lançamento efetuado!");
             }
         });
 
-        // Enviar Resposta de Chat
+        // Enviar Resposta
         document.getElementById('replyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!window.activeTicketId) return;
             const input = document.getElementById('vt-reply-text');
-            const texto = input.value.trim();
-            const btn = document.getElementById('btn-reply');
-            btn.innerText = "Enviando..."; btn.disabled = true;
-
-            try {
-                await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                    status: "Em Andamento",
-                    historico: arrayUnion({
-                        autor: currentUserData.nome,
-                        tipo: currentUserData.nivelAcesso || "cliente",
-                        texto: texto,
-                        data: new Date().toISOString()
-                    })
-                });
-                input.value = '';
-            } catch (err) { console.error(err); alert("Erro ao enviar."); }
-            finally { btn.innerText = "Enviar Interação"; btn.disabled = false; }
+            await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                status: "Em Andamento",
+                historico: arrayUnion({ autor: currentUserData.nome, tipo: currentUserData.nivelAcesso || "cliente", texto: input.value.trim(), data: new Date().toISOString() })
+            });
+            input.value = '';
         });
 
-        // Encerrar Chamado
         document.getElementById('btn-resolve-ticket').addEventListener('click', async () => {
-            if(!window.activeTicketId) return;
-            if(!confirm("Tem certeza que deseja encerrar este chamado?")) return;
-            try {
-                await updateDoc(doc(db, "chamados", window.activeTicketId), {
-                    status: "Resolvido",
-                    historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado marcado como Resolvido.", data: new Date().toISOString() })
-                });
-                alert("Chamado encerrado."); closeViewTicketModal();
-            } catch(e) { console.error(e); }
+            if(!confirm("Encerrar chamado?")) return;
+            await updateDoc(doc(db, "chamados", window.activeTicketId), {
+                status: "Resolvido", historico: arrayUnion({ autor: "Sistema", tipo: "admin", texto: "Chamado Resolvido.", data: new Date().toISOString() })
+            });
+            closeViewTicketModal();
         });
 
         document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
